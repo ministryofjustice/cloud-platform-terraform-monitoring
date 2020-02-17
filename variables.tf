@@ -22,8 +22,15 @@ variable "dependence_opa" {
   description = "OPA module dependences in order to be executed."
 }
 
-variable "enable_thanos" {
-  description = "Enable or not Thanos"
+variable "enable_ecr_exporter" {
+  description = "Enable or not ECR exporter"
   default     = false
   type        = bool
 }
+
+variable "enable_cloudwatch_exporter" {
+  description = "Enable or not Cloudwatch exporter"
+  default     = false
+  type        = bool
+}
+

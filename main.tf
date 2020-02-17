@@ -9,3 +9,8 @@ data "terraform_remote_state" "cluster" {
     profile = "moj-cp"
   }
 }
+
+data "helm_repository" "cloud_platform" {
+  name = "cloud-platform"
+  url  = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
+}
