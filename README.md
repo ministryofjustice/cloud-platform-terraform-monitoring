@@ -26,7 +26,9 @@ module "prometheus" {
 | alertmanager_slack_receivers | A list of configuration values for Slack receivers      | string |  | yes |
 | iam_role_nodes               | Nodes IAM role ARN in order to create the KIAM/Kube2IAM | string | | yes |
 | pagerduty_config             | PagerDuty key to allow integration with a PD service    | string | | yes |
-| enable_thanos                | Enable or not Thanos                                    | bool   | | no |
+| enable_thanos                | Enable or not Thanos                                    | bool   | false | no |
+| enable_ecr_exporter          | Conditional to deploy ECR Exporter                      | bool   | false | no |
+| enable_cloudwatch_exporter   | Conditional to deploy CloudWatch Exporter               | bool   | false | no |
 | dependence_deploy            | Dependency on helm                                      | string | | yes |
 | dependence_opa               | The key_pair name to be used in the bastion instance    | string | | yes |
 
