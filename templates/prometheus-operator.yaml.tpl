@@ -276,7 +276,7 @@ prometheusOperator:
 
   ## Deploy CRDs used by Prometheus Operator.
   ##
-  createCustomResource: true
+  createCustomResource: false
 
   ## Attempt to clean up CRDs created by Prometheus Operator.
   ##
