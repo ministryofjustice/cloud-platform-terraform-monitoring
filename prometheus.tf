@@ -125,6 +125,7 @@ resource "helm_release" "prometheus_operator" {
     random_password        = random_id.password.hex
     grafana_pod_annotation = aws_iam_role.grafana_datasource.name
     grafana_assumerolearn  = aws_iam_role.grafana_datasource.arn
+    monitoring_aws_role    = aws_iam_role.monitoring.name
   })]
 
   # Depends on Helm being installed
