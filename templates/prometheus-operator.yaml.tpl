@@ -272,8 +272,21 @@ prometheusOperator:
     enabled: false
 
   admissionWebhooks:
-    enabled: false
-
+    enabled: true
+    patch:
+      enabled: true
+      image:
+        repository: jettech/kube-webhook-certgen
+        tag: v1.0.0
+        pullPolicy: IfNotPresent
+      resources: {}
+      ## Provide a priority class name to the webhook patching job
+      ##
+      priorityClassName: ""
+      podAnnotations: {}
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
   ## Deploy CRDs used by Prometheus Operator.
   ##
   createCustomResource: true
