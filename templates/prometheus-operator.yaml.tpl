@@ -268,12 +268,6 @@ kube-state-metrics:
 prometheusOperator:
   enabled: true
 
-  tlsProxy:
-    enabled: false
-
-  admissionWebhooks:
-    enabled: false
-
   ## Deploy CRDs used by Prometheus Operator.
   ##
   createCustomResource: true
