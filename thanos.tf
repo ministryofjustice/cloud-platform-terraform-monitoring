@@ -46,3 +46,16 @@ resource "aws_iam_role_policy" "monitoring" {
   policy = data.aws_iam_policy_document.monitoring.json
 }
 
+# Kubernetes Secret holding thanos configuration file
+resource "kubernetes_secret" "thanos_config" {
+  metadata {
+    name      = "thanos-objstore-config"
+    namespace = kubernetes_namespace.monitoring.id
+  }
+
+  data = {
+    "thanos.yaml" = file("${path.module}/templates/thanos-objstore-config.yaml.tpl")
+  }
+
+  type = "Opaque"
+}
