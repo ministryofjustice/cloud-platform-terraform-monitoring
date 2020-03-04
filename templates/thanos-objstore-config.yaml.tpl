@@ -1,6 +1,6 @@
 type: s3
 config:
-  bucket: ${s3_bucket}
-  endpoint: s3.${aws_region}.amazonaws.com
+  bucket: cloud-platform-prometheus-thanos
+  endpoint: s3.eu-west-2.amazonaws.com
   access_key: ""
   secret_key: ""
