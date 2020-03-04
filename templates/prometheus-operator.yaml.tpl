@@ -345,6 +345,10 @@ prometheus:
     ##
     retention: 30d
 
+    podMetadata:
+      annotations:
+        iam.amazonaws.com/role: "${monitoring_aws_role}"
+
     ## Prometheus StorageSpec for persistent data
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
     ##
@@ -357,4 +361,11 @@ prometheus:
             requests:
               storage: 750Gi
         selector: {}
+
+    thanos: 
+      baseImage: quay.io/thanos/thanos
+      version: v0.10.1
+      objectStorageConfig:
+        key: thanos.yaml
+        name: thanos-objstore-config 
 
