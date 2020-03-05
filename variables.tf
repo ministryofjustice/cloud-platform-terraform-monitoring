@@ -4,7 +4,6 @@ variable "alertmanager_slack_receivers" {
   type        = list
 }
 
-
 variable "iam_role_nodes" {
   description = "Nodes IAM role ARN in order to create the KIAM/Kube2IAM"
   type        = string
@@ -34,3 +33,8 @@ variable "enable_cloudwatch_exporter" {
   type        = bool
 }
 
+variable "enable_thanos_compact" {
+  description = "Enable or not Thanos Compact - not semantically concurrency safe and must be deployed as a singleton against a bucket"
+  default     = false
+  type        = bool
+}

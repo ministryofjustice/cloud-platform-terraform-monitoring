@@ -70,6 +70,7 @@ resource "helm_release" "thanos" {
   version   = "0.3.18"
 
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
+    enabled_compact        = var.enable_thanos_compact
     monitoring_aws_role    = aws_iam_role.monitoring.name
   })]
 
