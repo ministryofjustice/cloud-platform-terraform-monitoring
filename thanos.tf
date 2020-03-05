@@ -54,8 +54,28 @@ resource "kubernetes_secret" "thanos_config" {
   }
 
   data = {
-    "thanos.yaml" = file("${path.module}/templates/thanos-objstore-config.yaml.tpl")
+    "thanos.yaml"       = file("${path.module}/templates/thanos-objstore-config.yaml.tpl")
+    "object-store.yaml" = file("${path.module}/templates/thanos-objstore-config.yaml.tpl")
   }
 
   type = "Opaque"
+}
+
+# Thanos Helm Chart
+
+resource "helm_release" "thanos" {
+  name      = "thanos"
+  namespace = kubernetes_namespace.monitoring.id
+  chart     = "banzaicloud-stable/thanos"
+  version   = "0.3.18"
+
+  values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
+    monitoring_aws_role    = aws_iam_role.monitoring.name
+  })]
+
+  depends_on = [ helm_release.prometheus_operator ]
+
+  lifecycle {
+    ignore_changes = [keyring]
+  }
 }
