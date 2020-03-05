@@ -293,6 +293,11 @@ prometheus:
   ##
   prometheusSpec:
 
+    ## External labels to add to any time series or alerts when communicating with external systems
+    ##    
+    externalLabels:
+      clusterName: "${clusterName}"
+
     ## External URL at which Prometheus will be reachable.
     ##
     externalUrl: "${ prometheus_ingress }"

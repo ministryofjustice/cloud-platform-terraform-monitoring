@@ -126,6 +126,7 @@ resource "helm_release" "prometheus_operator" {
     grafana_pod_annotation = aws_iam_role.grafana_datasource.name
     grafana_assumerolearn  = aws_iam_role.grafana_datasource.arn
     monitoring_aws_role    = aws_iam_role.monitoring.name
+    clusterName            = terraform.workspace
   })]
 
   # Depends on Helm being installed
