@@ -348,7 +348,7 @@ prometheus:
 
     ## How long to retain metrics
     ##
-    retention: 30d
+    retention: 1d
 
     podMetadata:
       annotations:
