@@ -10,7 +10,7 @@ resource "helm_release" "cloudwatch_exporter" {
   chart     = "stable/prometheus-cloudwatch-exporter"
 
   values = [
-    file("./resources/cloudwatch-exporter.yaml"),
+    file("${path.module}/resources/cloudwatch-exporter.yaml"),
   ]
 
   set {
