@@ -354,6 +354,21 @@ prometheus:
       annotations:
         iam.amazonaws.com/role: "${monitoring_aws_role}"
 
+    %{ if enable_prometheus_affinity ~}
+    ## Assign custom affinity rules to the prometheus instance
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+    ##
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: beta.kubernetes.io/instance-type
+              operator: In
+              values:
+              - r5.2xlarge
+    %{ endif ~}
+
     ## Prometheus StorageSpec for persistent data
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
     ##
