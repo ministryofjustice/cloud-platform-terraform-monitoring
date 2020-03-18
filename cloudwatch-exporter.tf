@@ -3,7 +3,7 @@
 # Ref: https://github.com/helm/charts/blob/master/stable/prometheus-cloudwatch-exporter/values.yaml
 
 resource "helm_release" "cloudwatch_exporter" {
-  count     = var.enable_cloudwatch_exporter ? 1 : 0
+  count = var.enable_cloudwatch_exporter ? 1 : 0
 
   name      = "cloudwatch-exporter"
   namespace = kubernetes_namespace.monitoring.id

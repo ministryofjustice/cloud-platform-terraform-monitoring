@@ -5,7 +5,7 @@
 ################
 
 resource "helm_release" "ecr_exporter" {
-  count      = var.enable_ecr_exporter ? 1 : 0
+  count = var.enable_ecr_exporter ? 1 : 0
 
   name       = "ecr-exporter"
   namespace  = kubernetes_namespace.monitoring.id

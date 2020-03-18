@@ -38,3 +38,9 @@ variable "enable_thanos_compact" {
   default     = false
   type        = bool
 }
+
+variable "enable_prometheus_affinity" {
+  description = "Enable or not Prometheus node affinity (check helm values for the expressions)"
+  default     = false
+  type        = bool
+}

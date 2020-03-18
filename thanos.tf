@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "monitoring_assume" {
 
     principals {
       type        = "AWS"
-      identifiers = [ var.iam_role_nodes ]
+      identifiers = [var.iam_role_nodes]
     }
   }
 }
@@ -70,11 +70,11 @@ resource "helm_release" "thanos" {
   version   = "0.3.18"
 
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
-    enabled_compact        = var.enable_thanos_compact
-    monitoring_aws_role    = aws_iam_role.monitoring.name
+    enabled_compact     = var.enable_thanos_compact
+    monitoring_aws_role = aws_iam_role.monitoring.name
   })]
 
-  depends_on = [ helm_release.prometheus_operator ]
+  depends_on = [helm_release.prometheus_operator]
 
   lifecycle {
     ignore_changes = [keyring]
