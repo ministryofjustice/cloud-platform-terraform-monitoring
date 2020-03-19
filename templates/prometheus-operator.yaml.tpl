@@ -293,6 +293,15 @@ prometheus:
   ##
   prometheusSpec:
 
+    ## Tolerations for use with node taints
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations:
+      - key: "monitoring-node"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+
     ## External labels to add to any time series or alerts when communicating with external systems
     ##    
     externalLabels:
