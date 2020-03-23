@@ -293,6 +293,17 @@ prometheus:
   ##
   prometheusSpec:
 
+    %{ if enable_prometheus_affinity_and_tolerations ~}
+    ## Tolerations for use with node taints
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations:
+      - key: "monitoring-node"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+    %{ endif ~}
+
     ## External labels to add to any time series or alerts when communicating with external systems
     ##    
     externalLabels:
@@ -354,7 +365,7 @@ prometheus:
       annotations:
         iam.amazonaws.com/role: "${monitoring_aws_role}"
 
-    %{ if enable_prometheus_affinity ~}
+    %{ if enable_prometheus_affinity_and_tolerations ~}
     ## Assign custom affinity rules to the prometheus instance
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
     ##
