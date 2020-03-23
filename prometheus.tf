@@ -114,20 +114,20 @@ resource "helm_release" "prometheus_operator" {
   version   = "8.7.0"
 
   values = [templatefile("${path.module}/templates/prometheus-operator.yaml.tpl", {
-    alertmanager_ingress       = local.alertmanager_ingress
-    grafana_ingress            = local.grafana_ingress
-    grafana_root               = local.grafana_root
-    pagerduty_config           = var.pagerduty_config
-    alertmanager_routes        = "${join("", data.template_file.alertmanager_routes.*.rendered)}"
-    alertmanager_receivers     = "${join("", data.template_file.alertmanager_receivers.*.rendered)}"
-    prometheus_ingress         = local.prometheus_ingress
-    random_username            = random_id.username.hex
-    random_password            = random_id.password.hex
-    grafana_pod_annotation     = aws_iam_role.grafana_datasource.name
-    grafana_assumerolearn      = aws_iam_role.grafana_datasource.arn
-    monitoring_aws_role        = aws_iam_role.monitoring.name
-    clusterName                = terraform.workspace
-    enable_prometheus_affinity = var.enable_prometheus_affinity
+    alertmanager_ingress                       = local.alertmanager_ingress
+    grafana_ingress                            = local.grafana_ingress
+    grafana_root                               = local.grafana_root
+    pagerduty_config                           = var.pagerduty_config
+    alertmanager_routes                        = "${join("", data.template_file.alertmanager_routes.*.rendered)}"
+    alertmanager_receivers                     = "${join("", data.template_file.alertmanager_receivers.*.rendered)}"
+    prometheus_ingress                         = local.prometheus_ingress
+    random_username                            = random_id.username.hex
+    random_password                            = random_id.password.hex
+    grafana_pod_annotation                     = aws_iam_role.grafana_datasource.name
+    grafana_assumerolearn                      = aws_iam_role.grafana_datasource.arn
+    monitoring_aws_role                        = aws_iam_role.monitoring.name
+    clusterName                                = terraform.workspace
+    enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
   })]
 
   # Depends on Helm being installed
