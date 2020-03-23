@@ -46,7 +46,7 @@ resource "aws_iam_role_policy" "monitoring" {
   policy = data.aws_iam_policy_document.monitoring.json
 }
 
-# Kubernetes Secret holding thanos configuration file
+# Kubernetes Secret holding thanos configuration file (this is also used by Prometheus Operator)
 resource "kubernetes_secret" "thanos_config" {
   metadata {
     name      = "thanos-objstore-config"
@@ -64,6 +64,8 @@ resource "kubernetes_secret" "thanos_config" {
 # Thanos Helm Chart
 
 resource "helm_release" "thanos" {
+  count = var.enable_thanos_helm_chart ? 1 : 0
+
   name      = "thanos"
   namespace = kubernetes_namespace.monitoring.id
   chart     = "banzaicloud-stable/thanos"
