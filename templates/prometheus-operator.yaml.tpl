@@ -273,6 +273,11 @@ prometheusOperator:
 
   admissionWebhooks:
     enabled: true
+  
+  namespaces:
+    releaseNamespace: true
+    additional:
+    - kube-system
 
   ## Deploy CRDs used by Prometheus Operator.
   ##
