@@ -269,10 +269,10 @@ prometheusOperator:
   enabled: true
 
   tlsProxy:
-    enabled: false
+    enabled: true
 
   admissionWebhooks:
-    enabled: false
+    enabled: true
 
   ## Deploy CRDs used by Prometheus Operator.
   ##
