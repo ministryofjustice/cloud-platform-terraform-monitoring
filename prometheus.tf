@@ -108,10 +108,11 @@ EOS
 }
 
 resource "helm_release" "prometheus_operator" {
-  name      = "prometheus-operator"
-  chart     = "stable/prometheus-operator"
-  namespace = kubernetes_namespace.monitoring.id
-  version   = "8.7.0"
+  name       = "prometheus-operator"
+  repository = data.helm_repository.stable.metadata[0].name
+  chart      = "prometheus-operator"
+  namespace  = kubernetes_namespace.monitoring.id
+  version    = "8.7.0"
 
   values = [templatefile("${path.module}/templates/prometheus-operator.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
@@ -179,10 +180,11 @@ data "template_file" "prometheus_proxy" {
 }
 
 resource "helm_release" "prometheus_proxy" {
-  name      = "prometheus-proxy"
-  namespace = kubernetes_namespace.monitoring.id
-  chart     = "stable/oauth2-proxy"
-  version   = "0.9.1"
+  name       = "prometheus-proxy"
+  namespace  = kubernetes_namespace.monitoring.id
+  repository = data.helm_repository.stable.metadata[0].name
+  chart      = "oauth2-proxy"
+  version    = "0.9.1"
 
   values = [
     data.template_file.prometheus_proxy.rendered,
@@ -218,10 +220,11 @@ data "template_file" "alertmanager_proxy" {
 }
 
 resource "helm_release" "alertmanager_proxy" {
-  name      = "alertmanager-proxy"
-  namespace = "monitoring"
-  chart     = "stable/oauth2-proxy"
-  version   = "0.9.1"
+  name       = "alertmanager-proxy"
+  namespace  = "monitoring"
+  repository = data.helm_repository.stable.metadata[0].name
+  chart      = "oauth2-proxy"
+  version    = "0.9.1"
 
   values = [
     data.template_file.alertmanager_proxy.rendered,
