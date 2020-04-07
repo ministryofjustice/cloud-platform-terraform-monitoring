@@ -1,4 +1,4 @@
-# cloud-platform-terraform-prometheus
+# cloud-platform-terraform-monitoring
 
 Terraform module that deploy cloud-platform monitoring solution. It has support for components like: proxy, thanos, cloudwatch datasource for grafana, side-car, etc
 
@@ -6,7 +6,7 @@ Terraform module that deploy cloud-platform monitoring solution. It has support 
 
 ```hcl
 module "prometheus" {
-  source = "github.com/ministryofjustice/cloud-platform-terraform-prometheus?ref=0.0.1"
+  source = "github.com/ministryofjustice/cloud-platform-terraform-monitoring?ref=0.0.1"
 
   alertmanager_slack_receivers = var.alertmanager_slack_receivers
   iam_role_nodes               = data.aws_iam_role.nodes.arn
