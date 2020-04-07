@@ -184,7 +184,7 @@ resource "helm_release" "prometheus_proxy" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = data.helm_repository.stable.metadata[0].name
   chart      = "oauth2-proxy"
-  version    = "0.9.1"
+  version    = "2.4.1"
 
   values = [
     data.template_file.prometheus_proxy.rendered,
@@ -224,7 +224,7 @@ resource "helm_release" "alertmanager_proxy" {
   namespace  = "monitoring"
   repository = data.helm_repository.stable.metadata[0].name
   chart      = "oauth2-proxy"
-  version    = "0.9.1"
+  version    = "2.4.1"
 
   values = [
     data.template_file.alertmanager_proxy.rendered,
