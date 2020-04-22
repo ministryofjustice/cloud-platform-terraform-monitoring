@@ -395,7 +395,7 @@ prometheus:
 
     thanos: 
       baseImage: quay.io/thanos/thanos
-      version: v0.10.1
+      version: v0.11.0
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config 
