@@ -470,3 +470,103 @@ The are a number of severity levels that can be defined in the error_log. The fo
 + crit - There are problems that need to be critically addressed.
 + alert - Prompt action is required.
 + emerg - The system is in an unusable state and requires immediate attention.
+
+## Kube API Latency Warning
+
+```
+KubeAPILatencyWarning
+Severity: Warning
+```
+
+This alert is triggered when the 1 in 100 API call for a given resource and verb is taking longer than 1 second.
+
+Expression:
+```
+(cluster:apiserver_request_duration_seconds:mean5m{job="apiserver",resource!="ingresses",verb!="POST"}
+  > on(verb) group_left() (avg by(verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
+  >= 0) + 2 * stddev by(verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
+  >= 0))) > on(verb) group_left() 1.2 * avg by(verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
+  >= 0) and on(verb, resource) cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="apiserver",quantile="0.99"}
+  > 1
+```
+
+### Action
+
+Check the API logs to identify and get more information:
+
+```
+ stern --namespace kube-system kube-apiserver-ip
+```
+
+## Kube API Latency Critical
+
+```
+KubeAPILatencyCritical
+Severity: Critical
+```
+
+This alert is triggered when the 1 in 100 API call for a given resource and verb is taking longer than 4 second.
+
+Expression:
+```
+cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="apiserver",quantile="0.99",resource!="ingresses",verb!="POST"}
+  > 4
+```
+
+### Action
+
+Check the API logs to identify and get more information:
+
+```
+ stern --namespace kube-system kube-apiserver-ip
+```
+
+## Kube API Latency Warning - Ingress Post
+
+```
+KubeAPILatencyWarning-IngressPost
+Severity: Warning
+```
+
+This alert is triggered when the 1 in 100 API call for resource ingress and verb post is taking longer than 1 second.
+
+Expression:
+```
+(cluster:apiserver_request_duration_seconds:mean5m{job="apiserver",resource="ingresses",verb="POST"}
+  > on(verb) group_left() (avg by(verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
+  >= 0) + 2 * stddev by(verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
+  >= 0))) > on(verb) group_left() 1.2 * avg by(verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
+  >= 0) and on(verb, resource) cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="apiserver",quantile="0.99"}
+  > 1
+```
+
+### Action
+
+Check the API logs to identify and get more information:
+
+```
+ stern --namespace kube-system kube-apiserver-ip
+```
+
+## Kube API Latency Critical - Ingress Post
+
+```
+KubeAPILatencyCritical-IngressPost
+Severity: Critical
+```
+
+This alert is triggered when the 1 in 100 API call for resource ingress and verb post is taking longer than 4 second.
+
+Expression:
+```
+cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="apiserver",quantile="0.99",resource"ingresses",verb"POST"}
+  > 4
+```
+
+### Action
+
+Check the API logs to identify and get more information:
+
+```
+ stern --namespace kube-system kube-apiserver-ip
+```
