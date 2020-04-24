@@ -49,6 +49,9 @@ alertmanager:
       - match:
           alertname: PrometheusTargetScrapesDuplicate
         receiver: 'null'
+      - match:
+          alertname: KubeAPILatencyHigh
+        receiver: 'null'
       
       - match:
           severity: critical
