@@ -8,14 +8,21 @@ Terraform module that deploy cloud-platform monitoring solution. It has support 
 module "monitoring" {
   source = "github.com/ministryofjustice/cloud-platform-terraform-monitoring?ref=0.1.3"
 
-  alertmanager_slack_receivers = var.alertmanager_slack_receivers
-  iam_role_nodes               = data.aws_iam_role.nodes.arn
-  pagerduty_config             = var.pagerduty_config
-  enable_thanos                = true
+  alertmanager_slack_receivers               = var.alertmanager_slack_receivers
+  iam_role_nodes                             = data.aws_iam_role.nodes.arn
+  pagerduty_config                           = var.pagerduty_config
+  enable_ecr_exporter                        = terraform.workspace == local.live_workspace ? true : false
+  enable_cloudwatch_exporter                 = terraform.workspace == local.live_workspace ? true : false
+  enable_thanos_helm_chart                   = terraform.workspace == local.live_workspace ? true : false
+  enable_prometheus_affinity_and_tolerations = terraform.workspace == local.live_workspace ? true : false
+  
+  cluster_domain_name           = data.terraform_remote_state.cluster.outputs.cluster_domain_name
+  oidc_components_client_id     = data.terraform_remote_state.cluster.outputs.oidc_components_client_id
+  oidc_components_client_secret = data.terraform_remote_state.cluster.outputs.oidc_components_client_secret
+  oidc_issuer_url               = data.terraform_remote_state.cluster.outputs.oidc_issuer_url
 
-  # This module requires helm and OPA already deployed
   dependence_deploy = null_resource.deploy
-  dependence_opa    = helm_release.open-policy-agent
+  dependence_opa    = module.opa.helm_opa_status
 }
 ```
 
@@ -31,6 +38,12 @@ module "monitoring" {
 | enable_cloudwatch_exporter   | Conditional to deploy CloudWatch Exporter               | bool   | false | no |
 | dependence_deploy            | Dependency on helm                                      | string | | yes |
 | dependence_opa               | The key_pair name to be used in the bastion instance    | string | | yes |
+| cluster_domain_name          | Value used by externalDNS and certmanager               | string | | yes |
+| oidc_components_client_id    | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
+| oidc_components_client_secret | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
+| oidc_issuer_url              | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
+| eks                          | Are we deploying in EKS or not?                                                       | bool     | false   | no |
+| eks_cluster_oidc_issuer_url  | The OIDC issuer URL from the cluster, it is used for IAM ServiceAccount integration   | string     |  | no |
 
 ## Outputs
 

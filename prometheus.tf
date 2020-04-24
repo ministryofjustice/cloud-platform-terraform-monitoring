@@ -31,11 +31,11 @@ resource "kubernetes_secret" "grafana_secret" {
   }
 
   data = {
-    GF_AUTH_GENERIC_OAUTH_CLIENT_ID     = data.terraform_remote_state.cluster.outputs.oidc_components_client_id
-    GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET = data.terraform_remote_state.cluster.outputs.oidc_components_client_secret
-    GF_AUTH_GENERIC_OAUTH_AUTH_URL      = "${data.terraform_remote_state.cluster.outputs.oidc_issuer_url}authorize"
-    GF_AUTH_GENERIC_OAUTH_TOKEN_URL     = "${data.terraform_remote_state.cluster.outputs.oidc_issuer_url}oauth/token"
-    GF_AUTH_GENERIC_OAUTH_API_URL       = "${data.terraform_remote_state.cluster.outputs.oidc_issuer_url}userinfo"
+    GF_AUTH_GENERIC_OAUTH_CLIENT_ID     = var.oidc_components_client_id
+    GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET = var.oidc_components_client_secret
+    GF_AUTH_GENERIC_OAUTH_AUTH_URL      = "${var.oidc_issuer_url}authorize"
+    GF_AUTH_GENERIC_OAUTH_TOKEN_URL     = "${var.oidc_issuer_url}oauth/token"
+    GF_AUTH_GENERIC_OAUTH_API_URL       = "${var.oidc_issuer_url}userinfo"
   }
 
   type = "Opaque"
@@ -169,12 +169,12 @@ data "template_file" "prometheus_proxy" {
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "prometheus", local.live_domain) : format(
       "%s.%s",
       "prometheus.apps",
-      data.terraform_remote_state.cluster.outputs.cluster_domain_name,
+      var.cluster_domain_name,
     )
     exclude_paths = "^/-/healthy$"
-    issuer_url    = data.terraform_remote_state.cluster.outputs.oidc_issuer_url
-    client_id     = data.terraform_remote_state.cluster.outputs.oidc_components_client_id
-    client_secret = data.terraform_remote_state.cluster.outputs.oidc_components_client_secret
+    issuer_url    = var.oidc_issuer_url
+    client_id     = var.oidc_components_client_id
+    client_secret = var.oidc_components_client_secret
     cookie_secret = random_id.session_secret.b64_std
   }
 }
@@ -209,12 +209,12 @@ data "template_file" "alertmanager_proxy" {
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "alertmanager", local.live_domain) : format(
       "%s.%s",
       "alertmanager.apps",
-      data.terraform_remote_state.cluster.outputs.cluster_domain_name,
+      var.cluster_domain_name,
     )
     exclude_paths = "^/-/healthy$"
-    issuer_url    = data.terraform_remote_state.cluster.outputs.oidc_issuer_url
-    client_id     = data.terraform_remote_state.cluster.outputs.oidc_components_client_id
-    client_secret = data.terraform_remote_state.cluster.outputs.oidc_components_client_secret
+    issuer_url    = var.oidc_issuer_url
+    client_id     = var.oidc_components_client_id
+    client_secret = var.oidc_components_client_secret
     cookie_secret = random_id.session_secret.b64_std
   }
 }
@@ -240,3 +240,50 @@ resource "helm_release" "alertmanager_proxy" {
     ignore_changes = [keyring]
   }
 }
+
+######################
+# Grafana Cloudwatch #
+######################
+
+# Grafana datasource for cloudwatch
+# Ref: https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
+
+data "aws_iam_policy_document" "grafana_datasource_assume" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "AWS"
+      identifiers = [var.iam_role_nodes]
+    }
+  }
+}
+
+resource "aws_iam_role" "grafana_datasource" {
+  name               = "datasource.${var.cluster_domain_name}"
+  assume_role_policy = data.aws_iam_policy_document.grafana_datasource_assume.json
+}
+
+# Minimal policy permissions 
+# Ref: https://grafana.com/docs/grafana/latest/features/datasources/cloudwatch/#iam-policies
+
+data "aws_iam_policy_document" "grafana_datasource" {
+  statement {
+    actions = [
+      "cloudwatch:ListMetrics",
+      "cloudwatch:GetMetricStatistics",
+      "cloudwatch:GetMetricData",
+    ]
+    resources = ["*"]
+  }
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = [aws_iam_role.grafana_datasource.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "grafana_datasource" {
+  name   = "grafana-datasource"
+  role   = aws_iam_role.grafana_datasource.id
+  policy = data.aws_iam_policy_document.grafana_datasource.json
+}
+

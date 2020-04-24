@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "monitoring_assume" {
 }
 
 resource "aws_iam_role" "monitoring" {
-  name               = "monitoring.${data.terraform_remote_state.cluster.outputs.cluster_domain_name}"
+  name               = "monitoring.${var.cluster_domain_name}"
   assume_role_policy = data.aws_iam_policy_document.monitoring_assume.json
 }
 

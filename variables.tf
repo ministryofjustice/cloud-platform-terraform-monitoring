@@ -50,3 +50,32 @@ variable "enable_prometheus_affinity_and_tolerations" {
   default     = false
   type        = bool
 }
+
+variable "cluster_domain_name" {
+  description = "The cluster domain - used by externalDNS and certmanager to create URLs"
+}
+
+variable "oidc_components_client_id" {
+  description = "OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy)"
+}
+
+variable "oidc_components_client_secret" {
+  description = "OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy)"
+}
+
+variable "oidc_issuer_url" {
+  description = "Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy)"
+}
+
+# EKS variables
+variable "eks" {
+  description = "Where are you applying this modules in kOps cluster or in EKS (KIAM or KUBE2IAM?)"
+  type        = bool
+  default     = false
+}
+
+variable "eks_cluster_oidc_issuer_url" {
+  description = "If EKS variable is set to true this is going to be used when we create the IAM OIDC role"
+  type        = string
+  default     = ""
+}

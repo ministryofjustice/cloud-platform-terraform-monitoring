@@ -37,3 +37,39 @@ resource "helm_release" "ecr_exporter" {
   }
 }
 
+################
+# ECR Exporter #
+################
+
+data "aws_iam_policy_document" "ecr_exporter_assume" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "AWS"
+      identifiers = [var.iam_role_nodes]
+    }
+  }
+}
+
+resource "aws_iam_role" "ecr_exporter" {
+  name               = "ecr-exporter.${var.cluster_domain_name}"
+  assume_role_policy = data.aws_iam_policy_document.ecr_exporter_assume.json
+}
+
+data "aws_iam_policy_document" "ecr_exporter" {
+  statement {
+    actions = [
+      "ecr:DescribeRepositories",
+      "ecr:ListImages",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "ecr_exporter" {
+  name   = "ecr-exporter"
+  role   = aws_iam_role.ecr_exporter.id
+  policy = data.aws_iam_policy_document.ecr_exporter.json
+}
