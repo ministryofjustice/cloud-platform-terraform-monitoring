@@ -20,6 +20,7 @@ config: |-
   # To add additional Cloudwatch metrics, please append this config list.
   region: eu-west-2
   period_seconds: 240
+  set_timestamp: false
   metrics:
   # RDS Metrics
   - aws_namespace: AWS/RDS
@@ -226,11 +227,11 @@ serviceMonitor:
   # Set the namespace the ServiceMonitor should be deployed
   namespace: monitoring
   # Set how frequently Prometheus should scrape
-  interval: 120s
+  interval: 240s
   # Set path to cloudwatch-exporter telemtery-path
   telemetryPath: /metrics
   # Set labels for the ServiceMonitor, use this to define your scrape label for Prometheus Operator
   labels:
     app: prometheus-cloudwatch-exporter
   # Set timeout for scrape
-  timeout: 30s
+  timeout: 90s
