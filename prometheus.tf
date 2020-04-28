@@ -126,9 +126,14 @@ resource "helm_release" "prometheus_operator" {
     random_password                            = random_id.password.hex
     grafana_pod_annotation                     = aws_iam_role.grafana_datasource.name
     grafana_assumerolearn                      = aws_iam_role.grafana_datasource.arn
-    monitoring_aws_role                        = aws_iam_role.monitoring.name
+    monitoring_aws_role                        = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
+    storage_class                              = var.eks ? "gp2" : "default"
+
+    # This is for EKS
+    eks                                        = var.eks
+    eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
   })]
 
   # Depends on Helm being installed

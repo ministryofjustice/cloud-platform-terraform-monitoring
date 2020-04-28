@@ -1,21 +1,20 @@
-# Values file for Helm chart stable/prometheus-cloudwatch-exporter
-# This YAML-formatted file will be called by Terraform.
-# Declare variables to be passed into your templates.
 
-replicaCount: 1
-
-image:
-  repository: prom/cloudwatch-exporter
-  tag: cloudwatch_exporter-0.6.0
-  pullPolicy: IfNotPresent
-
+%{ if eks == false ~}
 aws:
-  role:
-  # The name of a pre-created secret in which AWS credentials are stored. When
-  # set, aws_access_key_id is assumed to be in a field called access_key,
-  # aws_secret_access_key is assumed to be in a field called secret_key, and the
-  # session token, if it exists, is assumed to be in a field called
-  # security_token
+  role: "${iam_role}"
+%{ endif ~}
+
+securityContext:
+  runAsUser: 65534
+  fsGroup: 65534
+
+serviceAccount:
+  create: true
+  name: "cloud-platform-cloudwatch-exporter"
+%{ if eks ~}
+  annotations:
+    eks.amazonaws.com/role-arn: "${eks_service_account}"
+%{ endif ~}
 
 config: |-
   # To add additional Cloudwatch metrics, please append this config list.
