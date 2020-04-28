@@ -162,12 +162,21 @@ alertmanager:
 grafana:
   enabled: true
 
+%{ if eks ~}
+  serviceAccount:
+    create: true
+    annotations:
+      eks.amazonaws.com/role-arn: "${grafana_assumerolearn}"
+%{ endif ~}
+
   adminUser: "${ random_username }"
   adminPassword: "${ random_password }"
 
   ## Pod Annotations
+%{ if eks == false ~}
   podAnnotations: 
     iam.amazonaws.com/role: "${ grafana_pod_annotation }"
+%{ endif ~}
 
   ingress:
     ## If true, Prometheus Ingress will be created
@@ -184,12 +193,12 @@ grafana:
   env:
     GF_SERVER_ROOT_URL: "${ grafana_root }"
     GF_ANALYTICS_REPORTING_ENABLED: "false"
-    GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    GF_AUTH_DISABLE_LOGIN_FORM: "false"
     GF_USERS_ALLOW_SIGN_UP: "false"
     GF_USERS_AUTO_ASSIGN_ORG_ROLE: "Viewer"
     GF_USERS_VIEWERS_CAN_EDIT: "true"
     GF_SMTP_ENABLED: "false"
-    GF_AUTH_GENERIC_OAUTH_ENABLED: "true"
+    GF_AUTH_GENERIC_OAUTH_ENABLED: "false"
     GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: "true"
     GF_AUTH_GENERIC_OAUTH_NAME: "Auth0"
     GF_AUTH_GENERIC_OAUTH_SCOPES: "openid profile email"
