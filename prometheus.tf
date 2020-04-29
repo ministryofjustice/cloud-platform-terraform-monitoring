@@ -274,6 +274,8 @@ resource "aws_iam_role" "grafana_datasource" {
 # Ref: https://grafana.com/docs/grafana/latest/features/datasources/cloudwatch/#iam-policies
 
 data "aws_iam_policy_document" "grafana_datasource" {
+  count = var.eks ? 0 : 1
+
   statement {
     actions = [
       "cloudwatch:ListMetrics",
@@ -293,7 +295,7 @@ resource "aws_iam_role_policy" "grafana_datasource" {
 
   name   = "grafana-datasource"
   role   = aws_iam_role.grafana_datasource.0.id
-  policy = data.aws_iam_policy_document.grafana_datasource.json
+  policy = data.aws_iam_policy_document.grafana_datasource.0.json
 }
 
 # IRSA For the CloudWatch grafana datasource
