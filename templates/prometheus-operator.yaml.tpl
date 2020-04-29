@@ -412,11 +412,11 @@ prometheus:
     ##
     retention: 1d
 
-    %{ if eks == false ~}
+%{ if eks == false ~}
     podMetadata:
       annotations:
         iam.amazonaws.com/role: "${monitoring_aws_role}"
-    %{ endif ~}
+%{ endif ~}
 
     %{ if enable_prometheus_affinity_and_tolerations ~}
     ## Assign custom affinity rules to the prometheus instance
