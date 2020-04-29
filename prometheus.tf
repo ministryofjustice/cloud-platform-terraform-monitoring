@@ -31,11 +31,11 @@ resource "kubernetes_secret" "grafana_secret" {
   }
 
   data = {
-    GF_AUTH_GENERIC_OAUTH_CLIENT_ID     = data.terraform_remote_state.cluster.outputs.oidc_components_client_id
-    GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET = data.terraform_remote_state.cluster.outputs.oidc_components_client_secret
-    GF_AUTH_GENERIC_OAUTH_AUTH_URL      = "${data.terraform_remote_state.cluster.outputs.oidc_issuer_url}authorize"
-    GF_AUTH_GENERIC_OAUTH_TOKEN_URL     = "${data.terraform_remote_state.cluster.outputs.oidc_issuer_url}oauth/token"
-    GF_AUTH_GENERIC_OAUTH_API_URL       = "${data.terraform_remote_state.cluster.outputs.oidc_issuer_url}userinfo"
+    GF_AUTH_GENERIC_OAUTH_CLIENT_ID     = var.oidc_components_client_id
+    GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET = var.oidc_components_client_secret
+    GF_AUTH_GENERIC_OAUTH_AUTH_URL      = "${var.oidc_issuer_url}authorize"
+    GF_AUTH_GENERIC_OAUTH_TOKEN_URL     = "${var.oidc_issuer_url}oauth/token"
+    GF_AUTH_GENERIC_OAUTH_API_URL       = "${var.oidc_issuer_url}userinfo"
   }
 
   type = "Opaque"
@@ -124,11 +124,16 @@ resource "helm_release" "prometheus_operator" {
     prometheus_ingress                         = local.prometheus_ingress
     random_username                            = random_id.username.hex
     random_password                            = random_id.password.hex
-    grafana_pod_annotation                     = aws_iam_role.grafana_datasource.name
-    grafana_assumerolearn                      = aws_iam_role.grafana_datasource.arn
-    monitoring_aws_role                        = aws_iam_role.monitoring.name
+    grafana_pod_annotation                     = var.eks ? module.iam_assumable_role_grafana_datasource.this_iam_role_name : aws_iam_role.grafana_datasource.0.name
+    grafana_assumerolearn                      = var.eks ? module.iam_assumable_role_grafana_datasource.this_iam_role_arn : aws_iam_role.grafana_datasource.0.arn
+    monitoring_aws_role                        = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
+    storage_class                              = var.eks ? "gp2" : "default"
+
+    # This is for EKS
+    eks                                        = var.eks
+    eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
   })]
 
   # Depends on Helm being installed
@@ -169,12 +174,12 @@ data "template_file" "prometheus_proxy" {
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "prometheus", local.live_domain) : format(
       "%s.%s",
       "prometheus.apps",
-      data.terraform_remote_state.cluster.outputs.cluster_domain_name,
+      var.cluster_domain_name,
     )
     exclude_paths = "^/-/healthy$"
-    issuer_url    = data.terraform_remote_state.cluster.outputs.oidc_issuer_url
-    client_id     = data.terraform_remote_state.cluster.outputs.oidc_components_client_id
-    client_secret = data.terraform_remote_state.cluster.outputs.oidc_components_client_secret
+    issuer_url    = var.oidc_issuer_url
+    client_id     = var.oidc_components_client_id
+    client_secret = var.oidc_components_client_secret
     cookie_secret = random_id.session_secret.b64_std
   }
 }
@@ -209,12 +214,12 @@ data "template_file" "alertmanager_proxy" {
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "alertmanager", local.live_domain) : format(
       "%s.%s",
       "alertmanager.apps",
-      data.terraform_remote_state.cluster.outputs.cluster_domain_name,
+      var.cluster_domain_name,
     )
     exclude_paths = "^/-/healthy$"
-    issuer_url    = data.terraform_remote_state.cluster.outputs.oidc_issuer_url
-    client_id     = data.terraform_remote_state.cluster.outputs.oidc_components_client_id
-    client_secret = data.terraform_remote_state.cluster.outputs.oidc_components_client_secret
+    issuer_url    = var.oidc_issuer_url
+    client_id     = var.oidc_components_client_id
+    client_secret = var.oidc_components_client_secret
     cookie_secret = random_id.session_secret.b64_std
   }
 }
@@ -238,5 +243,89 @@ resource "helm_release" "alertmanager_proxy" {
 
   lifecycle {
     ignore_changes = [keyring]
+  }
+}
+
+######################
+# Grafana Cloudwatch #
+######################
+
+# Grafana datasource for cloudwatch
+# Ref: https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
+
+data "aws_iam_policy_document" "grafana_datasource_assume" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "AWS"
+      identifiers = [var.iam_role_nodes]
+    }
+  }
+}
+
+resource "aws_iam_role" "grafana_datasource" {
+  count = var.eks ? 0 : 1
+
+  name               = "datasource.${var.cluster_domain_name}"
+  assume_role_policy = data.aws_iam_policy_document.grafana_datasource_assume.json
+}
+
+# Minimal policy permissions 
+# Ref: https://grafana.com/docs/grafana/latest/features/datasources/cloudwatch/#iam-policies
+
+data "aws_iam_policy_document" "grafana_datasource" {
+  count = var.eks ? 0 : 1
+
+  statement {
+    actions = [
+      "cloudwatch:ListMetrics",
+      "cloudwatch:GetMetricStatistics",
+      "cloudwatch:GetMetricData",
+    ]
+    resources = ["*"]
+  }
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = [aws_iam_role.grafana_datasource.0.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "grafana_datasource" {
+  count = var.eks ? 0 : 1
+
+  name   = "grafana-datasource"
+  role   = aws_iam_role.grafana_datasource.0.id
+  policy = data.aws_iam_policy_document.grafana_datasource.0.json
+}
+
+# IRSA For the CloudWatch grafana datasource
+
+module "iam_assumable_role_grafana_datasource" {
+  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  version                       = "~> v2.6.0"
+  create_role                   = var.eks ? true : false
+  role_name                     = "datasource-test.${var.cluster_domain_name}"
+  provider_url                  = var.eks_cluster_oidc_issuer_url
+  role_policy_arns              = [var.eks ? aws_iam_policy.grafana_datasource.0.arn : "" ]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
+}
+
+resource "aws_iam_policy" "grafana_datasource" {
+  count = var.eks ? 1 : 0
+
+  name_prefix = "datasource"
+  description = "EKS grafana datasource policy for cluster ${var.cluster_domain_name}"
+  policy      = data.aws_iam_policy_document.grafana_datasource_irsa.json
+}
+
+data "aws_iam_policy_document" "grafana_datasource_irsa" {
+
+  statement {
+    actions = [
+      "cloudwatch:ListMetrics",
+      "cloudwatch:GetMetricStatistics",
+      "cloudwatch:GetMetricData",
+    ]
+    resources = ["*"]
   }
 }

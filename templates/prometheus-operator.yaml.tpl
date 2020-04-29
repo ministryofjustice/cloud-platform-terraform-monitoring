@@ -7,6 +7,10 @@
 defaultRules:
   create: true
   rules:
+%{ if eks ~}
+    kubeScheduler: false
+    etcd: false
+%{ endif ~}
     general: false
     kubernetesApps: false
 
@@ -142,7 +146,7 @@ alertmanager:
     storage:
     volumeClaimTemplate:
       spec:
-        storageClassName: default
+        storageClassName: ${storage_class}
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
@@ -158,12 +162,21 @@ alertmanager:
 grafana:
   enabled: true
 
+%{ if eks ~}
+  serviceAccount:
+    create: true
+    annotations:
+      eks.amazonaws.com/role-arn: "${grafana_assumerolearn}"
+%{ endif ~}
+
   adminUser: "${ random_username }"
   adminPassword: "${ random_password }"
 
   ## Pod Annotations
+%{ if eks == false ~}
   podAnnotations: 
     iam.amazonaws.com/role: "${ grafana_pod_annotation }"
+%{ endif ~}
 
   ingress:
     ## If true, Prometheus Ingress will be created
@@ -221,33 +234,61 @@ grafana:
 ## Component scraping coreDns. Use either this or kubeDns
 ##
 coreDns:
+%{ if eks ~}
+  enabled: true
+%{ else ~}
   enabled: false
+%{ endif ~}
 
 ## Component scraping kubeDns. Use either this or coreDns
 ##
 kubeDns:
+%{ if eks ~}
+  enabled: false
+%{ else ~}
   enabled: true
+%{ endif ~}
+
 
 ## Component scraping etcd
 ##
 kubeEtcd:
+%{ if eks ~}
+  enabled: false
+%{ else ~}
   enabled: true
+%{ endif ~}
 
 ## Component scraping kube scheduler
 ##
 kubeScheduler:
+%{ if eks ~}
+  enabled: false
+%{ else ~}
   enabled: true
-
   ## If using kubeScheduler.endpoints only the port and targetPort are used
   ##
   service:
     selector:
       k8s-app: kube-scheduler
+%{ endif ~}
+
+
+kubeProxy:
+%{ if eks ~}
+  enabled: false
+%{ else ~}
+  enabled: true
+%{ endif ~}
 
 ## Component scraping the kube controller manager
 ##
 kubeControllerManager:
+%{ if eks ~}
+  enabled: false
+%{ else ~}
   enabled: true
+%{ endif ~}
 
   ## If using kubeControllerManager.endpoints only the port and targetPort are used
   ##
@@ -290,6 +331,13 @@ prometheusOperator:
 prometheus:
 
   enabled: true
+
+%{ if eks ~}
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: "${eks_service_account}"
+%{ endif ~}
+      
 
   ## Settings affecting prometheusSpec
   ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
@@ -364,9 +412,11 @@ prometheus:
     ##
     retention: 1d
 
+    %{ if eks == false ~}
     podMetadata:
       annotations:
         iam.amazonaws.com/role: "${monitoring_aws_role}"
+    %{ endif ~}
 
     %{ if enable_prometheus_affinity_and_tolerations ~}
     ## Assign custom affinity rules to the prometheus instance
@@ -389,7 +439,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: default
+          storageClassName: ${storage_class}
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
