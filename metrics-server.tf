@@ -6,7 +6,7 @@ resource "helm_release" "metrics_server" {
   namespace  = "kube-system"
   version    = "2.8.8"
 
-  depends_on = [null_resource.deploy]
+  depends_on = [var.dependence_deploy]
 
   lifecycle {
     ignore_changes = [keyring]
