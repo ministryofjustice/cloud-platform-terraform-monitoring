@@ -307,6 +307,13 @@ kube-state-metrics:
   image:
     tag: v1.7.0
 
+  collectors:
+    validatingwebhookconfigurations: false
+    networkpolicies: false
+    volumeattachments: false
+    mutatingwebhookconfigurations: false
+    verticalpodautoscalers: false
+
 ## Manages Prometheus and Alertmanager components
 ##
 prometheusOperator:
@@ -364,49 +371,56 @@ prometheus:
     ##
     externalUrl: "${ prometheus_ingress }"
 
-    ## Namespaces to be selected for PrometheusRules discovery.
-    ## If unspecified, only the same namespace as the Prometheus object is in is used.
+    ## If true, a nil or {} value for prometheus.prometheusSpec.ruleSelector will cause the
+    ## prometheus resource to be created with selectors based on values in the helm deployment,
+    ## which will also match the PrometheusRule resources created
     ##
-    ruleNamespaceSelector:
-      any: true
+    ruleSelectorNilUsesHelmValues: false
 
     ## Rules CRD selector
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/design.md
     ## If unspecified the release `app` and `release` will be used as the label selector
     ## to load rules
     ##
-    ruleSelector:
-      any: true
-    ## Example which select all prometheusrules resources
-    ## with label "prometheus" with values any of "example-rules" or "example-rules-2"
-    # ruleSelector:
-    #   matchExpressions:
-    #     - key: prometheus
-    #       operator: In
-    #       values:
-    #         - example-rules
-    #         - example-rules-2
-    #
-    ## Example which select all prometheusrules resources with label "role" set to "example-rules"
-    # ruleSelector:
-    #   matchLabels:
-    #     role: example-rules
+    ruleSelector: {}
+
+    ## Namespaces to be selected for PrometheusRules discovery.
+    ## If nil, select own namespace. Namespaces to be selected for ServiceMonitor discovery.
+    ## See https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#namespaceselector for usage
+    ##
+    ruleNamespaceSelector: {}
+
+    ## If true, a nil or {} value for prometheus.prometheusSpec.serviceMonitorSelector will cause the
+    ## prometheus resource to be created with selectors based on values in the helm deployment,
+    ## which will also match the servicemonitors created
+    ##
+    serviceMonitorSelectorNilUsesHelmValues: false
 
     ## serviceMonitorSelector will limit which servicemonitors are used to create scrape
     ## configs in Prometheus. See serviceMonitorSelectorUseHelmLabels
     ##
-    serviceMonitorSelector:
-      any: true
-
-    # serviceMonitorSelector: {}
-    #   matchLabels:
-    #     prometheus: somelabel
+    serviceMonitorSelector: {}
 
     ## serviceMonitorNamespaceSelector will limit namespaces from which serviceMonitors are used to create scrape
     ## configs in Prometheus. By default all namespaces will be used
     ##
-    serviceMonitorNamespaceSelector:
-      any: true
+    serviceMonitorNamespaceSelector: {}
+
+    ## If true, a nil or {} value for prometheus.prometheusSpec.podMonitorSelector will cause the
+    ## prometheus resource to be created with selectors based on values in the helm deployment,
+    ## which will also match the podmonitors created
+    ##
+    podMonitorSelectorNilUsesHelmValues: false
+
+    ## PodMonitors to be selected for target discovery.
+    ## If {}, select all PodMonitors
+    ##
+    podMonitorSelector: {}
+
+    ## Namespaces to be selected for PodMonitor discovery.
+    ## See https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#namespaceselector for usage
+    ##
+    podMonitorNamespaceSelector: {}
 
     ## How long to retain metrics
     ##
@@ -444,7 +458,6 @@ prometheus:
           resources:
             requests:
               storage: 750Gi
-        selector: {}
 
     thanos: 
       baseImage: quay.io/thanos/thanos
