@@ -112,7 +112,7 @@ resource "helm_release" "prometheus_operator" {
   repository = data.helm_repository.stable.metadata[0].name
   chart      = "prometheus-operator"
   namespace  = kubernetes_namespace.monitoring.id
-  version    = "8.7.0"
+  version    = "8.13.7"
 
   values = [templatefile("${path.module}/templates/prometheus-operator.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
