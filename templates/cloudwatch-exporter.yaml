@@ -8,6 +8,14 @@ securityContext:
   runAsUser: 65534
   fsGroup: 65534
 
+livenessProbe:
+  periodSeconds: 120
+  timeoutSeconds: 60
+
+readinessProbe:
+  periodSeconds: 120
+  timeoutSeconds: 60
+
 serviceAccount:
   create: true
   name: "cloud-platform-cloudwatch-exporter"
