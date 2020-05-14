@@ -42,6 +42,9 @@ alertmanager:
           alertname: DeadMansSwitch
         receiver: 'null'
       - match:
+          alertname: AggregatedAPIDown
+        receiver: 'null'
+      - match:
           alertname: DeploymentReplicasAreOutdated
         receiver: 'null'
       - match:
