@@ -306,7 +306,7 @@ module "iam_assumable_role_grafana_datasource" {
   create_role                   = var.eks ? true : false
   role_name                     = "datasource-test.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
-  role_policy_arns              = [var.eks ? aws_iam_policy.grafana_datasource.0.arn : "" ]
+  role_policy_arns              = [var.eks && length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.0.arn : "" ]
   oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
 }
 
