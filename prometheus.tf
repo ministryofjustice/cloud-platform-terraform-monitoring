@@ -124,8 +124,8 @@ resource "helm_release" "prometheus_operator" {
     prometheus_ingress                         = local.prometheus_ingress
     random_username                            = random_id.username.hex
     random_password                            = random_id.password.hex
-    grafana_pod_annotation                     = var.eks ? module.iam_assumable_role_grafana_datasource.this_iam_role_name : aws_iam_role.grafana_datasource.0.name
-    grafana_assumerolearn                      = var.eks ? module.iam_assumable_role_grafana_datasource.this_iam_role_arn : aws_iam_role.grafana_datasource.0.arn
+    grafana_pod_annotation                     = var.eks ? "module.iam_assumable_role_grafana_datasource.this_iam_role_name" : aws_iam_role.grafana_datasource.0.name
+    grafana_assumerolearn                      = var.eks ? "module.iam_assumable_role_grafana_datasource.this_iam_role_arn" : aws_iam_role.grafana_datasource.0.arn
     monitoring_aws_role                        = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
@@ -299,33 +299,32 @@ resource "aws_iam_role_policy" "grafana_datasource" {
 }
 
 # IRSA For the CloudWatch grafana datasource
-
-module "iam_assumable_role_grafana_datasource" {
-  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "~> v2.6.0"
-  create_role                   = var.eks ? true : false
-  role_name                     = "datasource-test.${var.cluster_domain_name}"
-  provider_url                  = var.eks_cluster_oidc_issuer_url
-  role_policy_arns              = [var.eks && length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.0.arn : "" ]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
-}
-
-resource "aws_iam_policy" "grafana_datasource" {
-  count = var.eks ? 1 : 0
-
-  name_prefix = "datasource"
-  description = "EKS grafana datasource policy for cluster ${var.cluster_domain_name}"
-  policy      = data.aws_iam_policy_document.grafana_datasource_irsa.json
-}
-
-data "aws_iam_policy_document" "grafana_datasource_irsa" {
-
-  statement {
-    actions = [
-      "cloudwatch:ListMetrics",
-      "cloudwatch:GetMetricStatistics",
-      "cloudwatch:GetMetricData",
-    ]
-    resources = ["*"]
-  }
-}
+# module "iam_assumable_role_grafana_datasource" {
+#   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+#   version                       = "~> v2.6.0"
+#   create_role                   = var.eks ? true : false
+#   role_name                     = "datasource-test.${var.cluster_domain_name}"
+#   provider_url                  = var.eks_cluster_oidc_issuer_url
+#   role_policy_arns              = [var.eks && length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.0.arn : "" ]
+#   oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
+# }
+# 
+# resource "aws_iam_policy" "grafana_datasource" {
+#   count = var.eks ? 1 : 0
+# 
+#   name_prefix = "datasource"
+#   description = "EKS grafana datasource policy for cluster ${var.cluster_domain_name}"
+#   policy      = data.aws_iam_policy_document.grafana_datasource_irsa.json
+# }
+# 
+# data "aws_iam_policy_document" "grafana_datasource_irsa" {
+# 
+#   statement {
+#     actions = [
+#       "cloudwatch:ListMetrics",
+#       "cloudwatch:GetMetricStatistics",
+#       "cloudwatch:GetMetricData",
+#     ]
+#     resources = ["*"]
+#   }
+# }
