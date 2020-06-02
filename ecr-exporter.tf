@@ -28,7 +28,6 @@ resource "helm_release" "ecr_exporter" {
   }
 
   depends_on = [
-    var.dependence_deploy,
     helm_release.prometheus_operator,
   ]
 

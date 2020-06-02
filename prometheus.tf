@@ -138,7 +138,6 @@ resource "helm_release" "prometheus_operator" {
 
   # Depends on Helm being installed
   depends_on = [
-    var.dependence_deploy,
     var.dependence_opa,
     kubernetes_secret.grafana_secret,
     kubernetes_secret.thanos_config,
@@ -196,7 +195,6 @@ resource "helm_release" "prometheus_proxy" {
   ]
 
   depends_on = [
-    var.dependence_deploy,
     var.dependence_opa,
     random_id.session_secret,
   ]
@@ -236,7 +234,6 @@ resource "helm_release" "alertmanager_proxy" {
   ]
 
   depends_on = [
-    var.dependence_deploy,
     var.dependence_opa,
     random_id.session_secret,
   ]

@@ -21,7 +21,6 @@ module "monitoring" {
   oidc_components_client_secret = data.terraform_remote_state.cluster.outputs.oidc_components_client_secret
   oidc_issuer_url               = data.terraform_remote_state.cluster.outputs.oidc_issuer_url
 
-  dependence_deploy = null_resource.deploy
   dependence_opa    = module.opa.helm_opa_status
 }
 ```
@@ -36,7 +35,6 @@ module "monitoring" {
 | enable_thanos                | Enable or not Thanos                                    | bool   | false | no |
 | enable_ecr_exporter          | Conditional to deploy ECR Exporter                      | bool   | false | no |
 | enable_cloudwatch_exporter   | Conditional to deploy CloudWatch Exporter               | bool   | false | no |
-| dependence_deploy            | Dependency on helm                                      | string | | yes |
 | dependence_opa               | The key_pair name to be used in the bastion instance    | string | | yes |
 | cluster_domain_name          | Value used by externalDNS and certmanager               | string | | yes |
 | oidc_components_client_id    | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
