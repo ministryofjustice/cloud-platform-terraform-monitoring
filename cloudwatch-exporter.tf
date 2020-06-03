@@ -18,7 +18,6 @@ resource "helm_release" "cloudwatch_exporter" {
   })]
 
   depends_on = [
-    var.dependence_deploy,
     helm_release.prometheus_operator,
   ]
 
