@@ -1,4 +1,3 @@
-
 variable "alertmanager_slack_receivers" {
   description = "A list of configuration values for Slack receivers"
   type        = list
@@ -11,10 +10,6 @@ variable "iam_role_nodes" {
 
 variable "pagerduty_config" {
   description = "Add PagerDuty key to allow integration with a PD service."
-}
-
-variable "dependence_deploy" {
-  description = "Deploy Module dependences in order to be executed."
 }
 
 variable "dependence_opa" {
