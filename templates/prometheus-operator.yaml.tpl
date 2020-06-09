@@ -165,6 +165,11 @@ alertmanager:
 grafana:
   enabled: true
 
+  image:
+    repository: grafana/grafana
+    tag: 7.0.2
+    pullPolicy: IfNotPresent
+
 %{ if eks ~}
   serviceAccount:
     create: true
