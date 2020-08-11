@@ -16,7 +16,7 @@ spec:
         severity: warning
       annotations:
         message: 'A node is reporting low disk space below 10%. Action is required on a node.'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#node-disk-space-low
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#node-disk-space-low
     - alert: CPU-High
       expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
       for: 5m
@@ -24,7 +24,7 @@ spec:
         severity: warning
       annotations:
         message: This device's CPU usage has exceeded the threshold with a value of {{ $value }}. Instance {{ $labels.instance }} CPU usage is dangerously high
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#cpu-high
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#cpu-high
     - alert: CPU-Critical
       expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
       for: 5m
@@ -32,7 +32,7 @@ spec:
         severity: critical
       annotations:
         message: This device's CPU usage has exceeded the threshold with a value of {{ $value }}.Instance {{ $labels.instance }} CPU usage is critically high
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#cpu-critical
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#cpu-critical
     - alert: Memory-High
       expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / (node_memory_MemTotal_bytes) * 100 > 80
       for: 5m
@@ -40,7 +40,7 @@ spec:
         severity: warning
       annotations:
         message: '{{ $labels.instance }} has high memory usage for than 5 minutes. Instance {{ $labels.instance }} memory has high usage.'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#memory-high
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#memory-high
     - alert: Memory-Critical
       expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / (node_memory_MemTotal_bytes) * 100 > 95
       for: 5m
@@ -48,7 +48,7 @@ spec:
         severity: critical
       annotations:
         message: '{{ $labels.instance }} has high memory usage for than 5 minutes. Instance {{ $labels.instance }} memory has critically high usage.'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#memory-critical 
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#memory-critical 
     - alert: External-DNSDown
       expr: kube_deployment_status_replicas_available{deployment="external-dns"} == 0
       for: 5m
@@ -56,7 +56,7 @@ spec:
         severity: warning
       annotations: 
         message: external-dns container has not been running in the namespace 'kube-system' for 5 minutes.
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#kubednsdown
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#kubednsdown
     - alert: NginxIngressPodDown
       expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"^nginx-ingress-acme-controller.*"})> 0
       for: 5m
@@ -64,7 +64,7 @@ spec:
         severity: warning
       annotations:
         message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace. 1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#nginxingresspoddown
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
 
     - alert: NginxIngressDown
       expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"^nginx-ingress-acme-controller.*"})> 5
@@ -73,7 +73,7 @@ spec:
         severity: critical
       annotations:
         message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace. 1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#nginxingresspoddown
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
 
     - alert: NginxIngressPodPending
       expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown",pod=~"^nginx-ingress-acme-controller.*"})> 0
@@ -82,7 +82,7 @@ spec:
         severity: warning
       annotations:
         message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace. 1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#nginxingresspoddown
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
 
     - alert: RootVolUtilisation-High
       expr: (node_filesystem_size_bytes {mountpoint="/"} - node_filesystem_avail_bytes {mountpoint="/"} ) / (node_filesystem_size_bytes {mountpoint="/"} ) * 100 >85
@@ -91,7 +91,7 @@ spec:
         severity: warning
       annotations:
         message: '{{ $labels.instance }} has exceeded the threshold of root volume utilisation with a value of {{ $value }}. Instance {{ $labels.instance }} root volume utilisation usage is high'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#root-volume-utilisation---high
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#root-volume-utilisation---high
     - alert: RootVolUtilisation-Critical
       expr: (node_filesystem_size_bytes {mountpoint="/"} - node_filesystem_avail_bytes {mountpoint="/"} ) / (node_filesystem_size_bytes {mountpoint="/"} ) * 100 >95
       for: 1m
@@ -99,7 +99,7 @@ spec:
         severity: critical
       annotations:
         message: '{{ $labels.instance }} has exceeded the threshold of root volume utilisation with a value of {{ $value }}. Instance {{ $labels.instance }} root volume utilisation usage is critically high'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#root-volume-utilisation---critical
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#root-volume-utilisation---critical
     - alert: LoadBalancer5XXCountHigh
       expr: |-
         count by (service) (increase(http_requests_total{code=~"5.*"}[15m]))  >=  10
@@ -108,11 +108,11 @@ spec:
         severity: warning
       annotations:
         message: HTTPCode_Target_5XX_Count high for `{{$labels.service}}. HTTPCode_Target_5XX_Count high'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
     - alert: NginxConfigReloadFailureWarning
       annotations:
         message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#nginx-config-reload-failure
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure
       expr: nginx_ingress_controller_config_last_reload_successful == 0
       for: 3m
       labels:
@@ -120,9 +120,8 @@ spec:
     - alert: NginxConfigReloadFailure
       annotations:
         message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-alerts/Custom-Alerts.md#nginx-config-reload-failure
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure:x
       expr: nginx_ingress_controller_config_last_reload_successful == 0
       for: 5m
       labels:
         severity: critical
-        
