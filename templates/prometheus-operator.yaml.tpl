@@ -187,9 +187,9 @@ grafana:
 %{ endif ~}
 
   ingress:
-    ## If true, Prometheus Ingress will be created
-    ##
     enabled: true
+    annotations: 
+      kubernetes.io/ingress.class: monitoring
 
     hosts:
     - "${ grafana_ingress }"
