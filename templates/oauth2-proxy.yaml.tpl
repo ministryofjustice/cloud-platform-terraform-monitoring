@@ -34,8 +34,13 @@ ingress:
     - hosts:
       - "${hostname}"
 
-  annotations:
-    kubernetes.io/ingress.class: monitoring
+  # annotations:
+  #   kubernetes.io/ingress.class: nginx
+  #   kubernetes.io/tls-acme: "true"
+
+  # annotations:
+  #   kubernetes.io/ingress.class: nginx
+  #   kubernetes.io/tls-acme: "true"
   tls:
     - hosts:
       - "${hostname}"
