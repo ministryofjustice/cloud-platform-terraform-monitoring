@@ -28,27 +28,10 @@ extraArgs:
 ingress:
   enabled: true
   path: /
+  annotations:
+    kubernetes.io/ingress.class: monitoring
   hosts:
     - "${hostname}"
   tls:
     - hosts:
       - "${hostname}"
-
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: "true"
-
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: "true"
-  tls:
-    - hosts:
-      - "${hostname}"
-
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 300Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 300Mi
