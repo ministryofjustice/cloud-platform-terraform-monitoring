@@ -58,7 +58,7 @@ spec:
         message: external-dns container has not been running in the namespace 'kube-system' for 5 minutes.
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#kubednsdown
     - alert: NginxIngressPodDown
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"^nginx-ingress-acme-controller.*"})> 0
+      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed"})> 0
       for: 5m
       labels:
         severity: warning
@@ -67,7 +67,7 @@ spec:
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
 
     - alert: NginxIngressDown
-      expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"^nginx-ingress-acme-controller.*"})> 5
+      expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed"})> 5
       for: 5m
       labels:
         severity: critical
@@ -76,7 +76,7 @@ spec:
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
 
     - alert: NginxIngressPodPending
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown",pod=~"^nginx-ingress-acme-controller.*"})> 0
+      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown"})> 0
       for: 5m
       labels:
         severity: warning
