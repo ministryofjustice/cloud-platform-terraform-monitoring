@@ -126,6 +126,17 @@ You can [set CPU limits](https://kubernetes.io/docs/tasks/configure-pod-containe
 
 Limits can also be set on a [Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-default-namespace/)
 
+Also consider running the following searches for the relevant ip address in Kibana (around the time of the alert):
+
+```
+_HOSTNAME: "ip-172-20" AND MESSAGE:"Error"
+```
+
+```
+_HOSTNAME: "ip-172-20" AND MESSAGE:"Error syncing"
+```
+
+Look for pods where containers are failing to start. Contact the relevant project owners as necessary.
 
 ## CPU-Critical
 ```
@@ -151,6 +162,18 @@ Please read the Kubernetes documentation of the [Meaning of CPU](https://kuberne
 You can [set CPU limits](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/) to pods and containers, as by default - pods run with unbounded CPU limits.
 
 Limits can also be set on a [Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-default-namespace/)
+
+Also consider running the following searches for the relevant ip address in Kibana (around the time of the alert):
+
+```
+_HOSTNAME: "ip-172-20" AND MESSAGE:"Error"
+```
+
+```
+_HOSTNAME: "ip-172-20" AND MESSAGE:"Error syncing"
+```
+
+Look for pods where containers are failing to start. Contact the relevant project owners as necessary.
 
 ## KubeDNSDown
 
