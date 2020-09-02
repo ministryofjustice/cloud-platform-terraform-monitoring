@@ -188,8 +188,6 @@ grafana:
 
   ingress:
     enabled: true
-    annotations: 
-      kubernetes.io/ingress.class: monitoring
     hosts:
     - "${ grafana_ingress }"
     tls:
