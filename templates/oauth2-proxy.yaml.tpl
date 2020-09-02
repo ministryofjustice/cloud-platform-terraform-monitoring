@@ -28,8 +28,6 @@ extraArgs:
 ingress:
   enabled: true
   path: /
-  annotations:
-    kubernetes.io/ingress.class: monitoring
   hosts:
     - "${hostname}"
   tls:
