@@ -33,3 +33,6 @@ ingress:
   tls:
     - hosts:
       - "${hostname}"
+
+serviceAccount:
+  enabled: false
