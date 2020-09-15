@@ -301,6 +301,8 @@ resource "aws_iam_role_policy" "grafana_datasource" {
 #########################################################
 
 resource "null_resource" "infrastructure" {
+  count = var.split_prometheus ? 1 : 0
+
   depends_on = [helm_release.prometheus_operator]
 
   provisioner "local-exec" {
