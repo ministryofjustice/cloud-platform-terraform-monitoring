@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-cloud-platform
+  namespace: monitoring
+spec:
+  ports:
+  - name: web
+    port: 9090
+    protocol: TCP
+    targetPort: 9090
+  selector:
+    app: prometheus
+    prometheus: prometheus-cloud-platform
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  labels:
+    app: prometheus-cloud-platform
+  name: prometheus-cloud-platform
+  namespace: monitoring
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: beta.kubernetes.io/instance-type
+            operator: In
+            values:
+            - r5.2xlarge
+  alerting:
+    alertmanagers:
+    - apiVersion: v2
+      name: prometheus-operator-alertmanager
+      namespace: monitoring
+      pathPrefix: /
+      port: web
+  baseImage: quay.io/prometheus/prometheus
+  enableAdminAPI: false
+  externalLabels:
+    clusterName: live-1
+  listenLocal: false
+  logFormat: logfmt
+  logLevel: info
+  paused: false
+  podMonitorNamespaceSelector: {}
+  podMonitorSelector: {}
+  portName: web
+  replicas: 1
+  retention: 1d
+  routePrefix: /
+  ruleNamespaceSelector: {}
+  ruleSelector:
+    matchLabels:
+      release: prometheus-operator
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: prometheus-operator-prometheus
+  serviceMonitorNamespaceSelector: {}
+  serviceMonitorSelector:
+    matchLabels:
+      release: prometheus-operator
+  tolerations:
+  - effect: NoSchedule
+    key: monitoring-node
+    operator: Equal
+    value: "true"
+  version: v2.17.2

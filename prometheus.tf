@@ -130,6 +130,7 @@ resource "helm_release" "prometheus_operator" {
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     storage_class                              = var.eks ? "gp2" : "default"
+    split_prometheus                           = var.split_prometheus
 
     # This is for EKS
     eks                                        = var.eks
@@ -295,3 +296,63 @@ resource "aws_iam_role_policy" "grafana_datasource" {
   policy = data.aws_iam_policy_document.grafana_datasource.0.json
 }
 
+#########################################################
+# Second Prometheus, only when prometheus_split is true #
+#########################################################
+
+resource "null_resource" "infrastructure" {
+  depends_on = [helm_release.prometheus_operator]
+
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/resources/prometheus-infrastructure.yaml"
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "kubectl delete -f ${path.module}/resources/prometheus-infrastructure.yaml"
+  }
+
+  triggers = {
+    contents = sha1("${path.module}/resources/prometheus-infrastructure.yaml")
+  }
+}
+
+# Prometheus Needs access 
+data "template_file" "prometheus_infra_proxy" {
+  count = var.split_prometheus ? 1 : 0
+
+  template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
+
+  vars = {
+    upstream = "http://prometheus-cloud-platform:9090"
+    hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "prometheus-infra", local.live_domain) : format(
+      "%s.%s",
+      "prometheus-infra.apps",
+      var.cluster_domain_name,
+    )
+    exclude_paths = "^/-/healthy$"
+    issuer_url    = var.oidc_issuer_url
+    client_id     = var.oidc_components_client_id
+    client_secret = var.oidc_components_client_secret
+    cookie_secret = random_id.session_secret.b64_std
+  }
+}
+
+resource "helm_release" "prometheus_infra_proxy" {
+  count = var.split_prometheus ? 1 : 0
+
+  name       = "prometheus-infra-proxy"
+  namespace  = kubernetes_namespace.monitoring.id
+  repository = data.helm_repository.stable.metadata[0].name
+  chart      = "oauth2-proxy"
+  version    = "3.2.2"
+
+  values = [
+    data.template_file.prometheus_infra_proxy.0.rendered,
+  ]
+
+  depends_on = [
+    var.dependence_opa,
+    random_id.session_secret,
+  ]
+}

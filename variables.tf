@@ -62,6 +62,12 @@ variable "oidc_issuer_url" {
   description = "Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy)"
 }
 
+variable "split_prometheus" {
+  description = "Create a second Prometheus which will match (for rules) only rules with release=prometheus-operator labels and make the main prometheus only look for prometheus=cloud-platform (more info in the README)"
+  type        = bool
+  default     = false
+}
+
 # EKS variables
 variable "eks" {
   description = "Where are you applying this modules in kOps cluster or in EKS (KIAM or KUBE2IAM?)"
