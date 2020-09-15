@@ -238,21 +238,7 @@ grafana:
 ## Component scraping coreDns. Use either this or kubeDns
 ##
 coreDns:
-%{ if eks ~}
   enabled: true
-%{ else ~}
-  enabled: false
-%{ endif ~}
-
-## Component scraping kubeDns. Use either this or coreDns
-##
-kubeDns:
-%{ if eks ~}
-  enabled: false
-%{ else ~}
-  enabled: true
-%{ endif ~}
-
 
 ## Component scraping etcd
 ##
@@ -386,7 +372,15 @@ prometheus:
     ## If unspecified the release `app` and `release` will be used as the label selector
     ## to load rules
     ##
+    
+    # More information about this in the README.md
+    %{ if split_prometheus ~}
+    ruleSelector:
+      matchLabels:
+        prometheus: cloud-platform
+    %{ else ~}
     ruleSelector: {}
+    %{ endif ~}
 
     ## Namespaces to be selected for PrometheusRules discovery.
     ## If nil, select own namespace. Namespaces to be selected for ServiceMonitor discovery.
