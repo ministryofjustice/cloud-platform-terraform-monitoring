@@ -374,13 +374,13 @@ prometheus:
     ##
     
     # More information about this in the README.md
-    %{ if split_prometheus ~}
+%{ if split_prometheus ~}
     ruleSelector:
       matchLabels:
         prometheus: cloud-platform
-    %{ else ~}
+%{ else ~}
     ruleSelector: {}
-    %{ endif ~}
+%{ endif ~}
 
     ## Namespaces to be selected for PrometheusRules discovery.
     ## If nil, select own namespace. Namespaces to be selected for ServiceMonitor discovery.
