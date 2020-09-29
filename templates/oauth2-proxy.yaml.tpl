@@ -2,6 +2,7 @@
 # This is a redacted version of the upstream values.yaml file found here:
 # https://github.com/helm/charts/blob/dea84cfd139f0e7bd7721abfa53e4853c1379c0a/stable/oauth2-proxy/values.yaml
 #
+replicaCount: 2
 
 config:
   clientID: "${client_id}"
