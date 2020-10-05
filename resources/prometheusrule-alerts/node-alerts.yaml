@@ -59,7 +59,7 @@ spec:
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#kubednsdown
     - alert: NginxIngressPodDown
       expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed"})> 0
-      for: 5m
+      for: 2m
       labels:
         severity: warning
       annotations:
