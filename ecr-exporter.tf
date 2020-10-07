@@ -53,7 +53,7 @@ data "aws_iam_policy_document" "ecr_exporter_assume" {
 
 resource "aws_iam_role" "ecr_exporter" {
   count = var.enable_ecr_exporter && var.eks == false ? 1 : 0
-  
+
   name               = "ecr-exporter.${var.cluster_domain_name}"
   assume_role_policy = data.aws_iam_policy_document.ecr_exporter_assume.json
 }

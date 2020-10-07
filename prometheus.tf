@@ -133,8 +133,8 @@ resource "helm_release" "prometheus_operator" {
     split_prometheus                           = var.split_prometheus
 
     # This is for EKS
-    eks                                        = var.eks
-    eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
+    eks                 = var.eks
+    eks_service_account = module.iam_assumable_role_monitoring.this_iam_role_arn
   })]
 
   # Depends on Helm being installed
@@ -357,4 +357,92 @@ resource "helm_release" "prometheus_infra_proxy" {
     var.dependence_opa,
     random_id.session_secret,
   ]
+}
+
+####################
+# Network Policies #
+####################
+
+resource "kubernetes_network_policy" "default" {
+  metadata {
+    name      = "default"
+    namespace = kubernetes_namespace.monitoring.id
+  }
+
+  spec {
+    pod_selector {}
+    ingress {
+      from {
+        pod_selector {}
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
+
+resource "kubernetes_network_policy" "allow_ingress_controllers" {
+  metadata {
+    name      = "allow-ingress-controllers"
+    namespace = kubernetes_namespace.monitoring.id
+  }
+
+  spec {
+    pod_selector {}
+    ingress {
+      from {
+        namespace_selector {
+          match_labels = {
+            component = "ingress-controllers"
+          }
+        }
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
+
+resource "kubernetes_network_policy" "allow_kube_api" {
+  metadata {
+    name      = "allow-kube-api"
+    namespace = kubernetes_namespace.monitoring.id
+  }
+
+  spec {
+    pod_selector {}
+    ingress {
+      from {
+        namespace_selector {
+          match_labels = {
+            component = "kube-system"
+          }
+        }
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
+
+resource "kubernetes_network_policy" "allow_alertmanager_api" {
+  metadata {
+    name      = "allow-alertmanager-api"
+    namespace = kubernetes_namespace.monitoring.id
+  }
+
+  spec {
+    pod_selector {
+      match_labels = {
+        app = "alertmanager"
+      }
+    }
+    ingress {
+      from {
+        namespace_selector {}
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
 }
