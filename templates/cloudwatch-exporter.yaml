@@ -266,4 +266,4 @@ serviceMonitor:
   labels:
     app: prometheus-cloudwatch-exporter
   # Set timeout for scrape
-  timeout: 90s
+  timeout: 180s
