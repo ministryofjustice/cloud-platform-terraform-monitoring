@@ -4,6 +4,7 @@ metadata:
   labels:
     prometheus: prometheus-operator
     role: alert-rules
+    release: prometheus-operator
   name: prometheus-operator-custom-kubernetes-apps.rules
 spec:
   groups:
