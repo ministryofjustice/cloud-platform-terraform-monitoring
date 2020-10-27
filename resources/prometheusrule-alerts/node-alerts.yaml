@@ -58,32 +58,71 @@ spec:
       annotations: 
         message: external-dns container has not been running in the namespace 'kube-system' for 5 minutes.
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#kubednsdown
-    - alert: NginxIngressPodDown
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed"})> 0
+    - alert: NginxIngressPodDown-default-ingress
+      annotations:
+        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
+          1 or more nginx-ingress pods have been unavailable for 5 minutes'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
+      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"nginx-ingress-acme-controller-.*"})>
+        0
       for: 5m
       labels:
         severity: warning
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace. 1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
 
-    - alert: NginxIngressDown
-      expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed"})> 5
+    - alert: NginxIngressPodDown-modsec-ingress
+      annotations:
+        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
+          1 or more nginx-ingress pods have been unavailable for 5 minutes'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
+      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"modsec01.*"})>
+        0
+      for: 5m
+      labels:
+        severity: warning
+
+    - alert: NginxIngressDown-default-ingress
+      annotations:
+        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
+          1 or more nginx-ingress pods have been unavailable for 5 minutes'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
+      expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"nginx-ingress-acme-controller-.*"})>
+        5
       for: 5m
       labels:
         severity: critical
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace. 1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
 
-    - alert: NginxIngressPodPending
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown"})> 0
+    - alert: NginxIngressDown-modsec-ingress
+      annotations:
+        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
+          1 or more nginx-ingress pods have been unavailable for 5 minutes'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
+      expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"modsec01.*"})>
+        3
+      for: 5m
+      labels:
+        severity: critical
+
+    - alert: NginxIngressPodPending-default-ingress
+      annotations:
+        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
+          1 or more nginx-ingress pods have been unavailable for 5 minutes'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
+      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown",pod=~"nginx-ingress-acme-controller-.*"})>
+        0
       for: 5m
       labels:
         severity: warning
+
+    - alert: NginxIngressPodPending-modsec-ingress
       annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace. 1 or more nginx-ingress pods have been unavailable for 5 minutes'
+        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
+          1 or more nginx-ingress pods have been unavailable for 5 minutes'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
+      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown",pod=~"modsec01.*"})>
+        0
+      for: 5m
+      labels:
+        severity: warning
 
     - alert: RootVolUtilisation-High
       expr: (node_filesystem_size_bytes {mountpoint="/"} - node_filesystem_avail_bytes {mountpoint="/"} ) / (node_filesystem_size_bytes {mountpoint="/"} ) * 100 >85
