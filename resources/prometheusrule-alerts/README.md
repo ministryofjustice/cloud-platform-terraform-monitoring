@@ -593,3 +593,38 @@ Check the API logs to identify and get more information:
 ```
  stern --namespace kube-system kube-apiserver-ip
 ```
+
+## HTTP-Error-5xx---warning
+```
+HTTP-Error-5xx---warning
+Severity: warning
+```
+This alert is triggered when a http error requests for nginx_ingress_controller (5xx) exceed 1% of all requests for 5 minutes
+
+Expression:
+```
+expr: sum by(pod)(rate(nginx_ingress_controller_requests{status=~"2.*",ingress=~".*"pod=~".*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_requests{ingress=~".*"pod=~".*"}[5m])) * 100 > 1 for 5 minutes
+```
+### Action
+
+Investigation in Kibana required.
+The following Prometheus expression summary of all request nginx_ingress_controller_requests may also help with investigation:
+
+```
+sum(label_replace(rate(nginx_ingress_controller_requests{namespace="ingress-controllers",ingress=~".*"}[2m]), "status_code", "${1}xx", "status", "(.)..")) by (status_code)
+```
+
+## NginxIngress-Latency(ms)---warning
+```
+NginxIngress-Latency(ms)---warning
+Severity: warning
+```
+This alert is triggered when latency exceeds 300 milliseconds for 5 minutes for nginx_ingress_controller_requests.
+
+Expression:
+```
+expr: sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_sum{ingress=~".*",pod=~".*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_count{ingress=~".*",pod=~".*"}[5m])) * 1000 > 300 for 5 minutes
+```
+### Action
+
+Investigation in Kibana required
