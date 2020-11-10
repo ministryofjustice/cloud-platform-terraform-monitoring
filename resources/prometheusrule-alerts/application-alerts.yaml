@@ -343,4 +343,23 @@ spec:
       for: 1m
       labels:
         severity: info-warning
-        
+    - alert: coreDNSLatencyWarning
+      annotations:
+        message: The coreDNS for the Kubernetes cluster has a 99th percentile latency of {{ $value }} seconds for
+          {{ $labels.verb }} {{ $labels.resource }}. The high latency of the request could mean a degradation in the Kubernetes cluster service. This check is comparing the percentile against the average using the operator histogram
+        runbook_url: https://sysdig.com/blog/how-to-monitor-coredns/
+      expr: |-
+        histogram_quantile(0.99, sum(rate(coredns_dns_request_duration_seconds_bucket{job="coredns"}[5m])) by(server, zone, le)) > 1
+      for: 10m
+      labels:
+        severity: warning        
+    - alert: coreDNSLatencyCritical
+      annotations:
+        message: The coreDNS for the Kubernetes cluster has a 99th percentile latency of {{ $value }} seconds for
+          {{ $labels.verb }} {{ $labels.resource }}. The high latency of the request could mean a degradation in the Kubernetes cluster service. This check is comparing the percentile against the average using the operator histogram
+        runbook_url: https://sysdig.com/blog/how-to-monitor-coredns/
+      expr: |-
+        histogram_quantile(0.99, sum(rate(coredns_dns_request_duration_seconds_bucket{job="coredns"}[5m])) by(server, zone, le)) > 4
+      for: 10m
+      labels:
+        severity: critical
