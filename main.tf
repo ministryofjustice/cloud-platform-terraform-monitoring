@@ -13,6 +13,10 @@ data "helm_repository" "banzaicloud" {
   name = "banzaicloud-stable"
   url  = "https://kubernetes-charts.banzaicloud.com"
 }
+data "helm_repository" "loki" {
+  name = "lokie"
+  url  = "https://grafana.github.io/loki/charts"
+}
 
 #############
 # Namespace #

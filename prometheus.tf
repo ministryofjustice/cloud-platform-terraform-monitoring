@@ -334,3 +334,22 @@ resource "helm_release" "prometheus_infra_proxy" {
   ]
 }
 
+
+
+data "template_file" "loki" {
+  template = file("${path.module}/templates/loki.yaml.tpl")
+}
+
+
+resource "helm_release" "loki_stack" {
+ name       = "loki-stack"
+ namespace  = kubernetes_namespace.monitoring.id
+ repository = data.helm_repository.loki.metadata[0].name
+ chart      = "loki-stack"
+ version    = "2.1.0"
+
+  values = [
+    data.template_file.loki.rendered,
+  ]
+
+}
