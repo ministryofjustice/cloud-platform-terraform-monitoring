@@ -106,6 +106,7 @@ resource "helm_release" "prometheus_operator" {
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     storage_class                              = var.eks ? "gp2" : "default"
     split_prometheus                           = var.split_prometheus
+    enable_thanos_sidecar                      = var.enable_thanos_sidecar
 
     # This is for EKS
     eks                 = var.eks

@@ -457,10 +457,11 @@ prometheus:
             requests:
               storage: 750Gi
 
+%{ if enable_thanos_sidecar == true ~}
     thanos: 
       baseImage: quay.io/thanos/thanos
       version: v0.17.2
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config 
-
+%{ endif ~}
