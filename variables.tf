@@ -28,6 +28,12 @@ variable "enable_cloudwatch_exporter" {
   type        = bool
 }
 
+variable "enable_thanos_sidecar" {
+  description = "Enable or not Thanos sidecar. Basically defines if we want to send cluster metrics to thanos's S3 bucket"
+  default     = false
+  type        = bool
+}
+
 variable "enable_thanos_helm_chart" {
   description = "Enable or not Thanos Helm Chart - (do NOT confuse this with thanos sidecar within prometheus-operator)"
   default     = false

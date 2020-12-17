@@ -6,7 +6,7 @@ data "helm_repository" "cloud_platform" {
 
 data "helm_repository" "stable" {
   name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com"
+  url  = "https://charts.helm.sh/stable"
 }
 
 data "helm_repository" "banzaicloud" {
