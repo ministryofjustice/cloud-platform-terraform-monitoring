@@ -13,7 +13,6 @@ defaultRules:
 %{ endif ~}
     general: false
     kubernetesApps: false
-
 %{ if eks ~}
 global:
   imagePullSecrets:
@@ -311,6 +310,7 @@ kube-state-metrics:
     imagePullSecrets:
     - name: "dockerhub-credentials"
 %{ endif ~}
+
   collectors:
     validatingwebhookconfigurations: false
     networkpolicies: false
@@ -473,7 +473,7 @@ prometheus:
 
 %{ if enable_thanos_sidecar == true ~}
     thanos: 
-      image: quay.io/thanos/thanos
+      baseImage: quay.io/thanos/thanos
       version: v0.17.2
       objectStorageConfig:
         key: thanos.yaml
