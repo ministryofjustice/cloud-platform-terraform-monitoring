@@ -14,6 +14,12 @@ config:
   #   pass_access_token = true
   configFile: ""
 
+%{ if eks ~}
+image:
+  imagePullSecrets:
+  - name: "dockerhub-credentials"
+%{ endif ~}
+
 extraArgs:
   provider: oidc
   oidc-issuer-url: ${issuer_url}
