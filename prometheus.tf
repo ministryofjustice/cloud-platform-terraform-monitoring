@@ -118,6 +118,7 @@ resource "helm_release" "prometheus_operator" {
     var.dependence_opa,
     kubernetes_secret.grafana_secret,
     kubernetes_secret.thanos_config,
+    kubernetes_secret.dockerhub_credentials
   ]
 
   provisioner "local-exec" {

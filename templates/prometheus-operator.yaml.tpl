@@ -14,6 +14,10 @@ defaultRules:
     general: false
     kubernetesApps: false
 
+global:
+  imagePullSecrets:
+  - name: "dockerhub-credentials"
+
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
 ##
@@ -166,6 +170,8 @@ grafana:
   enabled: true
 
   image:
+    pullSecrets:
+    - "dockerhub-credentials"
     repository: grafana/grafana
     tag: 7.0.2
     pullPolicy: IfNotPresent
@@ -296,6 +302,9 @@ kubeStateMetrics:
 kube-state-metrics:
   image:
     tag: v1.7.0
+  serviceAccount:
+    imagePullSecrets:
+    - name: "dockerhub-credentials"
 
   collectors:
     validatingwebhookconfigurations: false
@@ -459,7 +468,7 @@ prometheus:
 
 %{ if enable_thanos_sidecar == true ~}
     thanos: 
-      baseImage: quay.io/thanos/thanos
+      image: quay.io/thanos/thanos
       version: v0.17.2
       objectStorageConfig:
         key: thanos.yaml

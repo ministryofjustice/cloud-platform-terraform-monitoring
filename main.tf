@@ -42,6 +42,33 @@ resource "kubernetes_namespace" "monitoring" {
   }
 }
 
+##################
+# DockerHub auth #
+##################
+
+resource "kubernetes_secret" "dockerhub_credentials" {
+  count = var.eks ? 1 : 0
+
+  metadata {
+    name      = "dockerhub-credentials"
+    namespace = kubernetes_namespace.monitoring.id
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  data = {
+    ".dockerconfigjson" = <<DOCKER
+{
+  "auths": {
+    "https://index.docker.io/v1": {
+      "auth": "${base64encode("${var.dockerhub_username}:${var.dockerhub_password}")}"
+    }
+  }
+}
+DOCKER
+  }
+}
+
 ##############
 # LimitRange #
 ##############
