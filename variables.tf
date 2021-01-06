@@ -86,3 +86,15 @@ variable "eks_cluster_oidc_issuer_url" {
   type        = string
   default     = ""
 }
+
+variable "dockerhub_username" {
+  description = "DockerHub username - required to avoid hitting Dockerhub API limits in EKS clusters"
+  default     = ""
+  type        = string
+}
+
+variable "dockerhub_password" {
+  description = "DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters"
+  default     = ""
+  type        = string
+}

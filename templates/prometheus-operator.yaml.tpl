@@ -13,6 +13,11 @@ defaultRules:
 %{ endif ~}
     general: false
     kubernetesApps: false
+%{ if eks ~}
+global:
+  imagePullSecrets:
+  - name: "dockerhub-credentials"
+%{ endif ~}
 
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
@@ -166,6 +171,10 @@ grafana:
   enabled: true
 
   image:
+%{ if eks ~}
+    pullSecrets:
+    - "dockerhub-credentials"
+%{ endif ~}
     repository: grafana/grafana
     tag: 7.0.2
     pullPolicy: IfNotPresent
@@ -296,6 +305,11 @@ kubeStateMetrics:
 kube-state-metrics:
   image:
     tag: v1.7.0
+%{ if eks ~}
+  serviceAccount:
+    imagePullSecrets:
+    - name: "dockerhub-credentials"
+%{ endif ~}
 
   collectors:
     validatingwebhookconfigurations: false

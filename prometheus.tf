@@ -118,6 +118,7 @@ resource "helm_release" "prometheus_operator" {
     var.dependence_opa,
     kubernetes_secret.grafana_secret,
     kubernetes_secret.thanos_config,
+    kubernetes_secret.dockerhub_credentials
   ]
 
   provisioner "local-exec" {
@@ -157,6 +158,7 @@ data "template_file" "prometheus_proxy" {
     client_id     = var.oidc_components_client_id
     client_secret = var.oidc_components_client_secret
     cookie_secret = random_id.session_secret.b64_std
+    eks           = var.eks
   }
 }
 
@@ -196,6 +198,7 @@ data "template_file" "alertmanager_proxy" {
     client_id     = var.oidc_components_client_id
     client_secret = var.oidc_components_client_secret
     cookie_secret = random_id.session_secret.b64_std
+    eks           = var.eks
   }
 }
 
@@ -313,6 +316,7 @@ data "template_file" "prometheus_infra_proxy" {
     client_id     = var.oidc_components_client_id
     client_secret = var.oidc_components_client_secret
     cookie_secret = random_id.session_secret.b64_std
+    eks           = var.eks
   }
 }
 
@@ -334,4 +338,3 @@ resource "helm_release" "prometheus_infra_proxy" {
     random_id.session_secret,
   ]
 }
-
