@@ -84,10 +84,10 @@ EOS
 
 resource "helm_release" "prometheus_operator" {
   name       = "prometheus-operator"
-  repository = data.helm_repository.stable.metadata[0].name
-  chart      = "prometheus-operator"
+  repository = data.helm_repository.prometheus_community.metadata[0].name
+  chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
-  version    = "8.13.7"
+  version    = "12.11.3"
 
   values = [templatefile("${path.module}/templates/prometheus-operator.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
@@ -147,7 +147,7 @@ data "template_file" "prometheus_proxy" {
   template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
 
   vars = {
-    upstream = "http://prometheus-operator-prometheus:9090"
+    upstream = "http://prometheus-operator-kube-p-prometheus:9090"
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "prometheus", local.live_domain) : format(
       "%s.%s",
       "prometheus.apps",
@@ -187,7 +187,7 @@ data "template_file" "alertmanager_proxy" {
   template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
 
   vars = {
-    upstream = "http://prometheus-operator-alertmanager:9093"
+    upstream = "http://prometheus-operator-kube-p-alertmanager:9093"
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "alertmanager", local.live_domain) : format(
       "%s.%s",
       "alertmanager.apps",

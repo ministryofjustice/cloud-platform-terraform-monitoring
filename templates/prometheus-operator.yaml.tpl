@@ -326,6 +326,9 @@ prometheusOperator:
   tlsProxy:
     enabled: false
 
+  tls:
+    enabled: false
+
   admissionWebhooks:
     enabled: false
 

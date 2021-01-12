@@ -9,6 +9,11 @@ data "helm_repository" "stable" {
   url  = "https://charts.helm.sh/stable"
 }
 
+data "helm_repository" "prometheus_community" {
+  name = "prometheus-community"
+  url  = "https://prometheus-community.github.io/helm-charts"
+}
+
 data "helm_repository" "banzaicloud" {
   name = "banzaicloud-stable"
   url  = "https://kubernetes-charts.banzaicloud.com"
