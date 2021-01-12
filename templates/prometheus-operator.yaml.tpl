@@ -332,14 +332,6 @@ prometheusOperator:
   admissionWebhooks:
     enabled: false
 
-  ## Deploy CRDs used by Prometheus Operator.
-  ##
-  createCustomResource: true
-
-  ## Attempt to clean up CRDs created by Prometheus Operator.
-  ##
-  cleanupCustomResource: true
-
 ## Deploy a Prometheus instance
 ##
 prometheus:
