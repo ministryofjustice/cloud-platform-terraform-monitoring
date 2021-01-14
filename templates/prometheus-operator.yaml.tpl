@@ -326,16 +326,11 @@ prometheusOperator:
   tlsProxy:
     enabled: false
 
-  admissionWebhooks:
+  tls:
     enabled: false
 
-  ## Deploy CRDs used by Prometheus Operator.
-  ##
-  createCustomResource: true
-
-  ## Attempt to clean up CRDs created by Prometheus Operator.
-  ##
-  cleanupCustomResource: false
+  admissionWebhooks:
+    enabled: false
 
 ## Deploy a Prometheus instance
 ##
