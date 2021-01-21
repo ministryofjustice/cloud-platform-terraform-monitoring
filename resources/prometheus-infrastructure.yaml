@@ -35,11 +35,11 @@ spec:
   alerting:
     alertmanagers:
     - apiVersion: v2
-      name: prometheus-operator-alertmanager
+      name: prometheus-operator-kube-p-alertmanager
       namespace: monitoring
       pathPrefix: /
       port: web
-  baseImage: quay.io/prometheus/prometheus
+  image: quay.io/prometheus/prometheus:v2.22.1
   enableAdminAPI: false
   externalLabels:
     clusterName: live-1
@@ -61,7 +61,7 @@ spec:
     fsGroup: 2000
     runAsNonRoot: true
     runAsUser: 1000
-  serviceAccountName: prometheus-operator-prometheus
+  serviceAccountName: prometheus-operator-kube-p-prometheus
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector:
     matchLabels:
@@ -71,4 +71,4 @@ spec:
     key: monitoring-node
     operator: Equal
     value: "true"
-  version: v2.17.2
+  version: v2.22.1
