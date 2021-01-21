@@ -104,7 +104,7 @@ resource "helm_release" "prometheus_operator" {
     monitoring_aws_role                        = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
-    storage_class                              = var.eks ? "gp2" : "default"
+    storage_class                              = var.eks ? "gp2" : "io1-expand"
     split_prometheus                           = var.split_prometheus
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
 
