@@ -40,7 +40,6 @@ module "monitoring" {
 | oidc_components_client_id    | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
 | oidc_components_client_secret | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
 | oidc_issuer_url              | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
-| split_prometheus             | Create another prometheus instance to look only for the infrastructure labels (more info below in this readme) | true | | false |
 | eks                          | Are we deploying in EKS or not?                                                       | bool     | false   | no |
 | eks_cluster_oidc_issuer_url  | The OIDC issuer URL from the cluster, it is used for IAM ServiceAccount integration   | string     |  | no |
 
