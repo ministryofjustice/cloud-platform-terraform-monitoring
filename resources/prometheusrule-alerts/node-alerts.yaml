@@ -140,31 +140,6 @@ spec:
       annotations:
         message: '{{ $labels.instance }} has exceeded the threshold of root volume utilisation with a value of {{ $value }}. Instance {{ $labels.instance }} root volume utilisation usage is critically high'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#root-volume-utilisation---critical
-    - alert: NginxIngress-5xx-modsec-ingress-High
-      expr: sum by(pod)(rate(nginx_ingress_controller_requests{status=~"5.*",ingress=~".*",pod=~"modsec01.*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_requests{ingress=~".*",pod=~"modsec01.*"}[5m])) * 100  > 1
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        message: '{{ $labels.pod}} - modsec01 ingress -has been receiving a high percentage of HTTP Error 5xx requests for 5 minutes, with a value of {{ $value }} {{ $labels.namespace}} namespace. Please investigate'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#HTTP-Error-5xx---warning
-    - alert: NginxIngress-5xx-nginx-ingress-acme-ingress-High
-      expr: sum by(pod)(rate(nginx_ingress_controller_requests{status=~"5.*",ingress=~".*",pod=~"nginx-ingress-acme.*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_requests{ingress=~".*",pod=~"nginx-ingress-acme.*"}[5m])) * 100 > 1
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        message: '{{ $labels.pod}} - nginx-ingress-acme ingress -has been receiving a high percentage of HTTP Error 5xx requests for 5 minutes, with a value of {{ $value }}{{ $labels.namespace}} namespace. Please investigate'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#HTTP-Error-5xx---warning
-    - alert: NginxIngress-5xx-k8snginx--ingress-High
-      expr: sum by(pod)(rate(nginx_ingress_controller_requests{status=~"5.*",ingress=~".*",pod=~"k8snginx.*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_requests{ingress=~".*",pod=~"k8snginx.*"}[5m])) * 100 > 1
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        message: '{{ $labels.pod}} - k8snginx ingress -has been receiving a high percentage of HTTP Error 5xx requests for 5 minutes, with a value of {{ $value }}{{ $labels.namespace}} namespace. Please investigate' 
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#HTTP-Error-5xx---warning
-
     - alert: NginxIngress-Latency(ms)-modsec-ingress-High
       expr: sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_sum{ingress=~".*",pod=~"modsec01.*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_count{ingress=~".*",pod=~"modsec01.*"}[5m])) * 1000 > 300
       for: 5m
