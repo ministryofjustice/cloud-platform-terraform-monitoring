@@ -10,7 +10,7 @@ resource "helm_release" "ecr_exporter" {
   name       = "ecr-exporter"
   namespace  = kubernetes_namespace.monitoring.id
   chart      = "prometheus-ecr-exporter"
-  repository = data.helm_repository.cloud_platform.metadata[0].name
+  repository = "https://charts.helm.sh/stable"
 
   set {
     name  = "serviceMonitor.enabled"
