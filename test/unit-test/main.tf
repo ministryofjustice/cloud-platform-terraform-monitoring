@@ -34,7 +34,7 @@ provider "aws" {
 }
 
 module "opa" {
-  source = "github.com/ministryofjustice/cloud-platform-terraform-opa?ref=unit-tests"
+  source = "github.com/ministryofjustice/cloud-platform-terraform-opa"
 
   cluster_domain_name = "prometheus.cloud-platform.service.justice.gov.uk"
 }
