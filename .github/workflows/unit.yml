@@ -12,8 +12,6 @@ jobs:
         env:
           SERVICES: iam,sts
           DEFAULT_REGION: eu-west-2
-          AWS_ACCESS_KEY_ID: localkey
-          AWS_SECRET_ACCESS_KEY: localsecret
           HOSTNAME_EXTERNAL: localstack
         ports:
           - 4566:4566
