@@ -16,9 +16,4 @@ func TestDeployMonitoring(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 
 	terraform.InitAndApply(t, terraformOptions)
-
-	// options := k8s.NewKubectlOptions("", "", "opa")
-
-	// service := k8s.GetService(t, options, "opa")
-	// require.Equal(t, service.Name, "opa")
 }
