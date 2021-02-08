@@ -10,7 +10,7 @@ storegateway:
     - --min-time=-1w
 query:
   stores:
-    - prometheus-prometheus-operator-prometheus-0.prometheus-operated.monitoring.svc:10901
+    - prometheus-operator-kube-p-prometheus.prometheus-operated.monitoring.svc:10901
 compactor:
   enabled: "${enabled_compact}"
   retentionResolutionRaw: 30d
