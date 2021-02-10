@@ -9,11 +9,12 @@ resource "helm_release" "thanos" {
 
   name      = "thanos"
   namespace = kubernetes_namespace.monitoring.id
-  chart     = "banzaicloud-stable/thanos"
-  version   = "0.3.18"
+  chart     = "bitnami/thanos"
+  version   = "3.8.3"
 
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
     enabled_compact     = var.enable_thanos_compact
+    eks                 = var.eks
     monitoring_aws_role = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
   })]
 
