@@ -40,7 +40,6 @@ module "monitoring" {
 | oidc_components_client_id    | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
 | oidc_components_client_secret | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
 | oidc_issuer_url              | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | string | | yes |
-| split_prometheus             | Create another prometheus instance to look only for the infrastructure labels (more info below in this readme) | true | | false |
 | eks                          | Are we deploying in EKS or not?                                                       | bool     | false   | no |
 | eks_cluster_oidc_issuer_url  | The OIDC issuer URL from the cluster, it is used for IAM ServiceAccount integration   | string     |  | no |
 
@@ -49,12 +48,3 @@ module "monitoring" {
 | Name | Description |
 |------|-------------|
 | helm_prometheus_operator_status | This is an output used as a dependency (to know the prometheus-operator chart has been deployed) |
-
-## Split Prometheus
-
-Our [big monolithic Prometheus](https://prometheus.cloud-platform.service.justice.gov.uk) (live-1) is having performance issues evaluating Rules. Some of the rules (kube-api) are having non-deterministic evaluation times up to 60 seconds, which causes the trigger of `PrometheusMissingRuleEvaluations` alert multiple times in #lower-priority-alarm.
-
-In order to solve the described problem, it was added `split_prometheus` terraform variable. When set to `true` it:
-- It set up the [big monolithic Prometheus](https://prometheus.cloud-platform.service.justice.gov.uk) to *only match* rules having `prometheus: cloud-platform` labels (which all teams rules have).
-- Create a new Prometheus instance *only matching* the rules having `release: prometheus-operator`. These are the default rules from prometheus-operator Helm Chart to scan and keep the cluster healthy. Unfortunately they are also the ones causing performance problems and that is the reason we put them in their own Prometheus so they don't affect the team's rules.
-
