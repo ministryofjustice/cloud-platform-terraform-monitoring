@@ -99,7 +99,7 @@ module "iam_assumable_role_monitoring" {
   role_name                     = "monitoring.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
   role_policy_arns              = [var.eks && length(aws_iam_policy.monitoring) >= 1 ? aws_iam_policy.monitoring.0.arn : ""]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-prometheus"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-kube-p-prometheus"]
 }
 
 resource "aws_iam_policy" "monitoring" {
