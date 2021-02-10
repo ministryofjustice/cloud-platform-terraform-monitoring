@@ -1,3 +1,8 @@
+image:
+  registry: quay.io
+  repository: thanos/thanos
+  tag: v0.18.0
+
 metrics:
   enabled: true
   serviceMonitor:
