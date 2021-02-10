@@ -84,7 +84,7 @@ EOS
 
 resource "helm_release" "prometheus_operator" {
   name       = "prometheus-operator"
-  repository = data.helm_repository.prometheus_community.metadata[0].name
+  repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
   version    = "12.11.3"
@@ -164,7 +164,7 @@ data "template_file" "prometheus_proxy" {
 resource "helm_release" "prometheus_proxy" {
   name       = "prometheus-proxy"
   namespace  = kubernetes_namespace.monitoring.id
-  repository = data.helm_repository.stable.metadata[0].name
+  repository = "https://charts.helm.sh/stable"
   chart      = "oauth2-proxy"
   version    = "3.2.2"
 
@@ -204,7 +204,7 @@ data "template_file" "alertmanager_proxy" {
 resource "helm_release" "alertmanager_proxy" {
   name       = "alertmanager-proxy"
   namespace  = "monitoring"
-  repository = data.helm_repository.stable.metadata[0].name
+  repository = "https://charts.helm.sh/stable"
   chart      = "oauth2-proxy"
   version    = "3.2.2"
 

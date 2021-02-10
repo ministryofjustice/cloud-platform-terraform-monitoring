@@ -1,5 +1,3 @@
-
-
 ################
 # ECR Exporter #
 ################
@@ -10,7 +8,7 @@ resource "helm_release" "ecr_exporter" {
   name       = "ecr-exporter"
   namespace  = kubernetes_namespace.monitoring.id
   chart      = "prometheus-ecr-exporter"
-  repository = data.helm_repository.cloud_platform.metadata[0].name
+  repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
 
   set {
     name  = "serviceMonitor.enabled"

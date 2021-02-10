@@ -208,6 +208,8 @@ grafana:
     GF_ANALYTICS_REPORTING_ENABLED: "false"
     GF_AUTH_DISABLE_LOGIN_FORM: "true"
     GF_USERS_ALLOW_SIGN_UP: "false"
+    GF_INSTALL_PLUGINS: "camptocamp-prometheus-alertmanager-datasource"
+    GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: "camptocamp-prometheus-alertmanager-datasource"
     GF_USERS_AUTO_ASSIGN_ORG_ROLE: "Viewer"
     GF_USERS_VIEWERS_CAN_EDIT: "true"
     GF_SMTP_ENABLED: "false"
@@ -242,6 +244,10 @@ grafana:
       defaultRegion: eu-west-2
       assumeRoleArn: "${ grafana_assumerolearn }"
     orgId: 1
+    version: 1
+  - name: Alertmanager
+    type: "camptocamp-prometheus-alertmanager-datasource"
+    url: "http://alertmanager-operated:9093"
     version: 1
 
 ## Component scraping coreDns. Use either this or kubeDns
