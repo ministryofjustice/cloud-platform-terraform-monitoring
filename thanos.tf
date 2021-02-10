@@ -14,6 +14,7 @@ resource "helm_release" "thanos" {
 
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
     enabled_compact     = var.enable_thanos_compact
+    eks                 = var.eks
     monitoring_aws_role = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
   })]
 
