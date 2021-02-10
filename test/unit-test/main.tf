@@ -56,7 +56,6 @@ module "prometheus" {
   enable_thanos_helm_chart                   = false
   enable_thanos_sidecar                      = false
   enable_prometheus_affinity_and_tolerations = false
-  split_prometheus                           = false
 
   cluster_domain_name           = "prometheus.cloud-platform.service.justice.gov.uk"
   oidc_components_client_id     = "XXX"
