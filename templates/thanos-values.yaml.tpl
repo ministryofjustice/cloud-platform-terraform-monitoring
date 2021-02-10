@@ -25,12 +25,8 @@ storegateway:
 %{ endif ~}
 
 query:
-  dnsDiscovery:
-    enabled: true
-    sidecarsService: "prometheus-operator-kube-p-thanos-discovery"
-
-  #stores:
-  #  - prometheus-operator-kube-p-prometheus.prometheus-operated.monitoring.svc:10901
+  stores:
+    - prometheus-prometheus-operator-kube-p-prometheus-0.prometheus-operated.monitoring.svc:10901
 
 compactor:
   enabled: "${enabled_compact}"
