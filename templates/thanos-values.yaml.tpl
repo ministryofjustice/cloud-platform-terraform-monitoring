@@ -29,7 +29,7 @@ query:
     - prometheus-prometheus-operator-kube-p-prometheus-0.prometheus-operated.monitoring.svc:10901
 
 compactor:
-  enabled: "${enabled_compact}"
+  enabled:  ${enabled_compact}
   retentionResolutionRaw: 30d
   retentionResolution5m: 183d
   retentionResolution1h: 365d
