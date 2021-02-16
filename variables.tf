@@ -52,6 +52,18 @@ variable "enable_prometheus_affinity_and_tolerations" {
   type        = bool
 }
 
+variable "enable_kibana_audit_proxy" {
+  description = "Enable or not Kibana-audit proxy for authentication"
+  default     = false
+  type        = bool
+}
+
+variable "enable_kibana_proxy" {
+  description = "Enable or not Kibana proxy for authentication"
+  default     = false
+  type        = bool
+}
+
 variable "cluster_domain_name" {
   description = "The cluster domain - used by externalDNS and certmanager to create URLs"
 }
