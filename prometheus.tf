@@ -273,3 +273,87 @@ resource "aws_iam_role_policy" "grafana_datasource" {
   role   = aws_iam_role.grafana_datasource.0.id
   policy = data.aws_iam_policy_document.grafana_datasource.0.json
 }
+
+data "template_file" "kibana_audit_proxy" {
+  template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
+
+  vars = {
+    upstream = "https://search-cloud-platform-audit-dq5bdnjokj4yt7qozshmifug6e.eu-west-2.es.amazonaws.com"
+    hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "kibana-audit", local.live_domain) : format(
+      "%s.%s",
+      "kibana-audit.apps",
+      var.cluster_domain_name,
+    )
+    exclude_paths = "^/-/healthy$"
+    issuer_url    = var.oidc_issuer_url
+    client_id     = var.oidc_components_client_id
+    client_secret = var.oidc_components_client_secret
+    cookie_secret = random_id.session_secret.b64_std
+    eks           = var.eks
+  }
+}
+
+resource "helm_release" "kibana_audit_proxy" {
+  count      = var.enable_kibana_audit_proxy ? 1 : 0
+  name       = "kibana-audit-proxy"
+  namespace  = kubernetes_namespace.monitoring.id
+  repository = "https://charts.helm.sh/stable"
+  chart      = "oauth2-proxy"
+  version    = "3.2.2"
+
+  values = [
+    data.template_file.kibana_audit_proxy.rendered,
+  ]
+
+  depends_on = [
+    var.dependence_opa,
+    random_id.session_secret,
+    kubernetes_namespace.monitoring,
+  ]
+
+  lifecycle {
+    ignore_changes = [keyring]
+  }
+}
+
+data "template_file" "kibana_proxy" {
+  template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
+
+  vars = {
+    upstream = "https://search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com"
+    hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "kibana", local.live_domain) : format(
+      "%s.%s",
+      "kibana.apps",
+      var.cluster_domain_name,
+    )
+    exclude_paths = "^/-/healthy$"
+    issuer_url    = var.oidc_issuer_url
+    client_id     = var.oidc_components_client_id
+    client_secret = var.oidc_components_client_secret
+    cookie_secret = random_id.session_secret.b64_std
+    eks           = var.eks
+  }
+}
+
+resource "helm_release" "kibana_proxy" {
+  count      = var.enable_kibana_proxy ? 1 : 0
+  name       = "kibana-proxy"
+  namespace  = kubernetes_namespace.monitoring.id
+  repository = "https://charts.helm.sh/stable"
+  chart      = "oauth2-proxy"
+  version    = "3.2.2"
+
+  values = [
+    data.template_file.kibana_proxy.rendered,
+  ]
+
+  depends_on = [
+    var.dependence_opa,
+    random_id.session_secret,
+    kubernetes_namespace.monitoring,
+  ]
+
+  lifecycle {
+    ignore_changes = [keyring]
+  }
+}
