@@ -308,6 +308,7 @@ resource "helm_release" "kibana_audit_proxy" {
   depends_on = [
     var.dependence_opa,
     random_id.session_secret,
+    kubernetes_namespace.monitoring,
   ]
 
   lifecycle {
@@ -349,6 +350,7 @@ resource "helm_release" "kibana_proxy" {
   depends_on = [
     var.dependence_opa,
     random_id.session_secret,
+    kubernetes_namespace.monitoring,
   ]
 
   lifecycle {
