@@ -16,6 +16,7 @@ resource "helm_release" "thanos" {
     enabled_compact     = var.enable_thanos_compact
     eks                 = var.eks
     monitoring_aws_role = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
+    clusterName         = terraform.workspace
   })]
 
   depends_on = [helm_release.prometheus_operator]
