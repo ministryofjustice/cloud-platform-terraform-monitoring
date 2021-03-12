@@ -94,8 +94,8 @@ resource "helm_release" "prometheus_operator" {
     grafana_ingress                            = local.grafana_ingress
     grafana_root                               = local.grafana_root
     pagerduty_config                           = var.pagerduty_config
-    alertmanager_routes                        = "${join("", data.template_file.alertmanager_routes.*.rendered)}"
-    alertmanager_receivers                     = "${join("", data.template_file.alertmanager_receivers.*.rendered)}"
+    alertmanager_routes                        = join("", data.template_file.alertmanager_routes.*.rendered)
+    alertmanager_receivers                     = join("", data.template_file.alertmanager_receivers.*.rendered)
     prometheus_ingress                         = local.prometheus_ingress
     random_username                            = random_id.username.hex
     random_password                            = random_id.password.hex
