@@ -28,7 +28,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.12.17
+          terraform_version: 0.13.x
           terraform_wrapper: false
 
       - name: Download Go Modules
