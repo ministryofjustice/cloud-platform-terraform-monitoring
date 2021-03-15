@@ -79,7 +79,7 @@ resource "aws_iam_role_policy" "ecr_exporter" {
 
 module "iam_assumable_role_ecr_exporter" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "~> v2.6.0"
+  version                       = "3.13.0"
   create_role                   = var.enable_ecr_exporter && var.eks ? true : false
   role_name                     = "ecr-exporter.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
