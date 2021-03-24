@@ -159,32 +159,12 @@ config: |-
  
     # DynamoDB Metrics   
   - aws_namespace: AWS/DynamoDB
-    aws_metric_name: ReturnedBytes
-    aws_dimensions: [TableName]
-   
-  - aws_namespace: AWS/DynamoDB
-    aws_metric_name: ReturnedItemCount
-    aws_dimensions: [TableName]
-   
-  - aws_namespace: AWS/DynamoDB
-    aws_metric_name: ReturnedRecordsCount
-    aws_dimensions: [TableName]
- 
-  - aws_namespace: AWS/DynamoDB
     aws_metric_name: SuccessfulRequestLatency
-    aws_dimensions: [TableName]
- 
-  - aws_namespace: AWS/DynamoDB
-    aws_metric_name: SystemErrors
-    aws_dimensions: [TableName]
+    aws_dimensions: ["TableName","Operation"]
 
   - aws_namespace: AWS/DynamoDB
-    aws_metric_name: TransactionConflict
-    aws_dimensions: [TableName]
-
-  - aws_namespace: AWS/DynamoDB
-    aws_metric_name: UserErrors
-    aws_dimensions: [TableName]
+    aws_metric_name: ThrottledRequests
+    aws_dimensions: ["TableName","Operation"]
 
     # MQ Broker Metrics
   - aws_namespace: AWS/AmazonMQ
