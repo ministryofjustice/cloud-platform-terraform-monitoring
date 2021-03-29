@@ -154,7 +154,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: ${storage_class}
+          storageClassName: gp2-expand
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
