@@ -152,14 +152,13 @@ alertmanager:
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
     ##
     storage:
-    volumeClaimTemplate:
-      spec:
-        storageClassName: ${storage_class}
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
-      selector: {}
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp2-expand
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
 
     ## 	The external URL the Alertmanager instances will be available under. This is necessary to generate correct URLs. This is necessary if Alertmanager is not served from root of a DNS name.	string	false
     ##
