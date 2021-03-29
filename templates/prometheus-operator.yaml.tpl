@@ -38,6 +38,9 @@ alertmanager:
       receiver: 'null'
       routes:
       - match:
+          alertname: NodeFilesystemSpaceFillingUp
+        receiver: 'null'
+      - match:
           alertname: KubeQuotaExceeded
         receiver: 'null'
       - match:
