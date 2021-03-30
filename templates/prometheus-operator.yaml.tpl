@@ -38,6 +38,9 @@ alertmanager:
       receiver: 'null'
       routes:
       - match:
+          alertname: NodeFilesystemSpaceFillingUp
+        receiver: 'null'
+      - match:
           alertname: KubeQuotaExceeded
         receiver: 'null'
       - match:
@@ -152,14 +155,13 @@ alertmanager:
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
     ##
     storage:
-    volumeClaimTemplate:
-      spec:
-        storageClassName: ${storage_class}
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
-      selector: {}
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp2-expand
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
 
     ## 	The external URL the Alertmanager instances will be available under. This is necessary to generate correct URLs. This is necessary if Alertmanager is not served from root of a DNS name.	string	false
     ##
@@ -248,6 +250,12 @@ grafana:
   - name: Alertmanager
     type: "camptocamp-prometheus-alertmanager-datasource"
     url: "http://alertmanager-operated:9093"
+    version: 1
+  - name: Thanos
+    type: "prometheus"
+    url: "http://thanos-query:9090"
+    isDefault: false
+    access: proxy
     version: 1
 
 ## Component scraping coreDns. Use either this or kubeDns
