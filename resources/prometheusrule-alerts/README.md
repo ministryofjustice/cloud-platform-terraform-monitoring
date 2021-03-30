@@ -110,7 +110,7 @@ This alert is triggered when the CPU for a node is running at or over 80% for 5 
 
 Expression:
 ```
-expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
 for: 5m
 ```
 ### Action
