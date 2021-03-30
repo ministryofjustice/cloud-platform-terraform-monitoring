@@ -110,7 +110,7 @@ This alert is triggered when the CPU for a node is running at or over 80% for 5 
 
 Expression:
 ```
-expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
 for: 5m
 ```
 ### Action
@@ -118,6 +118,15 @@ for: 5m
 Run the following to get a breakdown of CPU usage:
 ```bash
 kubectl describe node <node_name>
+```
+
+and the following to display resource (CPU/Memory/Storage) usage:
+```bash
+kubectl top node -n <namespace>
+```
+
+```bash
+kubectl top pod -n <namespace>
 ```
 
 Please read the Kubernetes documentation of the [Meaning of CPU](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#meaning-of-cpu)
@@ -129,11 +138,11 @@ Limits can also be set on a [Namespace](https://kubernetes.io/docs/tasks/adminis
 Also consider running the following searches for the relevant ip address in Kibana (around the time of the alert):
 
 ```
-_HOSTNAME: "ip-172-20" AND MESSAGE:"Error"
+kubernetes.host: "ip-172-20" AND "error"
 ```
 
 ```
-_HOSTNAME: "ip-172-20" AND MESSAGE:"Error syncing"
+kubernetes.host: "ip-172-20" AND "error syncing"
 ```
 
 Look for pods where containers are failing to start. Contact the relevant project owners as necessary.
@@ -147,7 +156,7 @@ This alert is triggered when the CPU for a node is running at or over 95% for 5 
 
 Expression:
 ```
-expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
 for: 5m
 ```
 ### Action
@@ -155,6 +164,15 @@ for: 5m
 Run the following to get a breakdown of CPU usage:
 ```bash
 kubectl describe node <node_name>
+```
+
+and the following to display resource (CPU/Memory/Storage) usage:
+```bash
+kubectl top node -n <namespace>
+```
+
+```bash
+kubectl top pod -n <namespace>
 ```
 
 Please read the Kubernetes documentation of the [Meaning of CPU](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#meaning-of-cpu)
@@ -166,11 +184,11 @@ Limits can also be set on a [Namespace](https://kubernetes.io/docs/tasks/adminis
 Also consider running the following searches for the relevant ip address in Kibana (around the time of the alert):
 
 ```
-_HOSTNAME: "ip-172-20" AND MESSAGE:"Error"
+kubernetes.host: "ip-172-20" AND "error"
 ```
 
 ```
-_HOSTNAME: "ip-172-20" AND MESSAGE:"Error syncing"
+kubernetes.host: "ip-172-20" AND "error syncing"
 ```
 
 Look for pods where containers are failing to start. Contact the relevant project owners as necessary.
