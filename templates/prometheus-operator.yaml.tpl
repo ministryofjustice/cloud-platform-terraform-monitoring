@@ -391,12 +391,15 @@ prometheus:
     ##
     externalUrl: "${ prometheus_ingress }"
 
-    requests:
-      memory: "14000Mi"
-      cpu: "1300m"
-    limits:
-      memory: "25000Mi"
-      cpu: "3000m"
+    ## Resource limits & requests
+    ##
+    resources:
+      requests:
+        memory: "14000Mi"
+        cpu: "1300m"
+      limits:
+        memory: "25000Mi"
+        cpu: "3000m"
 
     ## If true, a nil or {} value for prometheus.prometheusSpec.ruleSelector will cause the
     ## prometheus resource to be created with selectors based on values in the helm deployment,
