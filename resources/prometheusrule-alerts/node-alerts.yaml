@@ -19,7 +19,7 @@ spec:
         message: 'A node is reporting low disk space below 10%. Action is required on a node.'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#node-disk-space-low
     - alert: CPU-High
-      expr: 100 - (avg by (instance,pod) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+      expr: 100 - (avg by (instance,pod) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 95
       for: 5m
       labels:
         severity: warning
@@ -27,7 +27,7 @@ spec:
         message: This device's CPU usage has exceeded the threshold with a value of {{ $value }}. Instance {{ $labels.instance }} CPU usage is dangerously high
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#cpu-high
     - alert: CPU-Critical
-      expr: 100 - (avg by (instance,pod) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+      expr: 100 - (avg by (instance,pod) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 99
       for: 5m
       labels:
         severity: critical

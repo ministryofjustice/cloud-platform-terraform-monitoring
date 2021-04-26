@@ -106,11 +106,11 @@ Limits can also be set on a [Namespace](https://kubernetes.io/docs/tasks/adminis
 CPU-High
 Severity: warning
 ```
-This alert is triggered when the CPU for a node is running at or over 80% for 5 minutes
+This alert is triggered when the CPU for a node is running at or over 95% for 10 minutes
 
 Expression:
 ```
-expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 95
 for: 5m
 ```
 ### Action
@@ -152,11 +152,11 @@ Look for pods where containers are failing to start. Contact the relevant projec
 CPU-Critical
 Severity: critical
 ```
-This alert is triggered when the CPU for a node is running at or over 95% for 5 minutes
+This alert is triggered when the CPU for a node is running at or over 99% for 10 minutes
 
 Expression:
 ```
-expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 99
 for: 5m
 ```
 ### Action
