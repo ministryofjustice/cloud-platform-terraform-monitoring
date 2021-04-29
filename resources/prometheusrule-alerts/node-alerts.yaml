@@ -11,12 +11,12 @@ spec:
   - name: node.rules
     rules:
     - alert: Node-Disk-Space-Low
-      expr: ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes) < 10
+      expr: ((node_filesystem_avail_bytes {mountpoint !~"/snap/.+"} * 100) / node_filesystem_size_bytes) < 10
       for: 30m
       labels:
         severity: warning
       annotations:
-        message: 'A node is reporting low disk space below 10%. Action is required on a node.'
+        message: 'A node is reporting low disk space below 10% (Ignoring /snap/* mountpoints). Action is required on a node.'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#node-disk-space-low
     - alert: CPU-High
       expr: 100 - (avg by (instance,pod) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 95
