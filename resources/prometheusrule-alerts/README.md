@@ -31,11 +31,11 @@ Please read the documentation from [Kubernetes](https://github.com/kubernetes/ko
 Node-Disk-Space-Low
 Severity: warning
 ```
-This alert is triggered when a node has less than 10% disk space for 30 minutes. 
+This alert is triggered when a node has less than 10% disk space (Ignoring /snap/* mountpoints) for 30 minutes. 
 
 Expression:
 ```
-expr: ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes) < 10
+expr: ((node_filesystem_avail_bytes {mountpoint !~"/snap/.+"} * 100) / node_filesystem_size_bytes) < 10
 for: 30m
 ```
 ### Action
