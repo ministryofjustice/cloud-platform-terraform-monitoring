@@ -173,7 +173,6 @@ resource "helm_release" "prometheus_proxy" {
   ]
 
   depends_on = [
-    var.dependence_opa,
     random_id.session_secret,
   ]
 
