@@ -33,12 +33,6 @@ provider "aws" {
   }
 }
 
-module "opa" {
-  source = "github.com/ministryofjustice/cloud-platform-terraform-opa"
-
-  cluster_domain_name = "prometheus.cloud-platform.service.justice.gov.uk"
-}
-
 module "prometheus" {
   source = "../../"
 
@@ -61,6 +55,4 @@ module "prometheus" {
   oidc_components_client_id     = "XXX"
   oidc_components_client_secret = "XXX"
   oidc_issuer_url               = "https://justice-cloud-platform.eu.auth0.com/"
-
-  dependence_opa = module.opa.helm_opa_status
 }
