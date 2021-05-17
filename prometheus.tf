@@ -106,6 +106,7 @@ resource "helm_release" "prometheus_operator" {
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     storage_class                              = var.eks ? "gp2" : "io1-expand"
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
+    enable_large_nodesgroup                    = var.enable_large_nodesgroup
 
     # This is for EKS
     eks                 = var.eks
@@ -114,7 +115,6 @@ resource "helm_release" "prometheus_operator" {
 
   # Depends on Helm being installed
   depends_on = [
-    var.dependence_opa,
     kubernetes_secret.grafana_secret,
     kubernetes_secret.thanos_config,
     kubernetes_secret.dockerhub_credentials
