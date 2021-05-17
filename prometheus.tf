@@ -213,7 +213,6 @@ resource "helm_release" "alertmanager_proxy" {
   ]
 
   depends_on = [
-    var.dependence_opa,
     random_id.session_secret,
   ]
 
@@ -306,7 +305,6 @@ resource "helm_release" "kibana_audit_proxy" {
   ]
 
   depends_on = [
-    var.dependence_opa,
     random_id.session_secret,
     kubernetes_namespace.monitoring,
   ]
@@ -348,7 +346,6 @@ resource "helm_release" "kibana_proxy" {
   ]
 
   depends_on = [
-    var.dependence_opa,
     random_id.session_secret,
     kubernetes_namespace.monitoring,
   ]
