@@ -393,6 +393,7 @@ prometheus:
 
     ## Resource limits & requests
     ##
+    %{ if enable_large_nodesgroup }
     resources:
       requests:
         memory: "14000Mi"
@@ -400,6 +401,7 @@ prometheus:
       limits:
         memory: "25000Mi"
         cpu: "3000m"
+    %{ endif }
 
     ## If true, a nil or {} value for prometheus.prometheusSpec.ruleSelector will cause the
     ## prometheus resource to be created with selectors based on values in the helm deployment,

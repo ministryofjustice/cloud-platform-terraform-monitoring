@@ -12,10 +12,6 @@ variable "pagerduty_config" {
   description = "Add PagerDuty key to allow integration with a PD service."
 }
 
-variable "dependence_opa" {
-  description = "OPA module dependences in order to be executed."
-}
-
 variable "enable_ecr_exporter" {
   description = "Enable or not ECR exporter"
   default     = false
@@ -97,6 +93,12 @@ variable "dockerhub_username" {
   description = "DockerHub username - required to avoid hitting Dockerhub API limits in EKS clusters"
   default     = ""
   type        = string
+}
+
+variable "enable_large_nodesgroup" {
+  description = "Due to Prometheus resource consumption, enabling this will set k8s Prometheus resources to higher values"
+  type        = bool
+  default     = false
 }
 
 variable "dockerhub_password" {

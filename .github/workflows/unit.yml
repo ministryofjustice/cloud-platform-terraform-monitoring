@@ -37,7 +37,7 @@ jobs:
 
       - uses: engineerd/setup-kind@v0.5.0
         with:
-          image: "kindest/node:v1.17.11@sha256:5240a7a2c34bf241afb54ac05669f8a46661912eab05705d660971eeb12f6555"
+          image: "kindest/node:v1.18.8@sha256:f4bcc97a0ad6e7abaf3f643d890add7efe6ee4ab90baeb374b4f41a4c95567eb"
       - name: Set up Kind for module testing
         run: |
           kubectl cluster-info
