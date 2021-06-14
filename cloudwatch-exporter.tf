@@ -76,7 +76,7 @@ module "iam_assumable_role_cloudwatch_exporter" {
   role_name                     = "cloudwatch.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
   role_policy_arns              = [var.enable_cloudwatch_exporter && var.eks ? aws_iam_policy.cloudwatch_exporter.0.arn : ""]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:cloudwatch-exporter-prometheus-cloudwatch-exporter"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:cloud-platform-cloudwatch-exporter"]
 }
 
 resource "aws_iam_policy" "cloudwatch_exporter" {
