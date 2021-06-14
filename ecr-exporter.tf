@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "ecr_exporter" {
 }
 
 resource "aws_iam_role_policy" "ecr_exporter" {
-  count = var.enable_ecr_exporter && ? 1 : 0
+  count = var.enable_ecr_exporter ? 1 : 0
 
   name   = "ecr-exporter"
   role   = aws_iam_role.ecr_exporter.0.id
