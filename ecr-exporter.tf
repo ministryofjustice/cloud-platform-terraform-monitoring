@@ -92,5 +92,5 @@ resource "aws_iam_policy" "ecr_exporter" {
 
   name_prefix = "cloudwatch_exporter"
   description = "EKS ECR Exporter policy for cluster ${var.cluster_domain_name}"
-  policy      = data.aws_iam_policy_document.cloudwatch_exporter.json
+  policy      = data.aws_iam_policy_document.ecr_exporter.json
 }
