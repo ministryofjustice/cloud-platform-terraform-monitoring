@@ -199,6 +199,10 @@ grafana:
 
   ingress:
     enabled: true
+    annotations: {
+      external-dns.alpha.kubernetes.io/aws-weight: "100",
+      external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}"
+    }
     hosts:
     - "${ grafana_ingress }"
     tls:

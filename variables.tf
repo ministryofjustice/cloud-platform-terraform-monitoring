@@ -83,6 +83,11 @@ variable "eks" {
   default     = false
 }
 
+variable "ingress_redirect" {
+  description = "Enable ingress_redirect, to use live_domain, 'cloud-platform.service.justice.gov.uk'"
+  type        = bool
+  default     = false
+}
 variable "eks_cluster_oidc_issuer_url" {
   description = "If EKS variable is set to true this is going to be used when we create the IAM OIDC role"
   type        = string
@@ -103,6 +108,13 @@ variable "enable_large_nodesgroup" {
 
 variable "dockerhub_password" {
   description = "DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters"
+  default     = ""
+  type        = string
+}
+
+
+variable "grafana_ingress_redirect_url" {
+  description = "grafana url to use live_domain, 'cloud-platform.service.justice.gov.uk'"
   default     = ""
   type        = string
 }

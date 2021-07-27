@@ -2,25 +2,26 @@
 locals {
   live_workspace = "live-1"
   live_domain    = "cloud-platform.service.justice.gov.uk"
+  ingress_redirect = terraform.workspace == local.live_workspace ? true : false
 
-  alertmanager_ingress = terraform.workspace == local.live_workspace ? format("%s.%s", "https://alertmanager", local.live_domain) : format(
+  alertmanager_ingress = format(
     "%s.%s",
-    "https://alertmanager.apps",
+    "https://alertmanager",
     var.cluster_domain_name,
   )
-  grafana_ingress = terraform.workspace == local.live_workspace ? format("%s.%s", "grafana", local.live_domain) : format(
+  grafana_ingress = format(
     "%s.%s",
-    "grafana.apps",
+    "grafana",
     var.cluster_domain_name,
   )
-  grafana_root = terraform.workspace == local.live_workspace ? format("%s.%s", "https://grafana", local.live_domain) : format(
+  grafana_root = format(
     "%s.%s",
-    "https://grafana.apps",
+    "https://grafana",
     var.cluster_domain_name,
   )
-  prometheus_ingress = terraform.workspace == local.live_workspace ? format("%s.%s", "https://prometheus", local.live_domain) : format(
+  prometheus_ingress = format(
     "%s.%s",
-    "https://prometheus.apps",
+    "https://prometheus",
     var.cluster_domain_name,
   )
 }

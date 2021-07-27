@@ -146,17 +146,20 @@ data "template_file" "prometheus_proxy" {
 
   vars = {
     upstream = "http://prometheus-operator-kube-p-prometheus:9090"
-    hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "prometheus", local.live_domain) : format(
+    hostname = format(
       "%s.%s",
-      "prometheus.apps",
+      "prometheus",
       var.cluster_domain_name,
     )
-    exclude_paths = "^/-/healthy$"
-    issuer_url    = var.oidc_issuer_url
-    client_id     = var.oidc_components_client_id
-    client_secret = var.oidc_components_client_secret
-    cookie_secret = random_id.session_secret.b64_std
-    eks           = var.eks
+    exclude_paths        = "^/-/healthy$"
+    issuer_url           = var.oidc_issuer_url
+    client_id            = var.oidc_components_client_id
+    client_secret        = var.oidc_components_client_secret
+    cookie_secret        = random_id.session_secret.b64_std
+    eks                  = var.eks
+    clusterName          = terraform.workspace
+    ingress_redirect     = terraform.workspace == local.live_workspace ? true : false
+    live_domain_hostname = "prometheus.${local.live_domain}"
   }
 }
 
@@ -185,17 +188,20 @@ data "template_file" "alertmanager_proxy" {
 
   vars = {
     upstream = "http://prometheus-operator-kube-p-alertmanager:9093"
-    hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "alertmanager", local.live_domain) : format(
+    hostname = format(
       "%s.%s",
-      "alertmanager.apps",
+      "alertmanager",
       var.cluster_domain_name,
     )
-    exclude_paths = "^/-/healthy$"
-    issuer_url    = var.oidc_issuer_url
-    client_id     = var.oidc_components_client_id
-    client_secret = var.oidc_components_client_secret
-    cookie_secret = random_id.session_secret.b64_std
-    eks           = var.eks
+    exclude_paths        = "^/-/healthy$"
+    issuer_url           = var.oidc_issuer_url
+    client_id            = var.oidc_components_client_id
+    client_secret        = var.oidc_components_client_secret
+    cookie_secret        = random_id.session_secret.b64_std
+    eks                  = var.eks
+    clusterName          = terraform.workspace
+    ingress_redirect     = local.ingress_redirect
+    live_domain_hostname = "alertmanager.${local.live_domain}"
   }
 }
 
@@ -278,15 +284,17 @@ data "template_file" "kibana_audit_proxy" {
     upstream = "https://search-cloud-platform-audit-dq5bdnjokj4yt7qozshmifug6e.eu-west-2.es.amazonaws.com"
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "kibana-audit", local.live_domain) : format(
       "%s.%s",
-      "kibana-audit.apps",
+      "kibana-audit",
       var.cluster_domain_name,
     )
-    exclude_paths = "^/-/healthy$"
-    issuer_url    = var.oidc_issuer_url
-    client_id     = var.oidc_components_client_id
-    client_secret = var.oidc_components_client_secret
-    cookie_secret = random_id.session_secret.b64_std
-    eks           = var.eks
+    exclude_paths    = "^/-/healthy$"
+    issuer_url       = var.oidc_issuer_url
+    client_id        = var.oidc_components_client_id
+    client_secret    = var.oidc_components_client_secret
+    cookie_secret    = random_id.session_secret.b64_std
+    eks              = var.eks
+    ingress_redirect = false
+    clusterName      = terraform.workspace
   }
 }
 
@@ -319,15 +327,17 @@ data "template_file" "kibana_proxy" {
     upstream = "https://search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com"
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "kibana", local.live_domain) : format(
       "%s.%s",
-      "kibana.apps",
+      "kibana",
       var.cluster_domain_name,
     )
-    exclude_paths = "^/-/healthy$"
-    issuer_url    = var.oidc_issuer_url
-    client_id     = var.oidc_components_client_id
-    client_secret = var.oidc_components_client_secret
-    cookie_secret = random_id.session_secret.b64_std
-    eks           = var.eks
+    exclude_paths    = "^/-/healthy$"
+    issuer_url       = var.oidc_issuer_url
+    client_id        = var.oidc_components_client_id
+    client_secret    = var.oidc_components_client_secret
+    cookie_secret    = random_id.session_secret.b64_std
+    eks              = var.eks
+    ingress_redirect = false
+    clusterName      = terraform.workspace
   }
 }
 
@@ -350,5 +360,39 @@ resource "helm_release" "kibana_proxy" {
 
   lifecycle {
     ignore_changes = [keyring]
+  }
+}
+
+# This Ingress is to re-direct "grafana.cloud-platform.service.justice.gov.uk" to grafana_root URL
+# GF_SERVER_ROOT_URL supports only one URL, so cannot create multiple hosts as Prometheus and alertmanager in this module.
+
+resource "kubernetes_ingress" "ingress_redirect_grafana" {
+  count = local.ingress_redirect ? 1 : 0
+  metadata {
+    name        = "ingress-redirect-grafana"
+    namespace   = kubernetes_namespace.monitoring.id
+    annotations = {
+      "external-dns.alpha.kubernetes.io/aws-weight" = "100"
+      "external-dns.alpha.kubernetes.io/set-identifier" = "dns-grafana"
+      "kubernetes.io/ingress.class" = "nginx"
+      "nginx.ingress.kubernetes.io/permanent-redirect" = local.grafana_root
+    }
+  }
+  spec {
+    tls {
+      hosts = ["grafana.${local.live_domain}"]
+    }
+    rule {
+      host = "grafana.${local.live_domain}"
+      http {
+        path {
+          path = ""
+          backend {
+            service_name = "prometheus-operator-grafana"
+            service_port = 80
+          }
+        }
+      }
+    }
   }
 }
