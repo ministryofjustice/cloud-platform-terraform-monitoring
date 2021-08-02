@@ -478,7 +478,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: ${storage_class}
+          storageClassName: io1-expand
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
