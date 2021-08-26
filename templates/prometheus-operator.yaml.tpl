@@ -470,10 +470,10 @@ prometheus:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
           - matchExpressions:
-            - key: beta.kubernetes.io/instance-type
+            - key: cloud-platform.justice.gov.uk/monitoring-ng
               operator: In
               values:
-              - r5.2xlarge
+              - "true"
     %{ endif ~}
 
     ## Prometheus StorageSpec for persistent data
@@ -486,7 +486,7 @@ prometheus:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 750Gi
+              storage: 75Gi
 
 %{ if enable_thanos_sidecar == true ~}
     thanos: 
