@@ -49,4 +49,4 @@ jobs:
         run: |
           kind get kubeconfig > ./kubeconfig
           export KUBE_CONFIG_PATH="$PWD/kubeconfig"
-          go test -v
+          go test -timeout 30s -v
