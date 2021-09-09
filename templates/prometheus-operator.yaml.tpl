@@ -380,7 +380,7 @@ prometheus:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     ##
     tolerations:
-      - key: "cloud-platform.justice.gov.uk/monitoring-ng"
+      - key: "monitoring-node"
         operator: "Equal"
         value: "true"
         effect: "NoSchedule"
@@ -403,7 +403,7 @@ prometheus:
         memory: "14000Mi"
         cpu: "1300m"
       limits:
-        memory: "25000Mi"
+        memory: "60000Mi"
         cpu: "3000m"
     %{ endif }
 
