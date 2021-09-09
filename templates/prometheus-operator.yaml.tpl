@@ -403,7 +403,7 @@ prometheus:
         memory: "14000Mi"
         cpu: "1300m"
       limits:
-        memory: "25000Mi"
+        memory: "60000Mi"
         cpu: "3000m"
     %{ endif }
 
