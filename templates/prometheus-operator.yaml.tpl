@@ -202,7 +202,7 @@ grafana:
     annotations: {
       external-dns.alpha.kubernetes.io/aws-weight: "100",
       external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
-      cloud-platform.justice.gov.uk/ignore-external-dns-weight: true
+      cloud-platform.justice.gov.uk/ignore-external-dns-weight: "true"
     }
     hosts:
     - "${ grafana_ingress }"
