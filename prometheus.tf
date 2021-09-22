@@ -374,6 +374,7 @@ resource "kubernetes_ingress" "ingress_redirect_grafana" {
     annotations = {
       "external-dns.alpha.kubernetes.io/aws-weight" = "100"
       "external-dns.alpha.kubernetes.io/set-identifier" = "dns-grafana"
+      "cloud-platform.justice.gov.uk/ignore-external-dns-weight" : "true"
       "kubernetes.io/ingress.class" = "nginx"
       "nginx.ingress.kubernetes.io/permanent-redirect" = local.grafana_root
     }
