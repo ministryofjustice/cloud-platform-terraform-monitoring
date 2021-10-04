@@ -9,12 +9,14 @@ resource "helm_release" "thanos" {
 
   name      = "thanos"
   namespace = kubernetes_namespace.monitoring.id
-  chart     = "banzaicloud-stable/thanos"
-  version   = "0.3.18"
+  chart     = "bitnami/thanos"
+  version   = "3.8.3"
 
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
     enabled_compact     = var.enable_thanos_compact
+    eks                 = var.eks
     monitoring_aws_role = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
+    clusterName         = terraform.workspace
   })]
 
   depends_on = [helm_release.prometheus_operator]
@@ -94,12 +96,12 @@ resource "aws_iam_role_policy" "monitoring" {
 # IRSA
 module "iam_assumable_role_monitoring" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "~> v2.6.0"
+  version                       = "3.13.0"
   create_role                   = var.eks ? true : false
   role_name                     = "monitoring.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
   role_policy_arns              = [var.eks && length(aws_iam_policy.monitoring) >= 1 ? aws_iam_policy.monitoring.0.arn : ""]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-prometheus"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-kube-p-prometheus"]
 }
 
 resource "aws_iam_policy" "monitoring" {

@@ -2,7 +2,7 @@
 resource "helm_release" "metrics_server" {
   name       = "metrics-server"
   chart      = "metrics-server"
-  repository = data.helm_repository.stable.metadata[0].name
+  repository = "https://charts.helm.sh/stable"
   namespace  = "kube-system"
   version    = "2.8.8"
 

@@ -31,11 +31,11 @@ Please read the documentation from [Kubernetes](https://github.com/kubernetes/ko
 Node-Disk-Space-Low
 Severity: warning
 ```
-This alert is triggered when a node has less than 10% disk space for 30 minutes. 
+This alert is triggered when a node has less than 10% disk space (Ignoring /snap/* mountpoints) for 30 minutes. 
 
 Expression:
 ```
-expr: ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes) < 10
+expr: ((node_filesystem_avail_bytes {mountpoint !~"/snap/.+"} * 100) / node_filesystem_size_bytes) < 10
 for: 30m
 ```
 ### Action
@@ -106,11 +106,11 @@ Limits can also be set on a [Namespace](https://kubernetes.io/docs/tasks/adminis
 CPU-High
 Severity: warning
 ```
-This alert is triggered when the CPU for a node is running at or over 80% for 5 minutes
+This alert is triggered when the CPU for a node is running at or over 95% for 10 minutes
 
 Expression:
 ```
-expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 95
 for: 5m
 ```
 ### Action
@@ -120,23 +120,43 @@ Run the following to get a breakdown of CPU usage:
 kubectl describe node <node_name>
 ```
 
+and the following to display resource (CPU/Memory/Storage) usage:
+```bash
+kubectl top node -n <namespace>
+```
+
+```bash
+kubectl top pod -n <namespace>
+```
+
 Please read the Kubernetes documentation of the [Meaning of CPU](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#meaning-of-cpu)
 
 You can [set CPU limits](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/) to pods and containers, as by default - pods run with unbounded CPU limits.
 
 Limits can also be set on a [Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-default-namespace/)
 
+Also consider running the following searches for the relevant ip address in Kibana (around the time of the alert):
+
+```
+kubernetes.host: "ip-172-20" AND "error"
+```
+
+```
+kubernetes.host: "ip-172-20" AND "error syncing"
+```
+
+Look for pods where containers are failing to start. Contact the relevant project owners as necessary.
 
 ## CPU-Critical
 ```
 CPU-Critical
 Severity: critical
 ```
-This alert is triggered when the CPU for a node is running at or over 95% for 5 minutes
+This alert is triggered when the CPU for a node is running at or over 99% for 10 minutes
 
 Expression:
 ```
-expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 99
 for: 5m
 ```
 ### Action
@@ -146,11 +166,32 @@ Run the following to get a breakdown of CPU usage:
 kubectl describe node <node_name>
 ```
 
+and the following to display resource (CPU/Memory/Storage) usage:
+```bash
+kubectl top node -n <namespace>
+```
+
+```bash
+kubectl top pod -n <namespace>
+```
+
 Please read the Kubernetes documentation of the [Meaning of CPU](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#meaning-of-cpu)
 
 You can [set CPU limits](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/) to pods and containers, as by default - pods run with unbounded CPU limits.
 
 Limits can also be set on a [Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-default-namespace/)
+
+Also consider running the following searches for the relevant ip address in Kibana (around the time of the alert):
+
+```
+kubernetes.host: "ip-172-20" AND "error"
+```
+
+```
+kubernetes.host: "ip-172-20" AND "error syncing"
+```
+
+Look for pods where containers are failing to start. Contact the relevant project owners as necessary.
 
 ## KubeDNSDown
 
@@ -570,3 +611,38 @@ Check the API logs to identify and get more information:
 ```
  stern --namespace kube-system kube-apiserver-ip
 ```
+
+## HTTP-Error-5xx---warning
+```
+HTTP-Error-5xx---warning
+Severity: warning
+```
+This alert is triggered when a http error requests for nginx_ingress_controller (5xx) exceed 1% of all requests for 5 minutes
+
+Expression:
+```
+expr: sum by(pod)(rate(nginx_ingress_controller_requests{status=~"2.*",ingress=~".*"pod=~".*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_requests{ingress=~".*"pod=~".*"}[5m])) * 100 > 1 for 5 minutes
+```
+### Action
+
+Investigation in Kibana required.
+The following Prometheus expression summary of all request nginx_ingress_controller_requests may also help with investigation:
+
+```
+sum(label_replace(rate(nginx_ingress_controller_requests{namespace="ingress-controllers",ingress=~".*"}[2m]), "status_code", "${1}xx", "status", "(.)..")) by (status_code)
+```
+
+## NginxIngress-Latency(ms)---warning
+```
+NginxIngress-Latency(ms)---warning
+Severity: warning
+```
+This alert is triggered when latency exceeds 300 milliseconds for 5 minutes for nginx_ingress_controller_requests.
+
+Expression:
+```
+expr: sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_sum{ingress=~".*",pod=~".*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_count{ingress=~".*",pod=~".*"}[5m])) * 1000 > 300 for 5 minutes
+```
+### Action
+
+Investigation in Kibana required

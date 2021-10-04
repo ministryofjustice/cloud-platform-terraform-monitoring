@@ -13,6 +13,11 @@ defaultRules:
 %{ endif ~}
     general: false
     kubernetesApps: false
+%{ if eks ~}
+global:
+  imagePullSecrets:
+  - name: "dockerhub-credentials"
+%{ endif ~}
 
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
@@ -32,6 +37,9 @@ alertmanager:
       repeat_interval: 12h
       receiver: 'null'
       routes:
+      - match:
+          alertname: NodeFilesystemSpaceFillingUp
+        receiver: 'null'
       - match:
           alertname: KubeQuotaExceeded
         receiver: 'null'
@@ -147,14 +155,13 @@ alertmanager:
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
     ##
     storage:
-    volumeClaimTemplate:
-      spec:
-        storageClassName: ${storage_class}
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
-      selector: {}
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp2-expand
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
 
     ## 	The external URL the Alertmanager instances will be available under. This is necessary to generate correct URLs. This is necessary if Alertmanager is not served from root of a DNS name.	string	false
     ##
@@ -166,6 +173,10 @@ grafana:
   enabled: true
 
   image:
+%{ if eks ~}
+    pullSecrets:
+    - "dockerhub-credentials"
+%{ endif ~}
     repository: grafana/grafana
     tag: 7.0.2
     pullPolicy: IfNotPresent
@@ -187,13 +198,14 @@ grafana:
 %{ endif ~}
 
   ingress:
-    ## If true, Prometheus Ingress will be created
-    ##
     enabled: true
-
+    annotations: {
+      external-dns.alpha.kubernetes.io/aws-weight: "100",
+      external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
+      cloud-platform.justice.gov.uk/ignore-external-dns-weight: "true"
+    }
     hosts:
     - "${ grafana_ingress }"
-
     tls:
       - hosts:
         - "${ grafana_ingress }"
@@ -203,6 +215,8 @@ grafana:
     GF_ANALYTICS_REPORTING_ENABLED: "false"
     GF_AUTH_DISABLE_LOGIN_FORM: "true"
     GF_USERS_ALLOW_SIGN_UP: "false"
+    GF_INSTALL_PLUGINS: "camptocamp-prometheus-alertmanager-datasource"
+    GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: "camptocamp-prometheus-alertmanager-datasource"
     GF_USERS_AUTO_ASSIGN_ORG_ROLE: "Viewer"
     GF_USERS_VIEWERS_CAN_EDIT: "true"
     GF_SMTP_ENABLED: "false"
@@ -238,25 +252,21 @@ grafana:
       assumeRoleArn: "${ grafana_assumerolearn }"
     orgId: 1
     version: 1
+  - name: Alertmanager
+    type: "camptocamp-prometheus-alertmanager-datasource"
+    url: "http://alertmanager-operated:9093"
+    version: 1
+  - name: Thanos
+    type: "prometheus"
+    url: "http://thanos-query:9090"
+    isDefault: false
+    access: proxy
+    version: 1
 
 ## Component scraping coreDns. Use either this or kubeDns
 ##
 coreDns:
-%{ if eks ~}
   enabled: true
-%{ else ~}
-  enabled: false
-%{ endif ~}
-
-## Component scraping kubeDns. Use either this or coreDns
-##
-kubeDns:
-%{ if eks ~}
-  enabled: false
-%{ else ~}
-  enabled: true
-%{ endif ~}
-
 
 ## Component scraping etcd
 ##
@@ -314,6 +324,11 @@ kubeStateMetrics:
 kube-state-metrics:
   image:
     tag: v1.7.0
+%{ if eks ~}
+  serviceAccount:
+    imagePullSecrets:
+    - name: "dockerhub-credentials"
+%{ endif ~}
 
   collectors:
     validatingwebhookconfigurations: false
@@ -330,16 +345,11 @@ prometheusOperator:
   tlsProxy:
     enabled: false
 
-  admissionWebhooks:
+  tls:
     enabled: false
 
-  ## Deploy CRDs used by Prometheus Operator.
-  ##
-  createCustomResource: true
-
-  ## Attempt to clean up CRDs created by Prometheus Operator.
-  ##
-  cleanupCustomResource: true
+  admissionWebhooks:
+    enabled: false
 
 ## Deploy a Prometheus instance
 ##
@@ -352,7 +362,14 @@ prometheus:
     annotations:
       eks.amazonaws.com/role-arn: "${eks_service_account}"
 %{ endif ~}
-      
+
+  # Service for thanos service discovery on sidecar
+  # Enable this can make Thanos Query can use
+  # `--store=dnssrv+_grpc._tcp.$kube-prometheus-stack.fullname-thanos-discovery.$namespace.svc.cluster.local` to discovery
+  # Thanos sidecar on prometheus nodes
+  # (Please remember to change $kube-prometheus-stack.fullname and $namespace. Not just copy and paste!)
+  thanosService:
+    enabled: true      
 
   ## Settings affecting prometheusSpec
   ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
@@ -379,18 +396,23 @@ prometheus:
     ##
     externalUrl: "${ prometheus_ingress }"
 
+    ## Resource limits & requests
+    ##
+    %{ if enable_large_nodesgroup }
+    resources:
+      requests:
+        memory: "14000Mi"
+        cpu: "1300m"
+      limits:
+        memory: "60000Mi"
+        cpu: "3000m"
+    %{ endif }
+
     ## If true, a nil or {} value for prometheus.prometheusSpec.ruleSelector will cause the
     ## prometheus resource to be created with selectors based on values in the helm deployment,
     ## which will also match the PrometheusRule resources created
     ##
     ruleSelectorNilUsesHelmValues: false
-
-    ## Rules CRD selector
-    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/design.md
-    ## If unspecified the release `app` and `release` will be used as the label selector
-    ## to load rules
-    ##
-    ruleSelector: {}
 
     ## Namespaces to be selected for PrometheusRules discovery.
     ## If nil, select own namespace. Namespaces to be selected for ServiceMonitor discovery.
@@ -449,10 +471,10 @@ prometheus:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
           - matchExpressions:
-            - key: beta.kubernetes.io/instance-type
+            - key: cloud-platform.justice.gov.uk/monitoring-ng
               operator: In
               values:
-              - r5.2xlarge
+              - "true"
     %{ endif ~}
 
     ## Prometheus StorageSpec for persistent data
@@ -461,16 +483,17 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: ${storage_class}
+          storageClassName: io1-expand
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 750Gi
+              storage: 75Gi
 
+%{ if enable_thanos_sidecar == true ~}
     thanos: 
       baseImage: quay.io/thanos/thanos
-      version: v0.11.0
+      version: v0.17.2
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config 
-
+%{ endif ~}

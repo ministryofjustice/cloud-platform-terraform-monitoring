@@ -2,6 +2,7 @@
 # This is a redacted version of the upstream values.yaml file found here:
 # https://github.com/helm/charts/blob/dea84cfd139f0e7bd7721abfa53e4853c1379c0a/stable/oauth2-proxy/values.yaml
 #
+replicaCount: 2
 
 config:
   clientID: "${client_id}"
@@ -13,6 +14,11 @@ config:
   #   pass_access_token = true
   configFile: ""
 
+%{ if eks ~}
+image:
+  imagePullSecrets:
+  - name: "dockerhub-credentials"
+%{ endif ~}
 extraArgs:
   provider: oidc
   oidc-issuer-url: ${issuer_url}
@@ -27,28 +33,26 @@ extraArgs:
 
 ingress:
   enabled: true
+  annotations: {
+    external-dns.alpha.kubernetes.io/aws-weight: "100",
+    external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
+    cloud-platform.justice.gov.uk/ignore-external-dns-weight: "true"
+  }
   path: /
+%{ if ingress_redirect ~}
+  hosts:
+    - "${hostname}"
+    - "${live_domain_hostname}"
+  tls:
+    - hosts:
+      - "${hostname}"
+      - "${live_domain_hostname}"
+%{ else ~}
   hosts:
     - "${hostname}"
   tls:
     - hosts:
       - "${hostname}"
-
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: "true"
-
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: "true"
-  tls:
-    - hosts:
-      - "${hostname}"
-
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 300Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 300Mi
+%{ endif ~}
+serviceAccount:
+  enabled: false

@@ -1,5 +1,3 @@
-
-
 ################
 # ECR Exporter #
 ################
@@ -10,7 +8,7 @@ resource "helm_release" "ecr_exporter" {
   name       = "ecr-exporter"
   namespace  = kubernetes_namespace.monitoring.id
   chart      = "prometheus-ecr-exporter"
-  repository = data.helm_repository.cloud_platform.metadata[0].name
+  repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
 
   set {
     name  = "serviceMonitor.enabled"
@@ -19,7 +17,7 @@ resource "helm_release" "ecr_exporter" {
 
   set {
     name  = "aws.role"
-    value = aws_iam_role.ecr_exporter.0.name
+    value = var.eks ? module.iam_assumable_role_ecr_exporter.this_iam_role_name : aws_iam_role.ecr_exporter.0.name
   }
 
   set {
@@ -53,7 +51,7 @@ data "aws_iam_policy_document" "ecr_exporter_assume" {
 
 resource "aws_iam_role" "ecr_exporter" {
   count = var.enable_ecr_exporter && var.eks == false ? 1 : 0
-  
+
   name               = "ecr-exporter.${var.cluster_domain_name}"
   assume_role_policy = data.aws_iam_policy_document.ecr_exporter_assume.json
 }
@@ -81,12 +79,12 @@ resource "aws_iam_role_policy" "ecr_exporter" {
 
 module "iam_assumable_role_ecr_exporter" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "~> v2.6.0"
+  version                       = "3.13.0"
   create_role                   = var.enable_ecr_exporter && var.eks ? true : false
   role_name                     = "ecr-exporter.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
   role_policy_arns              = [var.enable_ecr_exporter && var.eks ? aws_iam_policy.ecr_exporter.0.arn : ""]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:test-prometheus-ecr-exporter"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:default"]
 }
 
 resource "aws_iam_policy" "ecr_exporter" {
@@ -94,5 +92,5 @@ resource "aws_iam_policy" "ecr_exporter" {
 
   name_prefix = "cloudwatch_exporter"
   description = "EKS ECR Exporter policy for cluster ${var.cluster_domain_name}"
-  policy      = data.aws_iam_policy_document.cloudwatch_exporter.json
+  policy      = data.aws_iam_policy_document.ecr_exporter.json
 }

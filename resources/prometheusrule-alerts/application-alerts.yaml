@@ -4,6 +4,7 @@ metadata:
   labels:
     prometheus: prometheus-operator
     role: alert-rules
+    release: prometheus-operator
   name: prometheus-operator-custom-kubernetes-apps.rules
 spec:
   groups:
@@ -45,7 +46,7 @@ spec:
         >= 0) + 2 * stddev by(verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
         >= 0))) > on(verb) group_left() 1.2 * avg by(verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
         >= 0) and on(verb, resource) cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="apiserver",quantile="0.99"}
-        > 10
+        > 30
       for: 5m
       labels:
         severity: warning
@@ -55,7 +56,7 @@ spec:
           {{ $labels.verb }} {{ $labels.resource }}.
         runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapilatencyhigh
       expr: |-
-        cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="apiserver",quantile="0.99",resource="ingresses",verb="POST"} > 30
+        cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="apiserver",quantile="0.99",resource="ingresses",verb="POST"} > 50
       for: 10m
       labels:
         severity: critical
@@ -68,7 +69,7 @@ spec:
         100 * kube_resourcequota{job="kube-state-metrics", type="used"} 
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"}
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"}
         / ignoring(instance, job, type)
         (kube_resourcequota{job="kube-state-metrics", type="hard"} > 0)
         > 90
@@ -84,7 +85,7 @@ spec:
         rate(kube_pod_container_status_restarts_total{job="kube-state-metrics"}[15m]) 
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"}
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"}
         * 60 * 5 > 0
       for: 1h
       labels:
@@ -98,7 +99,7 @@ spec:
         sum by (namespace, pod) (kube_pod_status_phase{job="kube-state-metrics", phase=~"Pending|Unknown"}) 
         * on (namespace) 
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"} 
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"} 
         > 0
       for: 1h
       labels:
@@ -113,7 +114,7 @@ spec:
         kube_deployment_status_observed_generation{job="kube-state-metrics"}
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"} 
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"} 
         !=
         kube_deployment_metadata_generation{job="kube-state-metrics"}
       for: 15m
@@ -128,7 +129,7 @@ spec:
         kube_deployment_spec_replicas{job="kube-state-metrics"} 
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"} 
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"} 
         != kube_deployment_status_replicas_available{job="kube-state-metrics"}
       for: 1h
       labels:
@@ -142,7 +143,7 @@ spec:
         kube_statefulset_status_replicas_ready{job="kube-state-metrics"}
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"}
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"}
         !=
         kube_statefulset_status_replicas{job="kube-state-metrics"}
       for: 15m
@@ -158,7 +159,7 @@ spec:
         kube_statefulset_status_observed_generation{job="kube-state-metrics"}        
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"}
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"}
         !=
         kube_statefulset_metadata_generation{job="kube-state-metrics"}
       for: 15m
@@ -174,7 +175,7 @@ spec:
           kube_statefulset_status_current_revision{job="kube-state-metrics"}
           * on (namespace)
           group_left() 
-          kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"}
+          kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"}
             unless
           kube_statefulset_status_update_revision{job="kube-state-metrics"}
         )
@@ -183,7 +184,7 @@ spec:
           kube_statefulset_replicas{job="kube-state-metrics"}
           * on (namespace)
           group_left() 
-          kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"}
+          kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"}
           !=
           kube_statefulset_status_replicas_updated{job="kube-state-metrics"}
         )  
@@ -199,7 +200,7 @@ spec:
         kube_daemonset_status_number_ready{job="kube-state-metrics"}
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"}
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"}
         /
         kube_daemonset_status_desired_number_scheduled{job="kube-state-metrics"} * 100 < 100
       for: 15m
@@ -214,7 +215,7 @@ spec:
         kube_daemonset_status_desired_number_scheduled{job="kube-state-metrics"}     
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"}
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"}
         -
         kube_daemonset_status_current_number_scheduled{job="kube-state-metrics"} > 0 
       for: 10m
@@ -229,7 +230,7 @@ spec:
         kube_daemonset_status_number_misscheduled{job="kube-state-metrics"} 
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"} 
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"} 
         > 0
       for: 10m
       labels:
@@ -243,7 +244,7 @@ spec:
         time() - kube_cronjob_next_schedule_time{job="kube-state-metrics"} 
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"} 
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"} 
         > 3600
       for: 1h
       labels:
@@ -257,7 +258,7 @@ spec:
         kube_job_spec_completions{job="kube-state-metrics"} - kube_job_status_succeeded{job="kube-state-metrics"} 
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"} 
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"} 
         > 0
       for: 1h
       labels:
@@ -270,7 +271,7 @@ spec:
         kube_job_status_failed{job="kube-state-metrics"}  
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"} 
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"} 
         > 0
       for: 1h
       labels:
@@ -282,7 +283,7 @@ spec:
         100 * (count(up == 0) BY (job) / count(up) BY (job)) 
         * on (namespace)
         group_left() 
-        kube_namespace_annotations{annotation_cloud_platform_justice_gov_uk_business_unit="cloud-platform"} 
+        kube_namespace_annotations{annotation_cloud_platform_out_of_hours_alert="true"} 
         > 10
       for: 10m
       labels:
@@ -342,4 +343,23 @@ spec:
       for: 1m
       labels:
         severity: info-warning
-        
+    - alert: coreDNSLatencyWarning
+      annotations:
+        message: The coreDNS for the Kubernetes cluster has a 99th percentile latency of {{ $value }} seconds for
+          {{ $labels.verb }} {{ $labels.resource }}. The high latency of the request could mean a degradation in the Kubernetes cluster service. This check is comparing the percentile against the average using the operator histogram
+        runbook_url: https://sysdig.com/blog/how-to-monitor-coredns/
+      expr: |-
+        histogram_quantile(0.99, sum(rate(coredns_dns_request_duration_seconds_bucket{job="coredns"}[5m])) by(server, zone, le)) > 1
+      for: 10m
+      labels:
+        severity: warning        
+    - alert: coreDNSLatencyCritical
+      annotations:
+        message: The coreDNS for the Kubernetes cluster has a 99th percentile latency of {{ $value }} seconds for
+          {{ $labels.verb }} {{ $labels.resource }}. The high latency of the request could mean a degradation in the Kubernetes cluster service. This check is comparing the percentile against the average using the operator histogram
+        runbook_url: https://sysdig.com/blog/how-to-monitor-coredns/
+      expr: |-
+        histogram_quantile(0.99, sum(rate(coredns_dns_request_duration_seconds_bucket{job="coredns"}[5m])) by(server, zone, le)) > 4
+      for: 10m
+      labels:
+        severity: critical
