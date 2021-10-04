@@ -61,6 +61,9 @@ data "template_file" "alertmanager_receivers" {
       text: 'Query :mag:'
       url: '{{ (index .Alerts 0).GeneratorURL }}'
     - type: button
+      text: 'Dashboard :chart_with_upwards_trend:'
+      url: '{{ (index .Alerts 0).Annotations.dashboard_url }}'
+    - type: button
       text: 'Silence :no_bell:'
       url: '{{ template "__alert_silence_link" . }}'
 - name: 'slack-info-$${severity}'
