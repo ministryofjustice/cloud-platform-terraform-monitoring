@@ -284,7 +284,7 @@ data "template_file" "kibana_audit_proxy" {
   template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
 
   vars = {
-    upstream = "https://search-cloud-platform-audit-dq5bdnjokj4yt7qozshmifug6e.eu-west-2.es.amazonaws.com"
+    upstream = var.kibana_audit_upstream
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "kibana-audit", local.live_domain) : format(
       "%s.%s",
       "kibana-audit",
@@ -327,7 +327,7 @@ data "template_file" "kibana_proxy" {
   template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
 
   vars = {
-    upstream = "https://search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com"
+    upstream = var.kibana_upstream
     hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "kibana", local.live_domain) : format(
       "%s.%s",
       "kibana",
