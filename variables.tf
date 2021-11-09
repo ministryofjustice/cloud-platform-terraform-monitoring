@@ -106,3 +106,15 @@ variable "dockerhub_password" {
   default     = ""
   type        = string
 }
+
+variable "kibana_upstream" {
+  description = "ES upstream for logs"
+  default = "https://search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com"
+  type = string
+}
+
+variable "kibana_audit_upstream" {
+  description = "ES upstream for audit logs"
+  default = "https://search-cloud-platform-audit-live-hfclvgaq73cul7ku362rvigti4.eu-west-2.es.amazonaws.com"
+  type = string
+}
