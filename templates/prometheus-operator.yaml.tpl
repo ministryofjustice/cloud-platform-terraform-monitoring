@@ -199,6 +199,11 @@ grafana:
 
   ingress:
     enabled: true
+    annotations: {
+      external-dns.alpha.kubernetes.io/aws-weight: "100",
+      external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
+      cloud-platform.justice.gov.uk/ignore-external-dns-weight: "true"
+    }
     hosts:
     - "${ grafana_ingress }"
     tls:
@@ -399,7 +404,7 @@ prometheus:
         memory: "14000Mi"
         cpu: "1300m"
       limits:
-        memory: "25000Mi"
+        memory: "60000Mi"
         cpu: "3000m"
     %{ endif }
 
@@ -466,10 +471,10 @@ prometheus:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
           - matchExpressions:
-            - key: beta.kubernetes.io/instance-type
+            - key: cloud-platform.justice.gov.uk/monitoring-ng
               operator: In
               values:
-              - r5.2xlarge
+              - "true"
     %{ endif ~}
 
     ## Prometheus StorageSpec for persistent data
@@ -478,11 +483,11 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: ${storage_class}
+          storageClassName: io1-expand
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 750Gi
+              storage: 75Gi
 
 %{ if enable_thanos_sidecar == true ~}
     thanos: 

@@ -83,6 +83,11 @@ variable "eks" {
   default     = false
 }
 
+variable "ingress_redirect" {
+  description = "Enable ingress_redirect, to use live_domain, 'cloud-platform.service.justice.gov.uk'"
+  type        = bool
+  default     = false
+}
 variable "eks_cluster_oidc_issuer_url" {
   description = "If EKS variable is set to true this is going to be used when we create the IAM OIDC role"
   type        = string
@@ -117,4 +122,9 @@ variable "kibana_audit_upstream" {
   description = "ES upstream for audit logs"
   default = "https://search-cloud-platform-audit-live-hfclvgaq73cul7ku362rvigti4.eu-west-2.es.amazonaws.com"
   type = string
+
+variable "grafana_ingress_redirect_url" {
+  description = "grafana url to use live_domain, 'cloud-platform.service.justice.gov.uk'"
+  default     = ""
+  type        = string
 }

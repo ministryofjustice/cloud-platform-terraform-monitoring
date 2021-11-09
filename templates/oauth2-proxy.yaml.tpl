@@ -33,12 +33,26 @@ extraArgs:
 
 ingress:
   enabled: true
+  annotations: {
+    external-dns.alpha.kubernetes.io/aws-weight: "100",
+    external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
+    cloud-platform.justice.gov.uk/ignore-external-dns-weight: "true"
+  }
   path: /
+%{ if ingress_redirect ~}
+  hosts:
+    - "${hostname}"
+    - "${live_domain_hostname}"
+  tls:
+    - hosts:
+      - "${hostname}"
+      - "${live_domain_hostname}"
+%{ else ~}
   hosts:
     - "${hostname}"
   tls:
     - hosts:
       - "${hostname}"
-
+%{ endif ~}
 serviceAccount:
   enabled: false
