@@ -16,7 +16,7 @@ jobs:
           terraform_version: 0.14.x
           terraform_wrapper: false
 
-      - name: Run Go Tests
+      - name: Run terraform Tests
         working-directory: test/unit-test
         run: |
           terraform init
