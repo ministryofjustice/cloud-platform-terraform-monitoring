@@ -487,7 +487,7 @@ prometheus:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 75Gi
+              storage: 750Gi
 
 %{ if enable_thanos_sidecar == true ~}
     thanos: 
