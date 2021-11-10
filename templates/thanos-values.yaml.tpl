@@ -45,7 +45,7 @@ compactor:
   retentionResolution5m: 183d
   retentionResolution1h: 365d
   persistence:
-    size: 350Gi
+    size: 400Gi
 %{ if eks == false ~}
   podAnnotations:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
