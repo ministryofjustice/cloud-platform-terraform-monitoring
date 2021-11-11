@@ -86,6 +86,7 @@ EOS
 }
 
 resource "helm_release" "prometheus_operator" {
+  count      = var.eks ? 0 : 1
   name       = "prometheus-operator"
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
@@ -102,17 +103,68 @@ resource "helm_release" "prometheus_operator" {
     prometheus_ingress                         = local.prometheus_ingress
     random_username                            = random_id.username.hex
     random_password                            = random_id.password.hex
-    grafana_pod_annotation                     = var.eks ? "module.iam_assumable_role_grafana_datasource.this_iam_role_name" : aws_iam_role.grafana_datasource.0.name
-    grafana_assumerolearn                      = var.eks ? "module.iam_assumable_role_grafana_datasource.this_iam_role_arn" : aws_iam_role.grafana_datasource.0.arn
-    monitoring_aws_role                        = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
+    grafana_pod_annotation                     = aws_iam_role.grafana_datasource.0.name
+    grafana_assumerolearn                      = aws_iam_role.grafana_datasource.0.arn
+    monitoring_aws_role                        = aws_iam_role.monitoring.0.name
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
     enable_large_nodesgroup                    = var.enable_large_nodesgroup
 
-    # This is for EKS
-    eks                 = var.eks
-    eks_service_account = module.iam_assumable_role_monitoring.this_iam_role_arn
+  })]
+
+  # Depends on Helm being installed
+  depends_on = [
+    kubernetes_secret.grafana_secret,
+    kubernetes_secret.thanos_config,
+    kubernetes_secret.dockerhub_credentials
+  ]
+
+  provisioner "local-exec" {
+    command = "kubectl apply -n monitoring -f ${path.module}/resources/prometheusrule-alerts/"
+  }
+
+  # Delete Prometheus leftovers
+  # Ref: https://github.com/coreos/prometheus-operator#removal
+  provisioner "local-exec" {
+    when    = destroy
+    command = "kubectl delete svc -l k8s-app=kubelet -n kube-system"
+  }
+
+  lifecycle {
+    ignore_changes = [keyring]
+  }
+}
+
+
+# This helm_release is for EKS cluster, running latest version of prometheus-operator.
+resource "helm_release" "prometheus_operator_eks" {
+  count      = var.eks ? 1 : 0
+
+  name       = "prometheus-operator"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "kube-prometheus-stack"
+  namespace  = kubernetes_namespace.monitoring.id
+  version    = "20.0.1"
+
+  values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
+    alertmanager_ingress                       = local.alertmanager_ingress
+    grafana_ingress                            = local.grafana_ingress
+    grafana_root                               = local.grafana_root
+    pagerduty_config                           = var.pagerduty_config
+    alertmanager_routes                        = join("", data.template_file.alertmanager_routes.*.rendered)
+    alertmanager_receivers                     = join("", data.template_file.alertmanager_receivers.*.rendered)
+    prometheus_ingress                         = local.prometheus_ingress
+    random_username                            = random_id.username.hex
+    random_password                            = random_id.password.hex
+    grafana_pod_annotation                     = "module.iam_assumable_role_grafana_datasource.this_iam_role_name"
+    grafana_assumerolearn                      = "module.iam_assumable_role_grafana_datasource.this_iam_role_arn"
+    monitoring_aws_role                        = module.iam_assumable_role_monitoring.this_iam_role_name
+    clusterName                                = terraform.workspace
+    enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
+    enable_thanos_sidecar                      = var.enable_thanos_sidecar
+    enable_large_nodesgroup                    = var.enable_large_nodesgroup
+    eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
   })]
 
   # Depends on Helm being installed
