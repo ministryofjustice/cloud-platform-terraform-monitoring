@@ -7,8 +7,13 @@
 defaultRules:
   create: true
   rules:
+    kubeScheduler: false
+    etcd: false
     general: false
     kubernetesApps: false
+global:
+  imagePullSecrets:
+  - name: "dockerhub-credentials"
 
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
@@ -164,16 +169,19 @@ grafana:
   enabled: true
 
   image:
+    pullSecrets:
+    - "dockerhub-credentials"
     repository: grafana/grafana
     tag: 7.0.2
     pullPolicy: IfNotPresent
 
+  serviceAccount:
+    create: true
+    annotations:
+      eks.amazonaws.com/role-arn: "${grafana_assumerolearn}"
+
   adminUser: "${ random_username }"
   adminPassword: "${ random_password }"
-
-  ## Pod Annotations
-  podAnnotations: 
-    iam.amazonaws.com/role: "${ grafana_pod_annotation }"
 
   ingress:
     enabled: true
@@ -249,26 +257,20 @@ coreDns:
 ## Component scraping etcd
 ##
 kubeEtcd:
-  enabled: true
+  enabled: false
 
 ## Component scraping kube scheduler
 ##
 kubeScheduler:
-  enabled: true
-  ## If using kubeScheduler.endpoints only the port and targetPort are used
-  ##
-  service:
-    selector:
-      k8s-app: kube-scheduler
-
+  enabled: false
 
 kubeProxy:
-  enabled: true
+  enabled: false
 
 ## Component scraping the kube controller manager
 ##
 kubeControllerManager:
-  enabled: true
+  enabled: false
 
   ## If using kubeControllerManager.endpoints only the port and targetPort are used
   ##
@@ -284,15 +286,34 @@ kubeStateMetrics:
 ## Configuration for kube-state-metrics subchart
 ##
 kube-state-metrics:
-  image:
-    tag: v1.7.0
+  serviceAccount:
+    imagePullSecrets:
+    - name: "dockerhub-credentials"
 
   collectors:
-    validatingwebhookconfigurations: false
-    networkpolicies: false
-    volumeattachments: false
-    mutatingwebhookconfigurations: false
-    verticalpodautoscalers: false
+    - certificatesigningrequests
+    - configmaps
+    - cronjobs
+    - daemonsets
+    - deployments
+    - endpoints
+    - horizontalpodautoscalers
+    - ingresses
+    - jobs
+    - limitranges
+    - namespaces
+    - nodes
+    - persistentvolumeclaims
+    - persistentvolumes
+    - poddisruptionbudgets
+    - pods
+    - replicasets
+    - replicationcontrollers
+    - resourcequotas
+    - secrets
+    - services
+    - statefulsets
+    - storageclasses
 
 ## Manages Prometheus and Alertmanager components
 ##
@@ -313,6 +334,10 @@ prometheusOperator:
 prometheus:
 
   enabled: true
+
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: "${eks_service_account}"
 
   # Service for thanos service discovery on sidecar
   # Enable this can make Thanos Query can use
@@ -406,10 +431,6 @@ prometheus:
     ## How long to retain metrics
     ##
     retention: 1d
-
-    podMetadata:
-      annotations:
-        iam.amazonaws.com/role: "${monitoring_aws_role}"
 
     %{ if enable_prometheus_affinity_and_tolerations ~}
     ## Assign custom affinity rules to the prometheus instance
