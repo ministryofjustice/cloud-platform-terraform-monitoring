@@ -101,6 +101,7 @@ module "monitoring" {
 
 | Name | Description |
 |------|-------------|
+| helm\_prometheus\_operator\_eks\_status | n/a |
 | helm\_prometheus\_operator\_status | n/a |
 
 <!--- END_TF_DOCS --->
