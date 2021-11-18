@@ -19,7 +19,9 @@ resource "helm_release" "thanos" {
     clusterName         = terraform.workspace
   })]
 
-  depends_on = [helm_release.prometheus_operator]
+    depends_on = [
+    local.prometheus_dependency,
+  ]
 
   lifecycle {
     ignore_changes = [keyring]

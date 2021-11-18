@@ -25,8 +25,8 @@ resource "helm_release" "ecr_exporter" {
     value = "eu-west-2"
   }
 
-  depends_on = [
-    helm_release.prometheus_operator,
+    depends_on = [
+    local.prometheus_dependency,
   ]
 
   lifecycle {
