@@ -298,17 +298,17 @@ data "aws_iam_policy_document" "grafana_datasource_assume" {
 }
 
 resource "aws_iam_role" "grafana_datasource" {
-  count = var.eks ? 0 : 1
+  count = var.eks ? 1 : 0
 
   name               = "datasource.${var.cluster_domain_name}"
   assume_role_policy = data.aws_iam_policy_document.grafana_datasource_assume.json
 }
 
-# Minimal policy permissions 
+# Minimal policy permissions
 # Ref: https://grafana.com/docs/grafana/latest/features/datasources/cloudwatch/#iam-policies
 
 data "aws_iam_policy_document" "grafana_datasource" {
-  count = var.eks ? 0 : 1
+  count = var.eks ? 1 : 0
 
   statement {
     actions = [
@@ -325,7 +325,7 @@ data "aws_iam_policy_document" "grafana_datasource" {
 }
 
 resource "aws_iam_role_policy" "grafana_datasource" {
-  count = var.eks ? 0 : 1
+  count = var.eks ? 1 : 0
 
   name   = "grafana-datasource"
   role   = aws_iam_role.grafana_datasource.0.id
