@@ -453,11 +453,11 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: io1-expand
+          storageClassName: "${storage_class}"
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 750Gi
+              storage: "${storage_size}"
 
 %{ if enable_thanos_sidecar == true ~}
     thanos: 

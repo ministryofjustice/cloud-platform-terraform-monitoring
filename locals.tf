@@ -1,7 +1,7 @@
 
 locals {
-  live_workspace = "live-1"
-  live_domain    = "cloud-platform.service.justice.gov.uk"
+  live_workspace   = "live-1"
+  live_domain      = "cloud-platform.service.justice.gov.uk"
   ingress_redirect = terraform.workspace == local.live_workspace ? true : false
 
   alertmanager_ingress = format(

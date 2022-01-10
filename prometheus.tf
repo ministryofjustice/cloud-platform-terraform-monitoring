@@ -139,7 +139,7 @@ resource "helm_release" "prometheus_operator" {
 
 # This helm_release is for EKS cluster, running latest version of prometheus-operator.
 resource "helm_release" "prometheus_operator_eks" {
-  count      = var.eks ? 1 : 0
+  count = var.eks ? 1 : 0
 
   name       = "prometheus-operator"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -165,6 +165,8 @@ resource "helm_release" "prometheus_operator_eks" {
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
     enable_large_nodesgroup                    = var.enable_large_nodesgroup
     eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
+    storage_class                              = can(regex("live", terraform.workspace)) ? "io1-expand" : "gp2-expand"
+    storage_size                               = can(regex("live", terraform.workspace)) ? "750Gi" : "75Gi"
   })]
 
   # Depends on Helm being installed
@@ -424,13 +426,13 @@ resource "helm_release" "kibana_proxy" {
 resource "kubernetes_ingress" "ingress_redirect_grafana" {
   count = local.ingress_redirect ? 1 : 0
   metadata {
-    name        = "ingress-redirect-grafana"
-    namespace   = kubernetes_namespace.monitoring.id
+    name      = "ingress-redirect-grafana"
+    namespace = kubernetes_namespace.monitoring.id
     annotations = {
-      "external-dns.alpha.kubernetes.io/aws-weight" = "100"
+      "external-dns.alpha.kubernetes.io/aws-weight"     = "100"
       "external-dns.alpha.kubernetes.io/set-identifier" = "dns-grafana"
       "cloud-platform.justice.gov.uk/ignore-external-dns-weight" : "true"
-      "kubernetes.io/ingress.class" = "nginx"
+      "kubernetes.io/ingress.class"                    = "nginx"
       "nginx.ingress.kubernetes.io/permanent-redirect" = local.grafana_root
     }
   }

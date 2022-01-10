@@ -25,7 +25,7 @@ resource "helm_release" "ecr_exporter" {
     value = "eu-west-2"
   }
 
-    depends_on = [
+  depends_on = [
     local.prometheus_dependency,
   ]
 
