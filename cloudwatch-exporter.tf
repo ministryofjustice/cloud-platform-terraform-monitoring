@@ -17,7 +17,7 @@ resource "helm_release" "cloudwatch_exporter" {
     eks_service_account = module.iam_assumable_role_cloudwatch_exporter.this_iam_role_arn
   })]
 
-    depends_on = [
+  depends_on = [
     local.prometheus_dependency,
   ]
 

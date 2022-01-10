@@ -19,7 +19,7 @@ resource "helm_release" "thanos" {
     clusterName         = terraform.workspace
   })]
 
-    depends_on = [
+  depends_on = [
     local.prometheus_dependency,
   ]
 
