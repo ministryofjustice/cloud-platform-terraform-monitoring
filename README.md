@@ -72,7 +72,7 @@ module "monitoring" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| alertmanager\_slack\_receivers | A list of configuration values for Slack receivers | `list` | n/a | yes |
+| alertmanager\_slack\_receivers | A list of configuration values for Slack receivers | `list(any)` | n/a | yes |
 | cluster\_domain\_name | The cluster domain - used by externalDNS and certmanager to create URLs | `any` | n/a | yes |
 | dockerhub\_password | DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
 | dockerhub\_username | DockerHub username - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
