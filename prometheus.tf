@@ -377,7 +377,7 @@ data "aws_iam_policy_document" "grafana_datasource_irsa" {
     resources = ["*"]
   }
   statement {
-    actions   = ["sts:AssumeRoleWithWebIdentity"]
+    actions   = ["sts:AssumeRole"]
     resources = [module.iam_assumable_role_grafana_datasource.this_iam_role_arn]
   }
 }
