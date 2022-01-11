@@ -357,12 +357,22 @@ resource "aws_iam_policy" "grafana_datasource" {
 }
 
 data "aws_iam_policy_document" "grafana_datasource_irsa" {
-
+  statement {
+    actions = [
+      "logs:DescribeLogGroups",
+      "logs:GetLogGroupFields",
+      "logs:StartQuery",
+      "logs:StopQuery",
+      "logs:GetQueryResults",
+      "logs:GetLogEvents"
+    ]
+    resources = ["*"]
+  }
   statement {
     actions = [
       "cloudwatch:ListMetrics",
       "cloudwatch:GetMetricStatistics",
-      "cloudwatch:GetMetricData",
+      "cloudwatch:GetMetricData"
     ]
     resources = ["*"]
   }
