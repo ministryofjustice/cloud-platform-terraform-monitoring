@@ -48,6 +48,7 @@ module "monitoring" {
 |------|--------|---------|
 | iam_assumable_role_cloudwatch_exporter | terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc | 3.13.0 |
 | iam_assumable_role_ecr_exporter | terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc | 3.13.0 |
+| iam_assumable_role_grafana_datasource | terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc | 3.13.0 |
 | iam_assumable_role_monitoring | terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc | 3.13.0 |
 
 ## Resources
