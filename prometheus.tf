@@ -157,8 +157,8 @@ resource "helm_release" "prometheus_operator_eks" {
     prometheus_ingress                         = local.prometheus_ingress
     random_username                            = random_id.username.hex
     random_password                            = random_id.password.hex
-    grafana_pod_annotation                     = "module.iam_assumable_role_grafana_datasource.this_iam_role_name"
-    grafana_assumerolearn                      = "module.iam_assumable_role_grafana_datasource.this_iam_role_arn"
+    grafana_pod_annotation                     = module.iam_assumable_role_grafana_datasource.this_iam_role_name
+    grafana_assumerolearn                      = module.iam_assumable_role_grafana_datasource.this_iam_role_arn
     monitoring_aws_role                        = module.iam_assumable_role_monitoring.this_iam_role_name
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
