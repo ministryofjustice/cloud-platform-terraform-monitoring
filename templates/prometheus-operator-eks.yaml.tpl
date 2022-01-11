@@ -172,7 +172,7 @@ grafana:
     pullSecrets:
     - "dockerhub-credentials"
     repository: grafana/grafana
-    tag: 7.0.2
+    tag: ${grafana_version}
     pullPolicy: IfNotPresent
 
   serviceAccount:
