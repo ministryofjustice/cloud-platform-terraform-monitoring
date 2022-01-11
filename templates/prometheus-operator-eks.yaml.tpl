@@ -233,7 +233,7 @@ grafana:
     editable: true
     access: proxy
     jsonData:
-      authType: arn
+      authType: default
       defaultRegion: eu-west-2
       assumeRoleArn: "${ grafana_assumerolearn }"
     orgId: 1

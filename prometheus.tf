@@ -376,6 +376,10 @@ data "aws_iam_policy_document" "grafana_datasource_irsa" {
     ]
     resources = ["*"]
   }
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = [aws_iam_role.grafana_datasource.0.arn]
+  }
 }
 
 data "template_file" "kibana_audit_proxy" {
