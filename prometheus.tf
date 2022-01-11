@@ -341,7 +341,7 @@ module "iam_assumable_role_grafana_datasource" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version                       = "3.13.0"
   create_role                   = var.eks ? true : false
-  role_name                     = "grafana-datasource.${var.cluster_domain_name}"
+  role_name                     = "grafana.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
   role_policy_arns              = [var.eks && length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.0.arn : ""]
   oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
@@ -351,7 +351,7 @@ module "iam_assumable_role_grafana_datasource" {
 resource "aws_iam_policy" "grafana_datasource" {
   count = var.eks ? 1 : 0
 
-  name_prefix = "datasource"
+  name_prefix = "grafana"
   description = "EKS grafana datasource policy for cluster ${var.cluster_domain_name}"
   policy      = data.aws_iam_policy_document.grafana_datasource_irsa.json
 }
