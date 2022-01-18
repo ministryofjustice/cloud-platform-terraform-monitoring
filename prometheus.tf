@@ -145,7 +145,7 @@ resource "helm_release" "prometheus_operator_eks" {
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
-  version    = "20.0.1"
+  version    = "30.0.1"
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress

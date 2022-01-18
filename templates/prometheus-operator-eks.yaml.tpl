@@ -11,9 +11,15 @@ defaultRules:
     etcd: false
     general: false
     kubernetesApps: false
+    rubookUrl: true
+
+
 global:
   imagePullSecrets:
   - name: "dockerhub-credentials"
+
+  rbac:
+    pspEnabled: true
 
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
@@ -168,6 +174,9 @@ alertmanager:
 grafana:
   enabled: true
 
+  rbac:
+    pspEnabled: true
+
   image:
     pullSecrets:
     - "dockerhub-credentials"
@@ -286,6 +295,9 @@ kubeStateMetrics:
 ## Configuration for kube-state-metrics subchart
 ##
 kube-state-metrics:
+  metricAnnotationsAllowList:
+    - namespaces=[*]
+
   serviceAccount:
     imagePullSecrets:
     - name: "dockerhub-credentials"
@@ -314,6 +326,13 @@ kube-state-metrics:
     - services
     - statefulsets
     - storageclasses
+
+  podSecurityPolicy:
+    enabled: true
+
+prometheus-node-exporter:
+  rbac:
+    pspEnabled: true
 
 ## Manages Prometheus and Alertmanager components
 ##
