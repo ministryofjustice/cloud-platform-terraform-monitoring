@@ -9,7 +9,7 @@ resource "helm_release" "thanos" {
 
   name      = "thanos"
   namespace = kubernetes_namespace.monitoring.id
-#  repository = "https://charts.bitnami.com/bitnami"
+  repository = "https://charts.bitnami.com/bitnami"
   chart     = "bitnami/thanos"
 #  version   = "8.3.0"
   version = "3.8.3"
