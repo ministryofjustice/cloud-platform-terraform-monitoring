@@ -1,9 +1,3 @@
-image:
-  registry: quay.io
-  repository: thanos/thanos
-  tag: v0.18.0
-
-
 %{ if eks ~}
 existingServiceAccount: prometheus-operator-kube-p-prometheus
 %{ endif ~}
@@ -45,7 +39,7 @@ compactor:
   retentionResolution5m: 183d
   retentionResolution1h: 365d
   persistence:
-    size: 400Gi
+    size: 500Gi
 %{ if eks == false ~}
   podAnnotations:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
