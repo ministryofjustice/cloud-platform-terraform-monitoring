@@ -4,7 +4,7 @@ resource "helm_release" "metrics_server" {
   chart      = "metrics-server"
   repository = "https://charts.bitnami.com/bitnami"
   namespace  = "kube-system"
-  version    = "5.10.14"
+  version    = "5.11.0"
 
   lifecycle {
     ignore_changes = [keyring]
