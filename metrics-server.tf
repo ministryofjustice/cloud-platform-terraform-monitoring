@@ -1,5 +1,5 @@
 
-resource "helm_release" "metrics_server" {
+resource "helm_release" "metrics-server" {
   name       = "metrics-server"
   chart      = "metrics-server"
   repository = "https://charts.bitnami.com/bitnami"
