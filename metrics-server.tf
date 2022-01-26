@@ -11,13 +11,13 @@ resource "helm_release" "metrics_server" {
   }
 
   set {
-    name  = "extraArgs[0]"
-    value = "--kubelet-insecure-tls"
+    name  = "extraArgs.kubelet-insecure-tls"
+    value = "true"
   }
 
   set {
-    name  = "extraArgs[1]"
-    value = "--kubelet-preferred-address-types=InternalIP"
+    name  = "extraArgs.kubelet-preferred-address-types"
+    value = "InternalIP"
   }
 
   set {
