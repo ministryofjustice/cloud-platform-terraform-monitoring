@@ -2,26 +2,26 @@
 resource "helm_release" "metrics_server" {
   name       = "metrics-server"
   chart      = "metrics-server"
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://charts.bitnami.com/bitnami"
   namespace  = "kube-system"
-  version    = "2.8.8"
+  version    = "5.11.0"
 
   lifecycle {
     ignore_changes = [keyring]
   }
 
   set {
-    name  = "args[0]"
-    value = "--kubelet-insecure-tls"
+    name  = "extraArgs.kubelet-insecure-tls"
+    value = "true"
   }
 
   set {
-    name  = "args[1]"
-    value = "--kubelet-preferred-address-types=InternalIP"
+    name  = "extraArgs.kubelet-preferred-address-types"
+    value = "InternalIP"
   }
 
   set {
-    name  = "hostNetwork.enabled"
+    name  = "hostNetwork"
     value = "true"
   }
 
