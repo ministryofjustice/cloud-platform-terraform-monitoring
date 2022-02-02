@@ -24,5 +24,9 @@ resource "helm_release" "metrics_server" {
     name  = "hostNetwork"
     value = "true"
   }
+    set {
+    name  = "apiService.create"
+    value = "true"
+  }
 
 }
