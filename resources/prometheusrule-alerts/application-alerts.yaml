@@ -363,3 +363,10 @@ spec:
       for: 10m
       labels:
         severity: critical
+    - alert: "Monitoring_dead_man"
+      expr: vector(1)
+      labels:
+        service: deadman
+      annotations:
+        summary: "Monitoring dead man switch should always fire alert"
+        description: "Monitoring dead man switch for probing alert path"          
