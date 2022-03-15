@@ -50,10 +50,7 @@ alertmanager:
         receiver: 'null'
       - match:
           alertname: DeadMansSwitch
-        receiver: 'null'
-          service: deadman
         receiver: 'DEAD-MAN-SNITCH'
-      repeat_interval: 5m
       - match:
           alertname: AggregatedAPIDown
         receiver: 'null'
