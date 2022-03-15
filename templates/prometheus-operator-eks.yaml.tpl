@@ -77,11 +77,15 @@ alertmanager:
       - match:
           alertname: DEAD-MAN-SNITCH
           service: deadman
-        repeat_interval: 5m
-        continue: true
-        receiver: 'null'
+          repeat_interval: 5m
+          continue: true
+          receiver: 'paul'
     receivers:
     - name: 'null'
+    - name: 'paul'
+    webhook_configs:
+    - url: 'http://192.168.2.66:8080/ping/bg8obqel0s1fdr02gtvg'
+        send_resolved: false
     - name: 'pager-duty-high-priority'
       pagerduty_configs:
       - service_key: "${ pagerduty_config }"
