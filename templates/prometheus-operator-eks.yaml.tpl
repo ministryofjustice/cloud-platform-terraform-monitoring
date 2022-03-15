@@ -74,12 +74,12 @@ alertmanager:
           severity: critical
         receiver: pager-duty-high-priority
       ${indent(6, alertmanager_routes)}
-#      - match:
-#          alertname: DEAD-MAN-SNITCH
-#          service: deadman
-#        repeat_interval: 5m
-#        continue: true
-#        receiver: DEAD-MAN-SNITCH
+      - match:
+          alertname: DEAD-MAN-SNITCH
+          service: deadman
+        repeat_interval: 5m
+        continue: true
+        receiver: DEAD-MAN-SNITCH
     receivers:
     - name: 'null'
     # Add PagerDuty key to allow integration with a PD service.
