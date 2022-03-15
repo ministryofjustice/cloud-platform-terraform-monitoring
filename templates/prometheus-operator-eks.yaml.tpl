@@ -83,9 +83,6 @@ alertmanager:
     receivers:
     - name: 'null'
     - name: 'paul'
-    webhook_configs:
-    - url: 'http://192.168.2.66:8080/ping/bg8obqel0s1fdr02gtvg'
-        send_resolved: false
     - name: 'pager-duty-high-priority'
       pagerduty_configs:
       - service_key: "${ pagerduty_config }"
