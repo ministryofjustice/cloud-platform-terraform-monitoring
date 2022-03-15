@@ -49,8 +49,8 @@ alertmanager:
           alertname: CPUThrottlingHigh
         receiver: 'null'
       - match:
-          alertname: DeadMansSwitch
-        receiver: 'DEAD-MAN-SNITCH'
+          alertname: DeadManSnitch
+        receiver: 'null'
       - match:
           alertname: AggregatedAPIDown
         receiver: 'null'
