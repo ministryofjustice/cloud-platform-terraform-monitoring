@@ -51,6 +51,7 @@ alertmanager:
       - match:
           alertname: DEAD-MAN-SNITCH
           service: deadman
+          repeat_interval: 5m
         receiver: 'null'
       - match:
           alertname: AggregatedAPIDown
