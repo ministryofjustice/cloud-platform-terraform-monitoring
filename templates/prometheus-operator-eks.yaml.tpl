@@ -82,6 +82,12 @@ alertmanager:
         receiver: DEAD-MAN-SNITCH
     receivers:
     - name: 'null'
+    - name: 'DEAD-MAN-SNITCH'
+      pagerduty_configs:
+      - service_key: "${ pagerduty_config }"
+    ${indent(4, alertmanager_receivers)}
+    templates:
+    - '/etc/alertmanager/config/cp-slack-templates.tmpl'      
     # Add PagerDuty key to allow integration with a PD service.
     - name: 'pager-duty-high-priority'
       pagerduty_configs:
