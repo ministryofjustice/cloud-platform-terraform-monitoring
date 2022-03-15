@@ -49,7 +49,7 @@ alertmanager:
           alertname: CPUThrottlingHigh
         receiver: 'null'
       - match:
-          alertname: DeadManSnitch
+          alertname: DEAD-MAN-SNITCH
         receiver: 'null'
       - match:
           alertname: AggregatedAPIDown
