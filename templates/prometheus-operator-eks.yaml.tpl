@@ -79,10 +79,10 @@ alertmanager:
           service: deadman
         repeat_interval: 5m
         continue: true
-        receiver: 'paul'
+        receiver: 'DEAD-MAN-SNITCH'
     receivers:
     - name: 'null'
-    - name: 'paul'
+    - name: 'DEAD-MAN-SNITCH'
     - name: 'pager-duty-high-priority'
       pagerduty_configs:
       - service_key: "${ pagerduty_config }"
