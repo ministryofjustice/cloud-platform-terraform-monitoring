@@ -50,6 +50,7 @@ alertmanager:
         receiver: 'null'
       - match:
           alertname: DEAD-MAN-SNITCH
+          service: deadman
         receiver: 'null'
       - match:
           alertname: AggregatedAPIDown
