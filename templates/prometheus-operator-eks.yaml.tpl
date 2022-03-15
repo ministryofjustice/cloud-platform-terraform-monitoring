@@ -77,9 +77,9 @@ alertmanager:
       - match:
           alertname: DEAD-MAN-SNITCH
           service: deadman
-          repeat_interval: 5m
-          continue: true
-          receiver: 'paul'
+        repeat_interval: 5m
+        continue: true
+        receiver: 'paul'
     receivers:
     - name: 'null'
     - name: 'paul'
