@@ -53,7 +53,7 @@ alertmanager:
           service: deadman
         repeat_interval: 5m
         continue: true
-        receiver: 'null'
+        receiver: DEAD-MAN-SNITCH
       - match:
           alertname: AggregatedAPIDown
         receiver: 'null'
