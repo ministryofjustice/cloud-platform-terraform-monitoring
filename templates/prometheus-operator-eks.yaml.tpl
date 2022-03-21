@@ -86,7 +86,7 @@ alertmanager:
     - name: 'null'
     - name: 'DEAD-MAN-SNITCH'
       webhook_configs:
-      - url: 'https://events.pagerduty.com/generic/2010-04-15/create_event.json'
+      - url: 'https://nosnch.in/87739ee736'
         send_resolved: false
     - name: 'pager-duty-high-priority'
       pagerduty_configs:
