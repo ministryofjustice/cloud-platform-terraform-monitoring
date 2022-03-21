@@ -78,7 +78,7 @@ alertmanager:
           severity: DEAD-MAN-SNITCH
           alertname: DEAD-MAN-SNITCH
           service: deadman
-        repeat_interval: 5m
+        repeat_interval: 1s
         receiver: 'DEAD-MAN-SNITCH'
     receivers:
     - name: 'null'
