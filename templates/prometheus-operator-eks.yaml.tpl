@@ -85,8 +85,8 @@ alertmanager:
     receivers:
     - name: 'null'
     - name: 'DEAD-MAN-SNITCH'
-    webhook_configs:
-    - url: 'https://events.pagerduty.com/generic/2010-04-15/create_event.json'
+      webhook_configs:
+      - url: 'https://events.pagerduty.com/generic/2010-04-15/create_event.json'
         send_resolved: false
     - name: 'pager-duty-high-priority'
       pagerduty_configs:
