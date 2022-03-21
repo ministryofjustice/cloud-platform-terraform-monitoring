@@ -75,14 +75,14 @@ alertmanager:
         receiver: pager-duty-high-priority
       ${indent(6, alertmanager_routes)}
       - match:
-          severity: DEAD-MAN-SNITCH
-          alertname: DEAD-MAN-SNITCH
-          service: deadman
-        repeat_interval: 1s
-        receiver: 'DEAD-MAN-SNITCH'
+#          severity: DEAD-MAN-SNITCH
+#          alertname: DEAD-MAN-SNITCH
+#          service: deadman
+#        repeat_interval: 1s
+#        receiver: 'DEAD-MAN-SNITCH'
     receivers:
     - name: 'null'
-    - name: 'DEAD-MAN-SNITCH'
+#    - name: 'DEAD-MAN-SNITCH'
     - name: 'pager-duty-high-priority'
       pagerduty_configs:
       - service_key: "${ pagerduty_config }"
