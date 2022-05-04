@@ -15,8 +15,7 @@ resource "helm_release" "thanos" {
 
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
     enabled_compact     = var.enable_thanos_compact
-    eks                 = var.eks
-    monitoring_aws_role = var.eks ? module.iam_assumable_role_monitoring.this_iam_role_name : aws_iam_role.monitoring.0.name
+    monitoring_aws_role = module.iam_assumable_role_monitoring.this_iam_role_name
     clusterName         = terraform.workspace
   })]
 
@@ -49,23 +48,6 @@ resource "kubernetes_secret" "thanos_config" {
 ##############
 
 # This is to create a policy which allows Prometheus (thanos to be precise) to have a role to write to S3 without credentials
-data "aws_iam_policy_document" "monitoring_assume" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [var.iam_role_nodes]
-    }
-  }
-}
-
-resource "aws_iam_role" "monitoring" {
-  count = var.eks == false ? 1 : 0
-
-  name               = "monitoring.${var.cluster_domain_name}"
-  assume_role_policy = data.aws_iam_policy_document.monitoring_assume.json
-}
 
 data "aws_iam_policy_document" "monitoring" {
 
@@ -88,27 +70,18 @@ data "aws_iam_policy_document" "monitoring" {
   }
 }
 
-resource "aws_iam_role_policy" "monitoring" {
-  count = var.eks == false ? 1 : 0
-
-  name   = "thanos.monitoring.${var.cluster_domain_name}"
-  role   = aws_iam_role.monitoring.0.id
-  policy = data.aws_iam_policy_document.monitoring.json
-}
-
 # IRSA
 module "iam_assumable_role_monitoring" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version                       = "3.13.0"
-  create_role                   = var.eks ? true : false
+  create_role                   = true
   role_name                     = "monitoring.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
-  role_policy_arns              = [var.eks && length(aws_iam_policy.monitoring) >= 1 ? aws_iam_policy.monitoring.0.arn : ""]
+  role_policy_arns              = [length(aws_iam_policy.monitoring) >= 1 ? aws_iam_policy.monitoring.arn : ""]
   oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-kube-p-prometheus"]
 }
 
 resource "aws_iam_policy" "monitoring" {
-  count = var.eks ? 1 : 0
 
   name_prefix = "monitoring"
   description = "EKS monitoring policy for cluster ${var.cluster_domain_name}"

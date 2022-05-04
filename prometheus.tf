@@ -85,61 +85,7 @@ EOS
   vars = var.alertmanager_slack_receivers[count.index]
 }
 
-resource "helm_release" "prometheus_operator" {
-  count      = var.eks ? 0 : 1
-  name       = "prometheus-operator"
-  repository = "https://prometheus-community.github.io/helm-charts"
-  chart      = "kube-prometheus-stack"
-  namespace  = kubernetes_namespace.monitoring.id
-  version    = "12.11.3"
-
-  values = [templatefile("${path.module}/templates/prometheus-operator.yaml.tpl", {
-    alertmanager_ingress                       = local.alertmanager_ingress
-    grafana_ingress                            = local.grafana_ingress
-    grafana_root                               = local.grafana_root
-    pagerduty_config                           = var.pagerduty_config
-    alertmanager_routes                        = join("", data.template_file.alertmanager_routes.*.rendered)
-    alertmanager_receivers                     = join("", data.template_file.alertmanager_receivers.*.rendered)
-    prometheus_ingress                         = local.prometheus_ingress
-    random_username                            = random_id.username.hex
-    random_password                            = random_id.password.hex
-    grafana_pod_annotation                     = aws_iam_role.grafana_datasource.0.name
-    grafana_assumerolearn                      = aws_iam_role.grafana_datasource.0.arn
-    monitoring_aws_role                        = aws_iam_role.monitoring.0.name
-    clusterName                                = terraform.workspace
-    enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
-    enable_thanos_sidecar                      = var.enable_thanos_sidecar
-    enable_large_nodesgroup                    = var.enable_large_nodesgroup
-
-  })]
-
-  # Depends on Helm being installed
-  depends_on = [
-    kubernetes_secret.grafana_secret,
-    kubernetes_secret.thanos_config,
-    kubernetes_secret.dockerhub_credentials
-  ]
-
-  provisioner "local-exec" {
-    command = "kubectl apply -n monitoring -f ${path.module}/resources/prometheusrule-alerts/"
-  }
-
-  # Delete Prometheus leftovers
-  # Ref: https://github.com/coreos/prometheus-operator#removal
-  provisioner "local-exec" {
-    when    = destroy
-    command = "kubectl delete svc -l k8s-app=kubelet -n kube-system"
-  }
-
-  lifecycle {
-    ignore_changes = [keyring]
-  }
-}
-
-
-# This helm_release is for EKS cluster, running latest version of prometheus-operator.
 resource "helm_release" "prometheus_operator_eks" {
-  count = var.eks ? 1 : 0
 
   name       = "prometheus-operator"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -214,7 +160,6 @@ data "template_file" "prometheus_proxy" {
     client_id            = var.oidc_components_client_id
     client_secret        = var.oidc_components_client_secret
     cookie_secret        = random_id.session_secret.b64_std
-    eks                  = var.eks
     clusterName          = terraform.workspace
     ingress_redirect     = terraform.workspace == local.live_workspace ? true : false
     live_domain_hostname = "prometheus.${local.live_domain}"
@@ -256,7 +201,6 @@ data "template_file" "alertmanager_proxy" {
     client_id            = var.oidc_components_client_id
     client_secret        = var.oidc_components_client_secret
     cookie_secret        = random_id.session_secret.b64_std
-    eks                  = var.eks
     clusterName          = terraform.workspace
     ingress_redirect     = local.ingress_redirect
     live_domain_hostname = "alertmanager.${local.live_domain}"
@@ -309,32 +253,6 @@ resource "aws_iam_role" "grafana_datasource" {
 
 # Minimal policy permissions 
 # Ref: https://grafana.com/docs/grafana/latest/features/datasources/cloudwatch/#iam-policies
-
-data "aws_iam_policy_document" "grafana_datasource" {
-  count = var.eks ? 0 : 1
-
-  statement {
-    actions = [
-      "cloudwatch:ListMetrics",
-      "cloudwatch:GetMetricStatistics",
-      "cloudwatch:GetMetricData",
-    ]
-    resources = ["*"]
-  }
-  statement {
-    actions   = ["sts:AssumeRole"]
-    resources = [aws_iam_role.grafana_datasource.0.arn]
-  }
-}
-
-resource "aws_iam_role_policy" "grafana_datasource" {
-  count = var.eks ? 0 : 1
-
-  name   = "grafana-datasource"
-  role   = aws_iam_role.grafana_datasource.0.id
-  policy = data.aws_iam_policy_document.grafana_datasource.0.json
-}
-
 # IRSA
 
 module "iam_assumable_role_grafana_datasource" {
@@ -343,13 +261,12 @@ module "iam_assumable_role_grafana_datasource" {
   create_role                   = var.eks ? true : false
   role_name                     = "grafana.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
-  role_policy_arns              = [var.eks && length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.0.arn : ""]
+  role_policy_arns              = [length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.0.arn : ""]
   oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
 
 }
 
 resource "aws_iam_policy" "grafana_datasource" {
-  count = var.eks ? 1 : 0
 
   name_prefix = "grafana"
   description = "EKS grafana datasource policy for cluster ${var.cluster_domain_name}"
@@ -397,7 +314,6 @@ data "template_file" "kibana_audit_proxy" {
     client_id        = var.oidc_components_client_id
     client_secret    = var.oidc_components_client_secret
     cookie_secret    = random_id.session_secret.b64_std
-    eks              = var.eks
     ingress_redirect = false
     clusterName      = terraform.workspace
   }
@@ -440,7 +356,6 @@ data "template_file" "kibana_proxy" {
     client_id        = var.oidc_components_client_id
     client_secret    = var.oidc_components_client_secret
     cookie_secret    = random_id.session_secret.b64_std
-    eks              = var.eks
     ingress_redirect = false
     clusterName      = terraform.workspace
   }
