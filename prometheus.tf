@@ -234,23 +234,6 @@ resource "helm_release" "alertmanager_proxy" {
 # Grafana datasource for cloudwatch
 # Ref: https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
 
-data "aws_iam_policy_document" "grafana_datasource_assume" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "AWS"
-      identifiers = [var.iam_role_nodes]
-    }
-  }
-}
-
-resource "aws_iam_role" "grafana_datasource" {
-  count = var.eks ? 0 : 1
-
-  name               = "datasource.${var.cluster_domain_name}"
-  assume_role_policy = data.aws_iam_policy_document.grafana_datasource_assume.json
-}
-
 # Minimal policy permissions 
 # Ref: https://grafana.com/docs/grafana/latest/features/datasources/cloudwatch/#iam-policies
 # IRSA
@@ -258,10 +241,10 @@ resource "aws_iam_role" "grafana_datasource" {
 module "iam_assumable_role_grafana_datasource" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version                       = "3.13.0"
-  create_role                   = var.eks ? true : false
+  create_role                   = true
   role_name                     = "grafana.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
-  role_policy_arns              = [length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.0.arn : ""]
+  role_policy_arns              = [length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.arn : ""]
   oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
 
 }

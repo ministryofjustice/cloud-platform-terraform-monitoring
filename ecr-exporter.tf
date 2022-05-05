@@ -17,7 +17,7 @@ resource "helm_release" "ecr_exporter" {
 
   set {
     name  = "aws.role"
-    value = var.eks ? module.iam_assumable_role_ecr_exporter.this_iam_role_name : aws_iam_role.ecr_exporter.0.name
+    value = module.iam_assumable_role_ecr_exporter.this_iam_role_name
   }
 
   set {
