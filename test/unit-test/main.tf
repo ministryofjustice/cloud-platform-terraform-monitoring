@@ -12,7 +12,6 @@ module "prometheus" {
       channel  = "#lower-priority-alarms"
   }]
 
-  iam_role_nodes                             = "arn:cloud-platform"
   pagerduty_config                           = "asdasd"
   enable_ecr_exporter                        = false
   enable_cloudwatch_exporter                 = false
