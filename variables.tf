@@ -3,11 +3,6 @@ variable "alertmanager_slack_receivers" {
   type        = list(any)
 }
 
-variable "iam_role_nodes" {
-  description = "Nodes IAM role ARN in order to create the KIAM/Kube2IAM"
-  type        = string
-}
-
 variable "pagerduty_config" {
   description = "Add PagerDuty key to allow integration with a PD service."
 }
@@ -76,20 +71,13 @@ variable "oidc_issuer_url" {
   description = "Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy)"
 }
 
-# EKS variables
-variable "eks" {
-  description = "Where are you applying this modules in kOps cluster or in EKS (KIAM or KUBE2IAM?)"
-  type        = bool
-  default     = false
-}
-
 variable "ingress_redirect" {
   description = "Enable ingress_redirect, to use live_domain, 'cloud-platform.service.justice.gov.uk'"
   type        = bool
   default     = false
 }
 variable "eks_cluster_oidc_issuer_url" {
-  description = "If EKS variable is set to true this is going to be used when we create the IAM OIDC role"
+  description = "This is going to be used when we create the IAM OIDC role"
   type        = string
   default     = ""
 }

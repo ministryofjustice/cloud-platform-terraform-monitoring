@@ -9,7 +9,6 @@ module "monitoring" {
   source = "github.com/ministryofjustice/cloud-platform-terraform-monitoring?ref=0.1.3"
 
   alertmanager_slack_receivers               = var.alertmanager_slack_receivers
-  iam_role_nodes                             = data.aws_iam_role.nodes.arn
   pagerduty_config                           = var.pagerduty_config
   enable_ecr_exporter                        = terraform.workspace == local.live_workspace ? true : false
   enable_cloudwatch_exporter                 = terraform.workspace == local.live_workspace ? true : false
@@ -57,8 +56,6 @@ module "monitoring" {
 |------|
 | [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) |
 | [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) |
-| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) |
-| [aws_iam_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) |
 | [helm_release](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) |
 | [kubernetes_ingress](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/ingress) |
 | [kubernetes_limit_range](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) |
@@ -77,8 +74,7 @@ module "monitoring" {
 | cluster\_domain\_name | The cluster domain - used by externalDNS and certmanager to create URLs | `any` | n/a | yes |
 | dockerhub\_password | DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
 | dockerhub\_username | DockerHub username - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
-| eks | Where are you applying this modules in kOps cluster or in EKS (KIAM or KUBE2IAM?) | `bool` | `false` | no |
-| eks\_cluster\_oidc\_issuer\_url | If EKS variable is set to true this is going to be used when we create the IAM OIDC role | `string` | `""` | no |
+| eks\_cluster\_oidc\_issuer\_url | This is going to be used when we create the IAM OIDC role | `string` | `""` | no |
 | enable\_cloudwatch\_exporter | Enable or not Cloudwatch exporter | `bool` | `false` | no |
 | enable\_ecr\_exporter | Enable or not ECR exporter | `bool` | `false` | no |
 | enable\_kibana\_audit\_proxy | Enable or not Kibana-audit proxy for authentication | `bool` | `false` | no |
@@ -89,7 +85,6 @@ module "monitoring" {
 | enable\_thanos\_helm\_chart | Enable or not Thanos Helm Chart - (do NOT confuse this with thanos sidecar within prometheus-operator) | `bool` | `false` | no |
 | enable\_thanos\_sidecar | Enable or not Thanos sidecar. Basically defines if we want to send cluster metrics to thanos's S3 bucket | `bool` | `false` | no |
 | grafana\_ingress\_redirect\_url | grafana url to use live\_domain, 'cloud-platform.service.justice.gov.uk' | `string` | `""` | no |
-| iam\_role\_nodes | Nodes IAM role ARN in order to create the KIAM/Kube2IAM | `string` | n/a | yes |
 | ingress\_redirect | Enable ingress\_redirect, to use live\_domain, 'cloud-platform.service.justice.gov.uk' | `bool` | `false` | no |
 | kibana\_audit\_upstream | ES upstream for audit logs | `string` | `"https://search-cloud-platform-audit-live-hfclvgaq73cul7ku362rvigti4.eu-west-2.es.amazonaws.com"` | no |
 | kibana\_upstream | ES upstream for logs | `string` | `"https://search-cloud-platform-live-dibidbfud3uww3lpxnhj2jdws4.eu-west-2.es.amazonaws.com"` | no |
@@ -103,6 +98,5 @@ module "monitoring" {
 | Name | Description |
 |------|-------------|
 | helm\_prometheus\_operator\_eks\_status | n/a |
-| helm\_prometheus\_operator\_status | n/a |
 
 <!--- END_TF_DOCS --->

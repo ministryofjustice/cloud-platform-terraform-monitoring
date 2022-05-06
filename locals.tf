@@ -24,5 +24,5 @@ locals {
     "https://prometheus",
     var.cluster_domain_name,
   )
-  prometheus_dependency = var.eks ? helm_release.prometheus_operator_eks : helm_release.prometheus_operator
+  prometheus_dependency = helm_release.prometheus_operator_eks
 }

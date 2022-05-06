@@ -32,7 +32,6 @@ resource "kubernetes_namespace" "monitoring" {
 ##################
 
 resource "kubernetes_secret" "dockerhub_credentials" {
-  count = var.eks ? 1 : 0
 
   metadata {
     name      = "dockerhub-credentials"

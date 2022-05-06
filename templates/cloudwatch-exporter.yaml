@@ -1,9 +1,4 @@
 
-%{ if eks == false ~}
-aws:
-  role: "${iam_role}"
-%{ endif ~}
-
 securityContext:
   runAsUser: 65534
   fsGroup: 65534
@@ -19,10 +14,8 @@ readinessProbe:
 serviceAccount:
   create: true
   name: "cloud-platform-cloudwatch-exporter"
-%{ if eks ~}
   annotations:
     eks.amazonaws.com/role-arn: "${eks_service_account}"
-%{ endif ~}
 
 config: |-
   # To add additional Cloudwatch metrics, please append this config list.

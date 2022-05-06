@@ -1,6 +1,5 @@
-%{ if eks ~}
+
 existingServiceAccount: prometheus-operator-kube-p-prometheus
-%{ endif ~}
 
 metrics:
   enabled: true
@@ -13,10 +12,6 @@ storegateway:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
   extraFlags:
     - --min-time=-1w
-%{ if eks == false ~}
-  podAnnotations:
-    iam.amazonaws.com/role: "${monitoring_aws_role}"
-%{ endif ~}
 
 query:
   stores:
@@ -40,17 +35,9 @@ compactor:
   retentionResolution1h: 365d
   persistence:
     size: 500Gi
-%{ if eks == false ~}
-  podAnnotations:
-    iam.amazonaws.com/role: "${monitoring_aws_role}"
-%{ endif ~}
 
 bucketweb:
   enabled: true
-%{ if eks == false ~}
-  podAnnotations:
-    iam.amazonaws.com/role: "${monitoring_aws_role}"
-%{ endif ~}
 
 existingObjstoreSecret: thanos-objstore-config
 existingObjstoreSecretItems:
