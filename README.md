@@ -30,6 +30,7 @@ module "monitoring" {
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13 |
+| kubectl | 1.11.2 |
 
 ## Providers
 
@@ -37,6 +38,8 @@ module "monitoring" {
 |------|---------|
 | aws | n/a |
 | helm | n/a |
+| http | n/a |
+| kubectl | 1.11.2 |
 | kubernetes | n/a |
 | random | n/a |
 | template | n/a |
@@ -57,6 +60,8 @@ module "monitoring" {
 | [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) |
 | [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) |
 | [helm_release](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) |
+| [http_http](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) |
+| [kubectl_manifest](https://registry.terraform.io/providers/gavinbunney/kubectl/1.11.2/docs/resources/manifest) |
 | [kubernetes_ingress](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/ingress) |
 | [kubernetes_limit_range](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) |
 | [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) |
@@ -92,11 +97,13 @@ module "monitoring" {
 | oidc\_components\_client\_secret | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | oidc\_issuer\_url | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | pagerduty\_config | Add PagerDuty key to allow integration with a PD service. | `any` | n/a | yes |
+| prometheus\_operator\_crd\_version | The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module | `string` | `"v0.50.0"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
 | helm\_prometheus\_operator\_eks\_status | n/a |
+| prometheus\_operator\_crds\_status | n/a |
 
 <!--- END_TF_DOCS --->
