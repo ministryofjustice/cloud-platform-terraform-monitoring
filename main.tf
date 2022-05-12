@@ -181,3 +181,15 @@ resource "kubernetes_network_policy" "allow_alertmanager_api" {
   }
 }
 
+
+// Prometheus crd yaml pulled from chart
+data "http" "prometheus_crd_yamls" {
+  for_each = local.prometheus_crd_yamls
+  url      = each.value
+}
+
+resource "kubectl_manifest" "prometheus_operator_crds" {
+  server_side_apply = true
+  for_each          = data.http.prometheus_crd_yamls
+  yaml_body         = each.value["body"]
+}

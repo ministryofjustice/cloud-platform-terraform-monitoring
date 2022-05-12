@@ -7,11 +7,11 @@
 resource "helm_release" "thanos" {
   count = var.enable_thanos_helm_chart ? 1 : 0
 
-  name      = "thanos"
-  namespace = kubernetes_namespace.monitoring.id
+  name       = "thanos"
+  namespace  = kubernetes_namespace.monitoring.id
   repository = "https://charts.bitnami.com/bitnami"
-  chart     = "thanos"
-  version   = "8.3.0"
+  chart      = "thanos"
+  version    = "8.3.0"
 
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
     enabled_compact     = var.enable_thanos_compact
