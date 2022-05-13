@@ -92,6 +92,7 @@ resource "helm_release" "prometheus_operator_eks" {
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
   version    = "30.0.1"
+  skip_crds = true
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
