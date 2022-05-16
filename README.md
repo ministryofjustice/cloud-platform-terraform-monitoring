@@ -97,7 +97,7 @@ module "monitoring" {
 | oidc\_components\_client\_secret | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | oidc\_issuer\_url | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | pagerduty\_config | Add PagerDuty key to allow integration with a PD service. | `any` | n/a | yes |
-| prometheus\_operator\_crd\_version | The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module | `string` | `"v0.50.0"` | no |
+| prometheus\_operator\_crd\_version | The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module | `string` | `"v0.53.1"` | no |
 
 ## Outputs
 
