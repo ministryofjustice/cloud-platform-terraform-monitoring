@@ -85,6 +85,22 @@ EOS
   vars = var.alertmanager_slack_receivers[count.index]
 }
 
+
+// Prometheus crd yaml pulled from kube-prometheus-stack helm chart. 
+// Upate variable `prometheus_operator_crd_version` to manage the crd version
+data "http" "prometheus_crd_yamls" {
+  for_each = local.prometheus_crd_yamls
+  url      = each.value
+}
+
+resource "kubectl_manifest" "prometheus_operator_crds" {
+  server_side_apply = true
+  for_each          = data.http.prometheus_crd_yamls
+  yaml_body         = each.value["body"]
+}
+
+// NOTE: Make sure to update the correct CRD version(if required) using above resource
+// `kubectl_manifest.prometheus_operator_crds` before upgrading prometheus operator
 resource "helm_release" "prometheus_operator_eks" {
 
   name       = "prometheus-operator"
@@ -92,7 +108,7 @@ resource "helm_release" "prometheus_operator_eks" {
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
   version    = "30.0.1"
-  skip_crds = true
+  skip_crds = true // Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
@@ -119,6 +135,7 @@ resource "helm_release" "prometheus_operator_eks" {
 
   # Depends on Helm being installed
   depends_on = [
+    local.prometheus_operator_crds_dependency,
     kubernetes_secret.grafana_secret,
     kubernetes_secret.thanos_config,
     kubernetes_secret.dockerhub_credentials

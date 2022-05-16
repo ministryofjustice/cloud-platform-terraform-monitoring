@@ -25,6 +25,7 @@ locals {
     var.cluster_domain_name,
   )
   prometheus_dependency = helm_release.prometheus_operator_eks
+  prometheus_operator_crds_dependency = kubectl_manifest.prometheus_operator_crds
 
   prometheus_crd_yamls = {
     alertmanager_configs = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagerconfigs.yaml"
