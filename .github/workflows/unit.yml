@@ -6,9 +6,25 @@ jobs:
   go-tests:
     name: Run Tests
     runs-on: ubuntu-latest
+    services:
+      localstack:
+        image: localstack/localstack:latest
+        env:
+          SERVICES: iam,sts
+          DEFAULT_REGION: eu-west-2
+          HOSTNAME_EXTERNAL: localstack
+        ports:
+          - 4566:4566
+          - 4571:4571
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -16,8 +32,29 @@ jobs:
           terraform_version: 0.14.x
           terraform_wrapper: false
 
+      - name: Download Go Modules
+        working-directory: test
+        run: go mod download
+
+      - uses: engineerd/setup-kind@v0.5.0
+        with:
+          image: "kindest/node:v1.18.8@sha256:f4bcc97a0ad6e7abaf3f643d890add7efe6ee4ab90baeb374b4f41a4c95567eb"
+
+      - name: Set up Kind for module testing
+        run: |
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          echo "current-context:" $(kubectl config current-context)
+
       - name: Run terraform Tests
         working-directory: test/unit-test
         run: |
           terraform init
           terraform validate
+      
+      - name: Run Go Tests
+        working-directory: test
+        run: |
+          kind get kubeconfig > ./kubeconfig
+          export KUBE_CONFIG_PATH="$PWD/kubeconfig"
+          go test -v
