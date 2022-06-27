@@ -187,9 +187,9 @@ data "template_file" "prometheus_proxy" {
 resource "helm_release" "prometheus_proxy" {
   name       = "prometheus-proxy"
   namespace  = kubernetes_namespace.monitoring.id
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "3.2.2"
+  version    = "6.2.1"
 
   values = [
     data.template_file.prometheus_proxy.rendered,
@@ -228,9 +228,9 @@ data "template_file" "alertmanager_proxy" {
 resource "helm_release" "alertmanager_proxy" {
   name       = "alertmanager-proxy"
   namespace  = "monitoring"
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "3.2.2"
+  version    = "6.2.1"
 
   values = [
     data.template_file.alertmanager_proxy.rendered,
@@ -324,9 +324,9 @@ resource "helm_release" "kibana_audit_proxy" {
   count      = var.enable_kibana_audit_proxy ? 1 : 0
   name       = "kibana-audit-proxy"
   namespace  = kubernetes_namespace.monitoring.id
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "3.2.2"
+  version    = "6.2.1"
 
   values = [
     data.template_file.kibana_audit_proxy.rendered,
@@ -366,9 +366,9 @@ resource "helm_release" "kibana_proxy" {
   count      = var.enable_kibana_proxy ? 1 : 0
   name       = "kibana-proxy"
   namespace  = kubernetes_namespace.monitoring.id
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "3.2.2"
+  version    = "6.2.1"
 
   values = [
     data.template_file.kibana_proxy.rendered,
