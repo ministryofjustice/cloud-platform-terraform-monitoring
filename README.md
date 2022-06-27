@@ -29,8 +29,7 @@ module "monitoring" {
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13 |
-| kubectl | 1.11.2 |
+| terraform | >= 0.14 |
 
 ## Providers
 
@@ -39,7 +38,7 @@ module "monitoring" {
 | aws | n/a |
 | helm | n/a |
 | http | n/a |
-| kubectl | 1.11.2 |
+| kubectl | n/a |
 | kubernetes | n/a |
 | random | n/a |
 | template | n/a |
@@ -61,7 +60,7 @@ module "monitoring" {
 | [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) |
 | [helm_release](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) |
 | [http_http](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) |
-| [kubectl_manifest](https://registry.terraform.io/providers/gavinbunney/kubectl/1.11.2/docs/resources/manifest) |
+| [kubectl_manifest](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) |
 | [kubernetes_ingress](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/ingress) |
 | [kubernetes_limit_range](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) |
 | [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) |
