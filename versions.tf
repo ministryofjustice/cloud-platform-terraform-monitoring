@@ -16,7 +16,7 @@ terraform {
       source = "hashicorp/template"
     }
     kubectl = {
-      source  = "gavinbunney/kubectl"
+      source = "gavinbunney/kubectl"
     }
   }
   required_version = ">= 0.14"
