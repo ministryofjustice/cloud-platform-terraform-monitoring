@@ -108,7 +108,7 @@ resource "helm_release" "prometheus_operator_eks" {
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
   version    = "30.0.1"
-  skip_crds = true // Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds
+  skip_crds  = true // Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
@@ -187,9 +187,9 @@ data "template_file" "prometheus_proxy" {
 resource "helm_release" "prometheus_proxy" {
   name       = "prometheus-proxy"
   namespace  = kubernetes_namespace.monitoring.id
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "3.2.2"
+  version    = "6.2.1"
 
   values = [
     data.template_file.prometheus_proxy.rendered,
@@ -228,9 +228,9 @@ data "template_file" "alertmanager_proxy" {
 resource "helm_release" "alertmanager_proxy" {
   name       = "alertmanager-proxy"
   namespace  = "monitoring"
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "3.2.2"
+  version    = "6.2.1"
 
   values = [
     data.template_file.alertmanager_proxy.rendered,
@@ -324,9 +324,9 @@ resource "helm_release" "kibana_audit_proxy" {
   count      = var.enable_kibana_audit_proxy ? 1 : 0
   name       = "kibana-audit-proxy"
   namespace  = kubernetes_namespace.monitoring.id
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "3.2.2"
+  version    = "6.2.1"
 
   values = [
     data.template_file.kibana_audit_proxy.rendered,
@@ -366,9 +366,9 @@ resource "helm_release" "kibana_proxy" {
   count      = var.enable_kibana_proxy ? 1 : 0
   name       = "kibana-proxy"
   namespace  = kubernetes_namespace.monitoring.id
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "3.2.2"
+  version    = "6.2.1"
 
   values = [
     data.template_file.kibana_proxy.rendered,
@@ -387,7 +387,7 @@ resource "helm_release" "kibana_proxy" {
 # This Ingress is to re-direct "grafana.cloud-platform.service.justice.gov.uk" to grafana_root URL
 # GF_SERVER_ROOT_URL supports only one URL, so cannot create multiple hosts as Prometheus and alertmanager in this module.
 
-resource "kubernetes_ingress" "ingress_redirect_grafana" {
+resource "kubernetes_ingress_v1" "ingress_redirect_grafana" {
   count = local.ingress_redirect ? 1 : 0
   metadata {
     name      = "ingress-redirect-grafana"
@@ -396,11 +396,11 @@ resource "kubernetes_ingress" "ingress_redirect_grafana" {
       "external-dns.alpha.kubernetes.io/aws-weight"     = "100"
       "external-dns.alpha.kubernetes.io/set-identifier" = "dns-grafana"
       "cloud-platform.justice.gov.uk/ignore-external-dns-weight" : "true"
-      "kubernetes.io/ingress.class"                    = "nginx"
       "nginx.ingress.kubernetes.io/permanent-redirect" = local.grafana_root
     }
   }
   spec {
+    ingress_class_name = "default"
     tls {
       hosts = ["grafana.${local.live_domain}"]
     }
@@ -410,8 +410,12 @@ resource "kubernetes_ingress" "ingress_redirect_grafana" {
         path {
           path = ""
           backend {
-            service_name = "prometheus-operator-grafana"
-            service_port = 80
+            service {
+              name = "prometheus-operator-grafana"
+              port {
+                number = 80
+              }
+            }
           }
         }
       }

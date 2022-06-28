@@ -194,6 +194,8 @@ grafana:
 
   ingress:
     enabled: true
+    ingressClassName: default
+    pathType: ImplementationSpecific
     annotations: {
       external-dns.alpha.kubernetes.io/aws-weight: "100",
       external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
