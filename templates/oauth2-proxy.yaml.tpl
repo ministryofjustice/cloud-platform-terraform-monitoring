@@ -31,6 +31,7 @@ extraArgs:
 
 ingress:
   enabled: true
+  className: nginx
   annotations: {
     external-dns.alpha.kubernetes.io/aws-weight: "100",
     external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
@@ -53,4 +54,17 @@ ingress:
       - "${hostname}"
 %{ endif ~}
 serviceAccount:
-  enabled: false
+  enabled: true
+
+securityContext:
+  enabled: true
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  runAsUser: 2000
+
+sessionStorage:
+  # Can be one of the supported session storage cookie/redis
+  type: redis
+redis:
+  # provision an instance of the redis sub-chart
+  enabled: true
