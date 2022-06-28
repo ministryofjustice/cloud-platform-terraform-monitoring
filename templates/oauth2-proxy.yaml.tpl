@@ -31,7 +31,7 @@ extraArgs:
 
 ingress:
   enabled: true
-  className: nginx
+  className: default
   annotations: {
     external-dns.alpha.kubernetes.io/aws-weight: "100",
     external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
