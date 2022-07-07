@@ -259,6 +259,17 @@ grafana:
     isDefault: false
     access: proxy
     version: 1
+  - name: Sentry
+    type: grafana-sentry-datasource
+    access: proxy
+    orgId: 1
+    version: 1
+    editable: false
+    jsonData:
+      url: https://sentry.io
+      orgSlug: ministryofjustice
+    secureJsonData:
+      authToken: "${ sentry_token }"
 
 ## Component scraping coreDns. Use either this or kubeDns
 ##

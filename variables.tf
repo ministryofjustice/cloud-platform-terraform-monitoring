@@ -7,6 +7,10 @@ variable "pagerduty_config" {
   description = "Add PagerDuty key to allow integration with a PD service."
 }
 
+variable "sentry_token" {
+  description = "Add Sentry key used for Grafana dashboards"
+}
+
 variable "enable_ecr_exporter" {
   description = "Enable or not ECR exporter"
   default     = false

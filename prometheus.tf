@@ -115,6 +115,7 @@ resource "helm_release" "prometheus_operator_eks" {
     grafana_ingress                            = local.grafana_ingress
     grafana_root                               = local.grafana_root
     pagerduty_config                           = var.pagerduty_config
+    sentry_token                               = var.sentry_token
     alertmanager_routes                        = join("", data.template_file.alertmanager_routes.*.rendered)
     alertmanager_receivers                     = join("", data.template_file.alertmanager_receivers.*.rendered)
     prometheus_ingress                         = local.prometheus_ingress
