@@ -131,7 +131,7 @@ resource "helm_release" "prometheus_operator_eks" {
     eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
     storage_class                              = can(regex("live", terraform.workspace)) ? "io1-expand" : "gp2-expand"
     storage_size                               = can(regex("live", terraform.workspace)) ? "750Gi" : "75Gi"
-    grafana_version                            = "7.5.9"
+    grafana_version                            = "7.5.16"
   })]
 
   # Depends on Helm being installed
