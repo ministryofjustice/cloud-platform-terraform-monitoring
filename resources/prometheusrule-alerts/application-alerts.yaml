@@ -363,46 +363,49 @@ spec:
       for: 10m
       labels:
         severity: critical
-    - alert: kuberhealthy_check_daemonset
+    - alert: KuberhealthyDaemonsetCheck
       annotations:
-        message: a failure occured somewhere in the daemonset deployment or tear down, an error is shown on the status page describing the issue "kubectl -n kuberhealthy describe  khstate daemonset" Also check failing pod logs
+        message: A failure occured somewhere in the daemonset deployment or tear down, an error is shown on the status page describing the issue "kubectl -n kuberhealthy describe khstate daemonset". 
+          Also check failing checker pod logs.
         runbook_url: https://github.com/kuberhealthy/kuberhealthy/blob/master/cmd/daemonset-check/README.md
       expr: |-
-        kuberhealthy_check{check="kuberhealthy/daemonset", container="kuberhealthy", endpoint="http", exported_namespace="kuberhealthy",  job="kuberhealthy", namespace="kuberhealthy",  service="kuberhealthy", status!="1"}
+        kuberhealthy_check{check="kuberhealthy/daemonset", container="kuberhealthy", endpoint="http", exported_namespace="kuberhealthy", job="kuberhealthy", namespace="kuberhealthy", service="kuberhealthy", status!="1"}
       for: 1m
       labels:
         severity: warning
-    - alert: kuberhealthy_check_deployment
+    - alert: KuberhealthyDeploymentCheck
       annotations:
-        message: an error occurred somewhere in the deployment creation, service creation, HTTP request, or tear down process -- resulting in an error report to the Kuberhealthy status page "kubectl -n kuberhealthy describe  khstate deployment". Also check failing pod logs
+        message: An error occurred somewhere in the deployment creation, service creation, HTTP request, or tear down process -- resulting in an error report to the Kuberhealthy status page 
+          "kubectl -n kuberhealthy describe  khstate deployment". Also check failing checker pod logs.
         runbook_url: https://github.com/kuberhealthy/kuberhealthy/blob/master/cmd/deployment-check/README.md
       expr: |-
         kuberhealthy_check{check="kuberhealthy/deployment", container="kuberhealthy", endpoint="http", exported_namespace="kuberhealthy",  job="kuberhealthy", namespace="kuberhealthy",  service="kuberhealthy", status!="1"}
       for: 1m
       labels:
         severity: warning
-    - alert: kuberhealthy_check_dns-status-internal
+    - alert: KuberhealthyDNSStatusCheckInternal
       annotations:
-        message: Checks for failures with DNS, including resolving within the cluster "kubectl -n kuberhealthy describe  khstate dns-status-internal". Also check failing pod logs.
+        message: Checks for failures with DNS, including resolving within the cluster "kubectl -n kuberhealthy describe khstate dns-status-internal". 
+          Also check failing checker pod logs.
         runbook_url: https://github.com/kuberhealthy/kuberhealthy/blob/master/cmd/dns-resolution-check/README.md
       expr: |-
         kuberhealthy_check{check="kuberhealthy/dns-status-internal", container="kuberhealthy", endpoint="http", exported_namespace="kuberhealthy",  job="kuberhealthy", namespace="kuberhealthy",  service="kuberhealthy", status!="1"}
       for: 1m
       labels:
         severity: warning
-    - alert: kuberhealthy_check_overall_Cluster state
+    - alert: KuberhealthyOverallClusterStateCheck
       annotations:
-        message: Check for any Kuberhealthy checks with status "fail". "kubectl -n kuberhealthy get khstate". Also check failing pod logs
+        message: Check for any Kuberhealthy checks with status "fail". "kubectl -n kuberhealthy get khstate". Also check failing pod logs.
         runbook_url: https://github.com/kuberhealthy/kuberhealthy
       expr: |-
         kuberhealthy_cluster_state!=1
       for: 1m
       labels:
         severity: warning
-    - alert: kuberhealthy_check_namespace-kh-check
+    - alert: KuberhealthyNamespaceExistsCheck
       annotations:
-        message: One of the following vital namespaces no longer exists: "cert-manager", "default", "ingress-controllers", "kube-system", "logging", "monitoring", "opa", "velero","kubectl -n kuberhealthy describe  khstate namespace-kh-check". Also check failing pod logs
-        runbook_url:
+        message: One of the following vital namespaces no longer exists - "cert-manager", "default", "ingress-controllers", "kube-system", "logging", "monitoring", "opa", "velero", "kubectl -n kuberhealthy describe khstate namespace-kh-check". Also check failing pod logs.
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-kuberhealthy/tree/main/cmd/namespace-check/README.md
       expr: |-
         kuberhealthy_check{check="kuberhealthy/namespace-kh-check", container="kuberhealthy", endpoint="http", exported_namespace="kuberhealthy",  job="kuberhealthy", namespace="kuberhealthy",  service="kuberhealthy", status!="1"}
       for: 1m
