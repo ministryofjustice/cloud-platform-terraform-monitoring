@@ -35,7 +35,7 @@ spec:
         message: This device's CPU usage has exceeded the threshold with a value of {{ $value }}.Instance {{ $labels.instance }} CPU usage is critically high
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#cpu-critical
     - alert: Memory-High
-      expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / (node_memory_MemTotal_bytes) * 100 > 80
+      expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / (node_memory_MemTotal_bytes) * 100 > 90
       for: 5m
       labels:
         severity: warning
