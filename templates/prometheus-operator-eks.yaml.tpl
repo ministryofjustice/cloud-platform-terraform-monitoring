@@ -40,6 +40,9 @@ alertmanager:
       receiver: 'null'
       routes:
       - match:
+          alertname: KubePersistentVolumeFillingUp
+        receiver: 'null'
+      - match:
           alertname: NodeFilesystemSpaceFillingUp
         receiver: 'null'
       - match:
