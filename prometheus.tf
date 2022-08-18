@@ -424,4 +424,5 @@ resource "kubernetes_ingress_v1" "ingress_redirect_grafana" {
       }
     }
   }
+  depends_on = [var.dependence_ingress_controller]
 }
