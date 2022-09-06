@@ -195,7 +195,7 @@ data "template_file" "thanos_proxy" {
   }
 }
 
-resource "helm_release" "thamos_proxy" {
+resource "helm_release" "thanos_proxy" {
   name       = "thanos-proxy"
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
