@@ -1,22 +1,6 @@
 
 existingServiceAccount: prometheus-operator-kube-p-prometheus
 
-queryFrontend:
-  ingress:
-    ## @param bucketweb.ingress.enabled Enable ingress controller resource
-    ##
-    enabled: false
-    ## @param bucketweb.ingress.hostname Default host for the ingress resource
-    ##
-    hostname: "${ grafana_ingress }"
-    ingressClassName: "default"
-    annotations: {
-      external-dns.alpha.kubernetes.io/aws-weight: "100",
-      external-dns.alpha.kubernetes.io/set-identifier: "dns-thanos",
-      cloud-platform.justice.gov.uk/ignore-external-dns-weight: "true"
-    }
-    pathType: ImplementationSpecific
-
 metrics:
   enabled: true
   serviceMonitor:

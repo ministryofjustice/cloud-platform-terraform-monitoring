@@ -24,11 +24,6 @@ locals {
     "https://prometheus",
     var.cluster_domain_name,
   )
-  thanos_ingress = format(
-    "%s.%s",
-    "thanos",
-    var.cluster_domain_name,
-  )
   prometheus_dependency               = helm_release.prometheus_operator_eks
   prometheus_operator_crds_dependency = kubectl_manifest.prometheus_operator_crds
 
