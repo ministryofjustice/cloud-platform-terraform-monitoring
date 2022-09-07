@@ -122,3 +122,7 @@ variable "prometheus_operator_crd_version" {
   default     = "v0.53.1"
   description = "The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module"
 }
+
+variable "dependence_ingress_controller" {
+  description = "Ingress controller module dependences in order to be executed."
+}
