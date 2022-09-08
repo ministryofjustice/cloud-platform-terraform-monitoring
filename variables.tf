@@ -125,4 +125,5 @@ variable "prometheus_operator_crd_version" {
 
 variable "dependence_ingress_controller" {
   description = "Ingress controller module dependences in order to be executed."
+  type        = list(string)
 }
