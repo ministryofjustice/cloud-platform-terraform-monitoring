@@ -105,6 +105,7 @@ module "monitoring" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_alertmanager_slack_receivers"></a> [alertmanager\_slack\_receivers](#input\_alertmanager\_slack\_receivers) | A list of configuration values for Slack receivers | `list(any)` | n/a | yes |
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain - used by externalDNS and certmanager to create URLs | `any` | n/a | yes |
+| <a name="input_dependence_ingress_controller"></a> [dependence\_ingress\_controller](#input\_dependence\_ingress\_controller) | Ingress controller module dependences in order to be executed. | `list(string)` | n/a | yes |
 | <a name="input_dockerhub_password"></a> [dockerhub\_password](#input\_dockerhub\_password) | DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
 | <a name="input_dockerhub_username"></a> [dockerhub\_username](#input\_dockerhub\_username) | DockerHub username - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
 | <a name="input_eks_cluster_oidc_issuer_url"></a> [eks\_cluster\_oidc\_issuer\_url](#input\_eks\_cluster\_oidc\_issuer\_url) | This is going to be used when we create the IAM OIDC role | `string` | `""` | no |
