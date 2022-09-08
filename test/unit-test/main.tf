@@ -20,7 +20,7 @@ module "prometheus" {
   enable_prometheus_affinity_and_tolerations = false
   enable_large_nodesgroup                    = false
   enable_thanos_compact                      = false
-  dependence_ingress_controller              = "asdasd"
+  dependence_ingress_controller              = ["asdasd"]
 
   cluster_domain_name           = "prometheus.cloud-platform.service.justice.gov.uk"
   oidc_components_client_id     = "XXX"
