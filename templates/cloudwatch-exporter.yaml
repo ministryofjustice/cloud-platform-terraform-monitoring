@@ -134,21 +134,39 @@ config: |-
     # ElastiCache Redis Metrics
   - aws_namespace: AWS/ElastiCache
     aws_metric_name: CPUUtilization
+    aws_dimensions:
+    - CacheNodeId
+    - CacheClusterId
 
   - aws_namespace: AWS/ElastiCache
     aws_metric_name: FreeableMemory
+    aws_dimensions:
+    - CacheNodeId
+    - CacheClusterId
  
   - aws_namespace: AWS/ElastiCache
     aws_metric_name: NetworkBytesIn
+    aws_dimensions:
+    - CacheNodeId
+    - CacheClusterId
 
   - aws_namespace: AWS/ElastiCache
     aws_metric_name: NetworkBytesOut
+    aws_dimensions:
+    - CacheNodeId
+    - CacheClusterId
  
   - aws_namespace: AWS/ElastiCache
     aws_metric_name: NetworkPacketsIn
+    aws_dimensions:
+    - CacheNodeId
+    - CacheClusterId
  
   - aws_namespace: AWS/ElastiCache
     aws_metric_name: NetworkPacketsOut
+    aws_dimensions:
+    - CacheNodeId
+    - CacheClusterId
  
     # DynamoDB Metrics   
   - aws_namespace: AWS/DynamoDB
