@@ -17,6 +17,7 @@ resource "helm_release" "thanos" {
     enabled_compact     = var.enable_thanos_compact
     monitoring_aws_role = module.iam_assumable_role_monitoring.this_iam_role_name
     clusterName         = terraform.workspace
+		storage_class				= "gp2-expand"
   })]
 
   depends_on = [
