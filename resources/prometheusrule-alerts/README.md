@@ -57,11 +57,11 @@ Please read the documentation from [Kubernetes](https://github.com/kubernetes/ko
 Memory-High
 Severity: warning
 ```
-This alert is triggered when the memory usage is at or over 80% for 5 minutes
+This alert is triggered when the memory usage is at or over 90% for 5 minutes
 
 Expression:
 ```
-expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / (node_memory_MemTotal_bytes) * 100 > 80
+expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / (node_memory_MemTotal_bytes) * 100 > 90
 for: 5m
 ```
 ### Action
