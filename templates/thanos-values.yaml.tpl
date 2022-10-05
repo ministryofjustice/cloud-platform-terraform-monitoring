@@ -12,6 +12,9 @@ storegateway:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
   extraFlags:
     - --min-time=-1w
+  persistence:
+    enabled: true
+    storageClass: "${storage_class}"
 
 query:
   stores:
