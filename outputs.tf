@@ -3,6 +3,6 @@ output "helm_prometheus_operator_eks_status" {
   value = length(helm_release.prometheus_operator_eks) > 0 ? helm_release.prometheus_operator_eks.status : null
 }
 
-output "prometheus_operator_crds_status" {
-  value = [kubectl_manifest.prometheus_operator_crds]
-}
+# output "prometheus_operator_crds_status" {
+#   value = [kubectl_manifest.prometheus_operator_crds]
+# }

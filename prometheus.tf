@@ -88,16 +88,16 @@ EOS
 
 // Prometheus crd yaml pulled from kube-prometheus-stack helm chart. 
 // Upate variable `prometheus_operator_crd_version` to manage the crd version
-data "http" "prometheus_crd_yamls" {
-  for_each = local.prometheus_crd_yamls
-  url      = each.value
-}
+# data "http" "prometheus_crd_yamls" {
+#   for_each = local.prometheus_crd_yamls
+#   url      = each.value
+# }
 
-resource "kubectl_manifest" "prometheus_operator_crds" {
-  server_side_apply = true
-  for_each          = data.http.prometheus_crd_yamls
-  yaml_body         = each.value["body"]
-}
+# resource "kubectl_manifest" "prometheus_operator_crds" {
+#   server_side_apply = true
+#   for_each          = data.http.prometheus_crd_yamls
+#   yaml_body         = each.value["body"]
+# }
 
 // NOTE: Make sure to update the correct CRD version(if required) using above resource
 // `kubectl_manifest.prometheus_operator_crds` before upgrading prometheus operator
@@ -135,7 +135,6 @@ resource "helm_release" "prometheus_operator_eks" {
 
   # Depends on Helm being installed
   depends_on = [
-    local.prometheus_operator_crds_dependency,
     kubernetes_secret.grafana_secret,
     kubernetes_secret.thanos_config,
     kubernetes_secret.dockerhub_credentials,
