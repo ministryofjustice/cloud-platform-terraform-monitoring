@@ -119,7 +119,7 @@ variable "grafana_ingress_redirect_url" {
 }
 
 variable "prometheus_operator_crd_version" {
-  default     = "v0.53.1"
+  default     = "v0.60.1"
   description = "The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module"
 }
 
