@@ -184,7 +184,6 @@ grafana:
     pullSecrets:
     - "dockerhub-credentials"
     repository: grafana/grafana
-    tag: ${grafana_version}
     pullPolicy: IfNotPresent
 
   serviceAccount:
