@@ -230,13 +230,18 @@ grafana:
     - grafana-user-dashboards
 
   sidecar:
+    image:
+      repository: quay.io/kiwigrid/k8s-sidecar
+      tag: 1.14.2
     dashboards:
       enabled: true
       label: grafana_dashboard
+      labelValue: ""
       searchNamespace: ALL
     datasources:
       enabled: true
       label: grafana_datasource
+      labelValue: ""
 
   ## Configure additional grafana datasources
   ## ref: http://docs.grafana.org/administration/provisioning/#datasources
