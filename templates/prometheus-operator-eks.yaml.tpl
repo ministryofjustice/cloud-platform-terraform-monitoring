@@ -209,11 +209,11 @@ grafana:
       - hosts:
         - "${ grafana_ingress }"
 
-  plugins:
-    - digrich-bubblechart-panel
-    - grafana-clock-panel
-    - mtanda-histogram-panel
-    - grafana-worldmap-panel
+  # plugins:
+  #   - digrich-bubblechart-panel
+  #   - grafana-clock-panel
+  #   - mtanda-histogram-panel
+  #   - grafana-worldmap-panel
 
   env:
     GF_SERVER_ROOT_URL: "${ grafana_root }"
