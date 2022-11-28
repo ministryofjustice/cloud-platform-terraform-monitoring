@@ -232,9 +232,6 @@ grafana:
 
   envFromSecret: "grafana-env"
 
-  dashboardsConfigMaps:
-    - grafana-user-dashboards
-
   sidecar:
     image:
       repository: quay.io/kiwigrid/k8s-sidecar
