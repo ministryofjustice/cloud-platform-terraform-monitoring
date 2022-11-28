@@ -209,12 +209,6 @@ grafana:
       - hosts:
         - "${ grafana_ingress }"
 
-  # plugins:
-  #   - digrich-bubblechart-panel
-  #   - grafana-clock-panel
-  #   - mtanda-histogram-panel
-  #   - grafana-worldmap-panel
-
   env:
     GF_SERVER_ROOT_URL: "${ grafana_root }"
     GF_ANALYTICS_REPORTING_ENABLED: "false"
@@ -235,9 +229,6 @@ grafana:
   sidecar:
     image:
       repository: quay.io/kiwigrid/k8s-sidecar
-    securityContext:
-    # skipTlsVerify Set to true to skip tls verification for kube api calls
-      skipTlsVerify: true
     alerts:
       enabled: true
       label: grafana_alert
@@ -290,15 +281,15 @@ kubeEtcd:
 ## Component scraping kube scheduler
 ##
 kubeScheduler:
-  enabled: false
+  enabled: true
 
 kubeProxy:
-  enabled: false
+  enabled: true
 
 ## Component scraping the kube controller manager
 ##
 kubeControllerManager:
-  enabled: false
+  enabled: true
 
   ## If using kubeControllerManager.endpoints only the port and targetPort are used
   ##
