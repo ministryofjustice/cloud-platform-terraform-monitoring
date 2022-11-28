@@ -184,7 +184,6 @@ grafana:
     pullSecrets:
     - "dockerhub-credentials"
     repository: grafana/grafana
-    tag: ${grafana_version}
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -210,6 +209,12 @@ grafana:
       - hosts:
         - "${ grafana_ingress }"
 
+  plugins:
+    - digrich-bubblechart-panel
+    - grafana-clock-panel
+    - mtanda-histogram-panel
+    - grafana-worldmap-panel
+
   env:
     GF_SERVER_ROOT_URL: "${ grafana_root }"
     GF_ANALYTICS_REPORTING_ENABLED: "false"
@@ -227,13 +232,17 @@ grafana:
 
   envFromSecret: "grafana-env"
 
-  serverDashboardConfigmaps:
+  dashboardsConfigMaps:
     - grafana-user-dashboards
 
   sidecar:
     image:
       repository: quay.io/kiwigrid/k8s-sidecar
-      tag: 1.14.2
+    alerts:
+      enabled: true
+      label: grafana_alert
+      labelValue: ""
+      searchNamespace: ALL
     dashboards:
       enabled: true
       label: grafana_dashboard
