@@ -235,6 +235,9 @@ grafana:
   sidecar:
     image:
       repository: quay.io/kiwigrid/k8s-sidecar
+    securityContext:
+    # skipTlsVerify Set to true to skip tls verification for kube api calls
+      skipTlsVerify: true
     alerts:
       enabled: true
       label: grafana_alert
