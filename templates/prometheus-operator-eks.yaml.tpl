@@ -210,8 +210,8 @@ grafana:
         - "${ grafana_ingress }"
 
   env:
-    AWS_ROLE_ARN: "${grafana_assumerolearn}"
-    AWS_REGION: eu-west-2
+    AWS_ROLE_ARN: "${ grafana_assumerolearn }"
+    AWS_REGION: "eu-west-2"
     ASSUME_ROLE_ENABLED: "true"
     GF_SERVER_ROOT_URL: "${ grafana_root }"
     GF_ANALYTICS_REPORTING_ENABLED: "false"
@@ -244,6 +244,10 @@ grafana:
   sidecar:
     image:
       repository: quay.io/kiwigrid/k8s-sidecar
+    securityContext:
+      fsGroup: 472
+      runAsUser: 472
+      runAsGroup: 472
     alerts:
       enabled: true
       label: grafana_alert
@@ -267,7 +271,7 @@ grafana:
     editable: true
     access: proxy
     jsonData:
-      authType: arn
+      authType: default
       defaultRegion: eu-west-2
       assumeRoleArn: "${ grafana_assumerolearn }"
     orgId: 1
