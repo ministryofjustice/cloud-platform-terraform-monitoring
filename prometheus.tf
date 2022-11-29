@@ -207,9 +207,27 @@ data "aws_iam_policy_document" "grafana_datasource_irsa" {
   }
   statement {
     actions = [
-      "cloudwatch:ListMetrics",
       "cloudwatch:GetMetricStatistics",
-      "cloudwatch:GetMetricData"
+      "cloudwatch:DescribeAlarmsForMetric",
+      "cloudwatch:DescribeAlarmHistory",
+      "cloudwatch:DescribeAlarms",
+      "cloudwatch:ListMetrics",
+      "cloudwatch:GetMetricData",
+      "cloudwatch:GetInsightRuleReport"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    actions = [
+      "ec2:DescribeTags",
+      "ec2:DescribeInstances",
+      "ec2:DescribeRegions"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    actions = [
+      "tag:GetResources",
     ]
     resources = ["*"]
   }
