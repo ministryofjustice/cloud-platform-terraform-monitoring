@@ -265,28 +265,52 @@ grafana:
 
   ## Configure additional grafana datasources
   ## ref: http://docs.grafana.org/administration/provisioning/#datasources
-  additionalDataSources:
-  - name: Cloudwatch
-    type: cloudwatch
-    editable: true
-    access: proxy
-    jsonData:
-      authType: default
-      defaultRegion: eu-west-2
-      assumeRoleArn: "${ grafana_assumerolearn }"
-    orgId: 1
-    version: 1
-  - name: Alertmanager
-    type: "camptocamp-prometheus-alertmanager-datasource"
-    url: "http://alertmanager-operated:9093"
-    version: 1
-  - name: Thanos
-    type: "prometheus"
-    url: "http://thanos-query:9090"
-    isDefault: false
-    access: proxy
-    version: 1
+  # additionalDataSources:
+  # - name: Cloudwatch
+  #   type: cloudwatch
+  #   editable: true
+  #   access: proxy
+  #   jsonData:
+  #     authType: default
+  #     defaultRegion: eu-west-2
+  #     assumeRoleArn: "${ grafana_assumerolearn }"
+  #   orgId: 1
+  #   version: 1
+  # - name: Alertmanager
+  #   type: "camptocamp-prometheus-alertmanager-datasource"
+  #   url: "http://alertmanager-operated:9093"
+  #   version: 1
+  # - name: Thanos
+  #   type: "prometheus"
+  #   url: "http://thanos-query:9090"
+  #   isDefault: false
+  #   access: proxy
+  #   version: 1
 
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Cloudwatch
+          type: cloudwatch
+          editable: true
+          access: proxy
+          jsonData:
+            authType: default
+            defaultRegion: eu-west-2
+            assumeRoleArn: "${ grafana_assumerolearn }"
+          orgId: 1
+          version: 1
+        - name: Alertmanager
+          type: "camptocamp-prometheus-alertmanager-datasource"
+          url: "http://alertmanager-operated:9093"
+          version: 1
+        - name: Thanos
+          type: "prometheus"
+          url: "http://thanos-query:9090"
+          isDefault: false
+          access: proxy
+          version: 1
 ## Component scraping coreDns. Use either this or kubeDns
 ##
 coreDns:
