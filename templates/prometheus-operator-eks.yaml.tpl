@@ -300,15 +300,15 @@ kubeEtcd:
 ## Component scraping kube scheduler
 ##
 kubeScheduler:
-  enabled: true
+  enabled: false
 
 kubeProxy:
-  enabled: true
+  enabled: false
 
 ## Component scraping the kube controller manager
 ##
 kubeControllerManager:
-  enabled: true
+  enabled: false
 
   ## If using kubeControllerManager.endpoints only the port and targetPort are used
   ##
