@@ -244,10 +244,6 @@ grafana:
   sidecar:
     image:
       repository: quay.io/kiwigrid/k8s-sidecar
-    securityContext:
-      fsGroup: 472
-      runAsUser: 472
-      runAsGroup: 472
     alerts:
       enabled: true
       label: grafana_alert
