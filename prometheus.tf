@@ -120,7 +120,7 @@ resource "helm_release" "prometheus_operator_eks" {
     prometheus_ingress                         = local.prometheus_ingress
     random_username                            = random_id.username.hex
     random_password                            = random_id.password.hex
-    grafana_assumerolearn                      = module.iam_assumable_role_grafana_datasource.iam_role_arn
+    grafana_assumerolearn                      = aws_iam_role.grafana_role.arn
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
@@ -159,80 +159,6 @@ resource "helm_release" "prometheus_operator_eks" {
 # Ref: https://github.com/evry/docker-oidc-proxy
 resource "random_id" "session_secret" {
   byte_length = 16
-}
-
-######################
-# Grafana Cloudwatch #
-######################
-
-# Grafana datasource for cloudwatch
-# Ref: https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
-
-# Minimal policy permissions 
-# Ref: https://grafana.com/docs/grafana/latest/features/datasources/cloudwatch/#iam-policies
-# IRSA
-
-module "iam_assumable_role_grafana_datasource" {
-  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "4.24.1"
-  create_role                   = true
-  allow_self_assume_role        = true
-  role_name                     = "grafana.${var.cluster_domain_name}"
-  provider_url                  = var.eks_cluster_oidc_issuer_url
-  role_policy_arns              = [length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.arn : ""]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
-
-}
-
-resource "aws_iam_policy" "grafana_datasource" {
-
-  name_prefix = "grafana"
-  description = "EKS grafana datasource policy for cluster ${var.cluster_domain_name}"
-  policy      = data.aws_iam_policy_document.grafana_datasource_irsa.json
-}
-
-data "aws_iam_policy_document" "grafana_datasource_irsa" {
-  statement {
-    actions = [
-      "logs:DescribeLogGroups",
-      "logs:GetLogGroupFields",
-      "logs:StartQuery",
-      "logs:StopQuery",
-      "logs:GetQueryResults",
-      "logs:GetLogEvents"
-    ]
-    resources = ["*"]
-  }
-  statement {
-    actions = [
-      "cloudwatch:GetMetricStatistics",
-      "cloudwatch:DescribeAlarmsForMetric",
-      "cloudwatch:DescribeAlarmHistory",
-      "cloudwatch:DescribeAlarms",
-      "cloudwatch:ListMetrics",
-      "cloudwatch:GetMetricData",
-      "cloudwatch:GetInsightRuleReport"
-    ]
-    resources = ["*"]
-  }
-  statement {
-    actions = [
-      "ec2:DescribeTags",
-      "ec2:DescribeInstances",
-      "ec2:DescribeRegions"
-    ]
-    resources = ["*"]
-  }
-  statement {
-    actions = [
-      "tag:GetResources",
-    ]
-    resources = ["*"]
-  }
-  statement {
-    actions   = ["sts:AssumeRole"]
-    resources = [module.iam_assumable_role_grafana_datasource.this_iam_role_arn]
-  }
 }
 
 # This Ingress is to re-direct "grafana.cloud-platform.service.justice.gov.uk" to grafana_root URL
