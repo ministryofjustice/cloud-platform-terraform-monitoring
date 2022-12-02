@@ -73,37 +73,34 @@ data "aws_caller_identity" "current" {}
 data "aws_iam_policy_document" "assume_role_with_oidc" {
   statement {
     # https://aws.amazon.com/blogs/security/announcing-an-update-to-iam-role-trust-policy-behavior/
-    content {
-      sid     = "ExplicitSelfRoleAssumption"
-      effect  = "Allow"
-      actions = ["sts:AssumeRole"]
-      principals {
-        type        = "AWS"
-        identifiers = ["*"]
-      }
-      condition {
-        test     = "ArnLike"
-        variable = "aws:PrincipalArn"
-        values   = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.role_name}"]
-      }
+
+    sid     = "ExplicitSelfRoleAssumption"
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
     }
+    condition {
+      test     = "ArnLike"
+      variable = "aws:PrincipalArn"
+      values   = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.role_name}"]
+    }
+
   }
   statement {
-    content {
-      effect  = "Allow"
-      actions = ["sts:AssumeRoleWithWebIdentity"]
-      principals {
-        type = "Federated"
 
-        identifiers = ["arn:aws:iam::${local.aws_account_id}:oidc-provider/${eks_cluster_oidc_issuer_url}"]
-      }
-      condition {
-        content {
-          test     = "StringEquals"
-          variable = "${eks_cluster_oidc_issuer_url}:sub"
-          values   = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
-        }
-      }
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    principals {
+      type = "Federated"
+
+      identifiers = ["arn:aws:iam::${local.aws_account_id}:oidc-provider/${var.eks_cluster_oidc_issuer_url}"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "${var.eks_cluster_oidc_issuer_url}:sub"
+      values   = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
     }
   }
 }
@@ -116,11 +113,13 @@ resource "aws_iam_role" "grafana_role" {
 
   assume_role_policy = data.aws_iam_policy_document.assume_role_with_oidc.json
 
-  tags = var.tags
+  tags = {
+    Terraform = "true"
+    Cluster   = var.cluster_domain_name
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "custom" {
-  count = var.create_role ? local.number_of_role_policy_arns : 0
 
   role       = aws_iam_role.grafana_role.name
   policy_arn = aws_iam_policy.grafana_datasource.arn
