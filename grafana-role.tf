@@ -71,20 +71,16 @@ locals {
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "assume_role_with_oidc" {
-
-  dynamic "statement" {
+  statement {
     # https://aws.amazon.com/blogs/security/announcing-an-update-to-iam-role-trust-policy-behavior/
-
     content {
       sid     = "ExplicitSelfRoleAssumption"
       effect  = "Allow"
       actions = ["sts:AssumeRole"]
-
       principals {
         type        = "AWS"
         identifiers = ["*"]
       }
-
       condition {
         test     = "ArnLike"
         variable = "aws:PrincipalArn"
@@ -92,28 +88,22 @@ data "aws_iam_policy_document" "assume_role_with_oidc" {
       }
     }
   }
-
-  dynamic "statement" {
-
+  statement {
     content {
       effect  = "Allow"
       actions = ["sts:AssumeRoleWithWebIdentity"]
-
       principals {
         type = "Federated"
 
         identifiers = ["arn:aws:iam::${local.aws_account_id}:oidc-provider/${eks_cluster_oidc_issuer_url}"]
       }
-
-      dynamic "condition" {
-
+      condition {
         content {
           test     = "StringEquals"
           variable = "${eks_cluster_oidc_issuer_url}:sub"
           values   = ["system:serviceaccount:monitoring:prometheus-operator-grafana"]
         }
       }
-
     }
   }
 }
