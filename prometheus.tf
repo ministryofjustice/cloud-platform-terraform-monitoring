@@ -120,9 +120,7 @@ resource "helm_release" "prometheus_operator_eks" {
     prometheus_ingress                         = local.prometheus_ingress
     random_username                            = random_id.username.hex
     random_password                            = random_id.password.hex
-    grafana_pod_annotation                     = module.iam_assumable_role_grafana_datasource.this_iam_role_name
-    grafana_assumerolearn                      = module.iam_assumable_role_grafana_datasource.this_iam_role_arn
-    monitoring_aws_role                        = module.iam_assumable_role_monitoring.this_iam_role_name
+    grafana_assumerolearn                      = module.iam_assumable_role_grafana_datasource.iam_role_arn
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
@@ -130,7 +128,6 @@ resource "helm_release" "prometheus_operator_eks" {
     eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
     storage_class                              = can(regex("live", terraform.workspace)) ? "io1-expand" : "gp2-expand"
     storage_size                               = can(regex("live", terraform.workspace)) ? "750Gi" : "75Gi"
-    grafana_version                            = "7.5.9"
   })]
 
   # Depends on Helm being installed
@@ -177,8 +174,9 @@ resource "random_id" "session_secret" {
 
 module "iam_assumable_role_grafana_datasource" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "3.13.0"
+  version                       = "4.24.1"
   create_role                   = true
+  allow_self_assume_role        = true
   role_name                     = "grafana.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
   role_policy_arns              = [length(aws_iam_policy.grafana_datasource) >= 1 ? aws_iam_policy.grafana_datasource.arn : ""]

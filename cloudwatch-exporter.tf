@@ -7,12 +7,12 @@ resource "helm_release" "cloudwatch_exporter" {
   name       = "cloudwatch-exporter"
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://prometheus-community.github.io/helm-charts"
-  version    = "0.18.0"
+  version    = "0.22.0"
   chart      = "prometheus-cloudwatch-exporter"
 
   values = [templatefile("${path.module}/templates/cloudwatch-exporter.yaml", {
-    iam_role            = module.iam_assumable_role_cloudwatch_exporter.this_iam_role_name
-    eks_service_account = module.iam_assumable_role_cloudwatch_exporter.this_iam_role_arn
+    iam_role            = module.iam_assumable_role_cloudwatch_exporter.iam_role_name
+    eks_service_account = module.iam_assumable_role_cloudwatch_exporter.iam_role_arn
   })]
 
   depends_on = [
@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "cloudwatch_exporter" {
 
 module "iam_assumable_role_cloudwatch_exporter" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "3.13.0"
+  version                       = "4.24.1"
   create_role                   = var.enable_cloudwatch_exporter ? true : false
   role_name                     = "cloudwatch.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url

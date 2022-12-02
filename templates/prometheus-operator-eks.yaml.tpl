@@ -172,6 +172,32 @@ alertmanager:
     ##
     externalUrl: "${ alertmanager_ingress }"
 
+    %{ if enable_prometheus_affinity_and_tolerations ~}
+    ## Tolerations for use with node taints
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations:
+      - key: "monitoring-node"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+    %{ endif ~}
+
+    %{ if enable_prometheus_affinity_and_tolerations ~}
+    ## Assign custom affinity rules to the prometheus instance
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+    ##
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: cloud-platform.justice.gov.uk/monitoring-ng
+              operator: In
+              values:
+              - "true"
+    %{ endif ~}
+
 ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
 ##
 grafana:
@@ -209,10 +235,33 @@ grafana:
       - hosts:
         - "${ grafana_ingress }"
 
+    %{ if enable_prometheus_affinity_and_tolerations ~}
+    ## Tolerations for use with node taints
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+  tolerations:
+    - key: "monitoring-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+  %{ endif ~}
+
+  %{ if enable_prometheus_affinity_and_tolerations ~}
+  ## Assign custom affinity rules to the prometheus instance
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: cloud-platform.justice.gov.uk/monitoring-ng
+            operator: In
+            values:
+            - "true"
+  %{ endif ~}
+
   env:
-    AWS_ROLE_ARN: "${ grafana_assumerolearn }"
-    AWS_REGION: "eu-west-2"
-    ASSUME_ROLE_ENABLED: "true"
     GF_SERVER_ROOT_URL: "${ grafana_root }"
     GF_ANALYTICS_REPORTING_ENABLED: "false"
     GF_AUTH_DISABLE_LOGIN_FORM: "true"
@@ -228,18 +277,6 @@ grafana:
     GF_AUTH_GENERIC_OAUTH_SCOPES: "openid profile email"
 
   envFromSecret: "grafana-env"
-
-  extraSecretMounts:
-  - name: aws-iam-token
-    mountPath: /var/run/secrets/eks.amazonaws.com/serviceaccount
-    readOnly: true
-    projected:
-      defaultMode: 420
-      sources:
-        - serviceAccountToken:
-            audience: sts.amazonaws.com
-            expirationSeconds: 86400
-            path: token
 
   sidecar:
     image:
@@ -261,52 +298,28 @@ grafana:
 
   ## Configure additional grafana datasources
   ## ref: http://docs.grafana.org/administration/provisioning/#datasources
-  # additionalDataSources:
-  # - name: Cloudwatch
-  #   type: cloudwatch
-  #   editable: true
-  #   access: proxy
-  #   jsonData:
-  #     authType: default
-  #     defaultRegion: eu-west-2
-  #     assumeRoleArn: "${ grafana_assumerolearn }"
-  #   orgId: 1
-  #   version: 1
-  # - name: Alertmanager
-  #   type: "camptocamp-prometheus-alertmanager-datasource"
-  #   url: "http://alertmanager-operated:9093"
-  #   version: 1
-  # - name: Thanos
-  #   type: "prometheus"
-  #   url: "http://thanos-query:9090"
-  #   isDefault: false
-  #   access: proxy
-  #   version: 1
+  additionalDataSources:
+  - name: Cloudwatch
+    type: cloudwatch
+    editable: true
+    access: proxy
+    jsonData:
+      authType: default
+      defaultRegion: eu-west-2
+      assumeRoleArn: "${ grafana_assumerolearn }"
+    orgId: 1
+    version: 1
+  - name: Alertmanager
+    type: "camptocamp-prometheus-alertmanager-datasource"
+    url: "http://alertmanager-operated:9093"
+    version: 1
+  - name: Thanos
+    type: "prometheus"
+    url: "http://thanos-query:9090"
+    isDefault: false
+    access: proxy
+    version: 1
 
-  datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-        - name: Cloudwatch
-          type: cloudwatch
-          editable: true
-          access: proxy
-          jsonData:
-            authType: default
-            defaultRegion: eu-west-2
-            assumeRoleArn: "${ grafana_assumerolearn }"
-          orgId: 1
-          version: 1
-        - name: Alertmanager
-          type: "camptocamp-prometheus-alertmanager-datasource"
-          url: "http://alertmanager-operated:9093"
-          version: 1
-        - name: Thanos
-          type: "prometheus"
-          url: "http://thanos-query:9090"
-          isDefault: false
-          access: proxy
-          version: 1
 ## Component scraping coreDns. Use either this or kubeDns
 ##
 coreDns:
