@@ -162,7 +162,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: gp3
+          storageClassName: gp2-expand
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -172,35 +172,6 @@ alertmanager:
     ##
     externalUrl: "${ alertmanager_ingress }"
 
-    %{ if enable_prometheus_affinity_and_tolerations ~}
-    ## Tolerations for use with node taints
-    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-    ##
-    tolerations:
-      - key: "monitoring-node"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
-    %{ endif ~}
-
-    %{ if enable_prometheus_affinity_and_tolerations ~}
-    ## Assign custom affinity rules to the prometheus instance
-    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-    ##
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: cloud-platform.justice.gov.uk/monitoring-ng
-              operator: In
-              values:
-              - "true"
-            - key: topology.kubernetes.io/zone
-              operator: In
-              values:
-              - "eu-west-2b"
-    %{ endif ~}
 
 ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
 ##
@@ -530,10 +501,6 @@ prometheus:
               operator: In
               values:
               - "true"
-            - key: topology.kubernetes.io/zone
-              operator: In
-              values:
-              - "eu-west-2b"
     %{ endif ~}
 
     ## Prometheus StorageSpec for persistent data
@@ -542,7 +509,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: gp3
+          storageClassName: ${storage_class}
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
