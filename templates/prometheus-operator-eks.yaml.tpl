@@ -196,6 +196,10 @@ alertmanager:
               operator: In
               values:
               - "true"
+            - key: topology.kubernetes.io/zone
+              operator: In
+              values:
+              - "eu-west-2b"
     %{ endif ~}
 
 ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
@@ -526,6 +530,10 @@ prometheus:
               operator: In
               values:
               - "true"
+            - key: topology.kubernetes.io/zone
+              operator: In
+              values:
+              - "eu-west-2b"
     %{ endif ~}
 
     ## Prometheus StorageSpec for persistent data
