@@ -60,10 +60,18 @@ config: |-
   - aws_namespace: AWS/S3
     aws_metric_name: BucketSizeBytes
     aws_dimensions: [BucketName, StorageType]
+    aws_statistics: [Average]
+    range_seconds: 172800
+    period_seconds: 86400
+    set_timestamp: false
  
   - aws_namespace: AWS/S3
     aws_metric_name: NumberOfObjects
     aws_dimensions: [BucketName, StorageType]
+    aws_statistics: [Average]
+    range_seconds: 172800
+    period_seconds: 86400
+    set_timestamp: false
 
     # SQS Metrics
   - aws_namespace: AWS/SQS
@@ -122,10 +130,17 @@ config: |-
   - aws_namespace: AWS/SNS
     aws_metric_name: NumberOfNotificationsFilteredOut-NoMessageAttributes
     aws_dimensions: [TopicName]
+    aws_dimensions: [TopicName]
+    aws_namespace: AWS/SNS
+    aws_statistics:
+    - Sum
 
   - aws_namespace: AWS/SNS
     aws_metric_name: NumberOfNotificationsFilteredOut-InvalidAttributes
     aws_dimensions: [TopicName]
+    aws_namespace: AWS/SNS
+    aws_statistics:
+    - Sum
     
   - aws_namespace: AWS/SNS
     aws_metric_name: PublishSize
@@ -182,10 +197,16 @@ config: |-
   - aws_namespace: AWS/DynamoDB
     aws_metric_name: WriteThrottleEvents
     aws_dimensions: ["TableName","GlobalSecondaryIndexName"]
+    aws_namespace: AWS/DynamoDB
+    aws_statistics:
+    - Sum
 
   - aws_namespace: AWS/DynamoDB
     aws_metric_name: ReadThrottleEvents
     aws_dimensions: ["TableName","GlobalSecondaryIndexName"]
+    aws_namespace: AWS/DynamoDB
+    aws_statistics:
+    - Sum
 
     # MQ Broker Metrics
   - aws_namespace: AWS/AmazonMQ
