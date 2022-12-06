@@ -162,7 +162,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: gp2-expand
+          storageClassName: gp3-monitoring
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -509,7 +509,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: ${storage_class}
+          storageClassName: gp3-monitoring
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
