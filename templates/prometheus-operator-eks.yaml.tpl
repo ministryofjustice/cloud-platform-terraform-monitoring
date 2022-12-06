@@ -172,6 +172,7 @@ alertmanager:
     ##
     externalUrl: "${ alertmanager_ingress }"
 
+
 ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
 ##
 grafana:
@@ -184,7 +185,6 @@ grafana:
     pullSecrets:
     - "dockerhub-credentials"
     repository: grafana/grafana
-    tag: ${grafana_version}
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -210,6 +210,32 @@ grafana:
       - hosts:
         - "${ grafana_ingress }"
 
+    %{ if enable_prometheus_affinity_and_tolerations ~}
+    ## Tolerations for use with node taints
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+  tolerations:
+    - key: "monitoring-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+  %{ endif ~}
+
+  %{ if enable_prometheus_affinity_and_tolerations ~}
+  ## Assign custom affinity rules to the prometheus instance
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: cloud-platform.justice.gov.uk/monitoring-ng
+            operator: In
+            values:
+            - "true"
+  %{ endif ~}
+
   env:
     GF_SERVER_ROOT_URL: "${ grafana_root }"
     GF_ANALYTICS_REPORTING_ENABLED: "false"
@@ -227,13 +253,14 @@ grafana:
 
   envFromSecret: "grafana-env"
 
-  serverDashboardConfigmaps:
-    - grafana-user-dashboards
-
   sidecar:
     image:
       repository: quay.io/kiwigrid/k8s-sidecar
-      tag: 1.14.2
+    alerts:
+      enabled: true
+      label: grafana_alert
+      labelValue: ""
+      searchNamespace: ALL
     dashboards:
       enabled: true
       label: grafana_dashboard
