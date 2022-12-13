@@ -30,19 +30,25 @@ module "monitoring" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=4.24.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >=2.6.0 |
+| <a name="requirement_http"></a> [http](#requirement\_http) | >=3.2.1 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >=1.13.2 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >=2.12.1 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >=3.4.3 |
+| <a name="requirement_template"></a> [template](#requirement\_template) | >=2.2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | ~> 2.6.0 |
-| <a name="provider_http"></a> [http](#provider\_http) | n/a |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | n/a |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
-| <a name="provider_random"></a> [random](#provider\_random) | n/a |
-| <a name="provider_template"></a> [template](#provider\_template) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >=4.24.0 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.6.0 |
+| <a name="provider_http"></a> [http](#provider\_http) | >=3.2.1 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >=1.13.2 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >=2.12.1 |
+| <a name="provider_random"></a> [random](#provider\_random) | >=3.4.3 |
+| <a name="provider_template"></a> [template](#provider\_template) | >=2.2.0 |
 
 ## Modules
 
@@ -121,8 +127,6 @@ module "monitoring" {
 | <a name="input_enable_thanos_compact"></a> [enable\_thanos\_compact](#input\_enable\_thanos\_compact) | Enable or not Thanos Compact - not semantically concurrency safe and must be deployed as a singleton against a bucket | `bool` | `false` | no |
 | <a name="input_enable_thanos_helm_chart"></a> [enable\_thanos\_helm\_chart](#input\_enable\_thanos\_helm\_chart) | Enable or not Thanos Helm Chart - (do NOT confuse this with thanos sidecar within prometheus-operator) | `bool` | `false` | no |
 | <a name="input_enable_thanos_sidecar"></a> [enable\_thanos\_sidecar](#input\_enable\_thanos\_sidecar) | Enable or not Thanos sidecar. Basically defines if we want to send cluster metrics to thanos's S3 bucket | `bool` | `false` | no |
-| <a name="input_grafana_ingress_redirect_url"></a> [grafana\_ingress\_redirect\_url](#input\_grafana\_ingress\_redirect\_url) | grafana url to use live\_domain, 'cloud-platform.service.justice.gov.uk' | `string` | `""` | no |
-| <a name="input_ingress_redirect"></a> [ingress\_redirect](#input\_ingress\_redirect) | Enable ingress\_redirect, to use live\_domain, 'cloud-platform.service.justice.gov.uk' | `bool` | `false` | no |
 | <a name="input_kibana_audit_upstream"></a> [kibana\_audit\_upstream](#input\_kibana\_audit\_upstream) | ES upstream for audit logs | `string` | `""` | no |
 | <a name="input_kibana_upstream"></a> [kibana\_upstream](#input\_kibana\_upstream) | ES upstream for logs | `string` | `""` | no |
 | <a name="input_oidc_components_client_id"></a> [oidc\_components\_client\_id](#input\_oidc\_components\_client\_id) | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
