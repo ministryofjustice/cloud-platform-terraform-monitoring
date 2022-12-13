@@ -46,7 +46,7 @@ module "iam_assumable_role_cloudwatch_exporter" {
   create_role                   = var.enable_cloudwatch_exporter ? true : false
   role_name                     = "cloudwatch.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
-  role_policy_arns              = [var.enable_cloudwatch_exporter ? aws_iam_policy.cloudwatch_exporter.0.arn : ""]
+  role_policy_arns              = [var.enable_cloudwatch_exporter ? aws_iam_policy.cloudwatch_exporter[0].arn : ""]
   oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:cloud-platform-cloudwatch-exporter"]
 }
 
