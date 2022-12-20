@@ -6,7 +6,7 @@ resource "helm_release" "metrics_server" {
   namespace  = "kube-system"
   version    = "6.2.2"
 
-  values = [templatefile("${path.module}/templates/metrics-server.yaml", {
+  values = [templatefile("${path.module}/templates/metrics-server.yaml.tpl", {
   })]
 
   depends_on = [
