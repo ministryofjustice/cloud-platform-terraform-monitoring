@@ -4,29 +4,16 @@ resource "helm_release" "metrics_server" {
   chart      = "metrics-server"
   repository = "https://charts.bitnami.com/bitnami"
   namespace  = "kube-system"
-  version    = "5.11.0"
+  version    = "6.2.2"
+
+  values = [templatefile("${path.module}/templates/metrics-server.yaml", {
+  })]
+
+  depends_on = [
+    local.prometheus_dependency,
+  ]
 
   lifecycle {
     ignore_changes = [keyring]
   }
-
-  set {
-    name  = "extraArgs.kubelet-insecure-tls"
-    value = "true"
-  }
-
-  set {
-    name  = "extraArgs.kubelet-preferred-address-types"
-    value = "InternalIP"
-  }
-
-  set {
-    name  = "hostNetwork"
-    value = "true"
-  }
-  set {
-    name  = "apiService.create"
-    value = "true"
-  }
-
 }
