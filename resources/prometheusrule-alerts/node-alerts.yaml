@@ -10,6 +10,14 @@ spec:
   groups:
   - name: node.rules
     rules:
+    - alert: Node-Scheduling-Disabled
+      expr: sum(kube_node_spec_unschedulable) by (node) == 1
+      for: 3h
+      labels:
+        severity: warning
+      annotations:
+        message: 'A node has had scheduling disabled for more than 3 hours'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#node-scheduling-disabled
     - alert: Node-Disk-Space-Low
       expr: ((node_filesystem_avail_bytes {mountpoint !~"/snap/.+"} * 100) / node_filesystem_size_bytes) < 10
       for: 30m

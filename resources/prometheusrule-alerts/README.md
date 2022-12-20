@@ -26,6 +26,26 @@ Please read the documentation from [Kubernetes](https://github.com/kubernetes/ko
 [Resize an instance group](https://github.com/kubernetes/kops/blob/master/docs/instance_groups.md#resize-an-instance-group)
 [Change the instance type in an instance group](https://github.com/kubernetes/kops/blob/master/docs/instance_groups.md#change-the-instance-type-in-an-instance-group)
 
+## Node-Scheduling-Disabled
+```
+Node-Scheduling-Disabled
+Severity: warning
+```
+This alert is triggered when a node has had scheduling disabled for more than 3 hours. 
+
+Expression:
+```
+expr: sum(kube_node_spec_unschedulable) by (node) == 1
+for: 3h
+```
+### Action
+
+Run the following command to confirm disk shortage on a node:
+`kubectl describe node <node name>`
+
+A node with a status of `Ready,SchedulingDisabled` is normally set when a node as been `Cordoned` by a user or a process such as the node recycle pipeline. 
+However, there may be other reasons why a node has been set to `Ready,SchedulingDisabled` by Kubernetes, and a describe of the node should give an indication to why. 
+
 ## Node-Disk-Space-Low
 ```
 Node-Disk-Space-Low
