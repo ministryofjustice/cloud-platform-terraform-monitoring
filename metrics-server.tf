@@ -2,9 +2,9 @@
 resource "helm_release" "metrics_server" {
   name       = "metrics-server"
   chart      = "metrics-server"
-  repository = "https://charts.bitnami.com/bitnami"
+  repository = "https://kubernetes-sigs.github.io/metrics-server/"
   namespace  = "kube-system"
-  version    = "6.2.2"
+  version    = "3.8.3"
 
   values = [templatefile("${path.module}/templates/metrics-server.yaml.tpl", {
   })]
