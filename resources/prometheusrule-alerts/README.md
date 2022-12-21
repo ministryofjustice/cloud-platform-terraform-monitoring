@@ -40,7 +40,7 @@ for: 3h
 ```
 ### Action
 
-Run the following command to confirm disk shortage on a node:
+Run the following command:
 `kubectl describe node <node name>`
 
 A node with a status of `Ready,SchedulingDisabled` is normally set when a node as been `Cordoned` by a user or a process such as the node recycle pipeline. 
