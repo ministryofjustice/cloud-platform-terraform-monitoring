@@ -86,8 +86,8 @@ EOS
 }
 
 
-// Prometheus crd yaml pulled from kube-prometheus-stack helm chart. 
-// Upate variable `prometheus_operator_crd_version` to manage the crd version
+# Prometheus crd yaml pulled from kube-prometheus-stack helm chart.
+# Upate variable `prometheus_operator_crd_version` to manage the crd version
 data "http" "prometheus_crd_yamls" {
   for_each = local.prometheus_crd_yamls
   url      = each.value
@@ -99,8 +99,8 @@ resource "kubectl_manifest" "prometheus_operator_crds" {
   yaml_body         = each.value["body"]
 }
 
-// NOTE: Make sure to update the correct CRD version(if required) using above resource
-// `kubectl_manifest.prometheus_operator_crds` before upgrading prometheus operator
+# NOTE: Make sure to update the correct CRD version(if required) using above resource
+# `kubectl_manifest.prometheus_operator_crds` before upgrading prometheus operator
 resource "helm_release" "prometheus_operator_eks" {
 
   name       = "prometheus-operator"
@@ -108,15 +108,15 @@ resource "helm_release" "prometheus_operator_eks" {
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
   version    = "41.9.1"
-  skip_crds  = true // Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds
+  skip_crds  = true # Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
     grafana_ingress                            = local.grafana_ingress
     grafana_root                               = local.grafana_root
     pagerduty_config                           = var.pagerduty_config
-    alertmanager_routes                        = join("", data.template_file.alertmanager_routes.*.rendered)
-    alertmanager_receivers                     = join("", data.template_file.alertmanager_receivers.*.rendered)
+    alertmanager_routes                        = join("", data.template_file.alertmanager_routes[*].rendered)
+    alertmanager_receivers                     = join("", data.template_file.alertmanager_receivers[*].rendered)
     prometheus_ingress                         = local.prometheus_ingress
     random_username                            = random_id.username.hex
     random_password                            = random_id.password.hex

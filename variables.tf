@@ -71,11 +71,6 @@ variable "oidc_issuer_url" {
   description = "Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy)"
 }
 
-variable "ingress_redirect" {
-  description = "Enable ingress_redirect, to use live_domain, 'cloud-platform.service.justice.gov.uk'"
-  type        = bool
-  default     = false
-}
 variable "eks_cluster_oidc_issuer_url" {
   description = "This is going to be used when we create the IAM OIDC role"
   type        = string
@@ -108,12 +103,6 @@ variable "kibana_upstream" {
 
 variable "kibana_audit_upstream" {
   description = "ES upstream for audit logs"
-  default     = ""
-  type        = string
-}
-
-variable "grafana_ingress_redirect_url" {
-  description = "grafana url to use live_domain, 'cloud-platform.service.justice.gov.uk'"
   default     = ""
   type        = string
 }
