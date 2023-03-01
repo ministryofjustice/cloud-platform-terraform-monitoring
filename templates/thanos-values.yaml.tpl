@@ -9,7 +9,7 @@ metrics:
 storegateway:
   enabled: true
   persistence:
-   size: 75Gi
+    size: 75Gi
   podAnnotations:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
   extraFlags:
