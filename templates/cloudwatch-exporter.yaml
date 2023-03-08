@@ -208,35 +208,6 @@ config: |-
     aws_statistics:
     - Sum
 
-    # MQ Broker Metrics
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: CpuUtilization
-    aws_dimensions: [Broker]
-
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: CurrentConnectionsCount
-    aws_dimensions: [Broker]
-
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: OpenTransactionCount
-    aws_dimensions: [Broker]
- 
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: StorePercentUsage
-    aws_dimensions: [Broker]
-
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: TotalConsumerCount
-    aws_dimensions: [Broker]
- 
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: TotalMessageCount
-    aws_dimensions: [Broker]
- 
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: TotalProducerCount
-    aws_dimensions: [Broker] 
-
   # Elasticsearch Metrics
   - aws_namespace: AWS/ES
     aws_metric_name: ClusterStatus.green
