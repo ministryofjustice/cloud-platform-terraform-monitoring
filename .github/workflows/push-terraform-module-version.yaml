@@ -1,0 +1,16 @@
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  push-terraform-module-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version@main
+        env:
+          API_URL: ${{ vars.TERRAFORM_MODULE_VERSIONS_API_URL }}
+          API_KEY: ${{ secrets.TERRAFORM_MODULE_VERSIONS_API_KEY }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          UPDATED_MODULE_VERSION: ${{ github.ref_name }}
