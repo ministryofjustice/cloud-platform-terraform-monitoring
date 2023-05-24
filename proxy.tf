@@ -86,51 +86,6 @@ resource "helm_release" "alertmanager_proxy" {
   }
 }
 
-# Kibana_audit
-
-data "template_file" "kibana_audit_proxy" {
-  template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
-
-  vars = {
-    upstream = var.kibana_audit_upstream
-    hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "kibana-audit", local.live_domain) : format(
-      "%s.%s",
-      "kibana-audit",
-      var.cluster_domain_name,
-    )
-    exclude_paths    = "^/-/healthy$"
-    issuer_url       = var.oidc_issuer_url
-    client_id        = var.oidc_components_client_id
-    client_secret    = var.oidc_components_client_secret
-    cookie_secret    = random_id.session_secret.b64_std
-    ingress_redirect = false
-    clusterName      = terraform.workspace
-  }
-}
-
-resource "helm_release" "kibana_audit_proxy" {
-  count      = var.enable_kibana_audit_proxy ? 1 : 0
-  name       = "kibana-audit-proxy"
-  namespace  = kubernetes_namespace.monitoring.id
-  repository = "https://oauth2-proxy.github.io/manifests"
-  chart      = "oauth2-proxy"
-  version    = "6.2.1"
-
-  values = [
-    data.template_file.kibana_audit_proxy.rendered,
-  ]
-
-  depends_on = [
-    random_id.session_secret,
-    kubernetes_namespace.monitoring,
-    var.dependence_ingress_controller
-  ]
-
-  lifecycle {
-    ignore_changes = [keyring]
-  }
-}
-
 # Kibana_live
 
 data "template_file" "kibana_proxy" {
