@@ -43,12 +43,6 @@ variable "enable_prometheus_affinity_and_tolerations" {
   type        = bool
 }
 
-variable "enable_kibana_audit_proxy" {
-  description = "Enable or not Kibana-audit proxy for authentication"
-  default     = false
-  type        = bool
-}
-
 variable "enable_kibana_proxy" {
   description = "Enable or not Kibana proxy for authentication"
   default     = false
@@ -97,12 +91,6 @@ variable "dockerhub_password" {
 
 variable "kibana_upstream" {
   description = "ES upstream for logs"
-  default     = ""
-  type        = string
-}
-
-variable "kibana_audit_upstream" {
-  description = "ES upstream for audit logs"
   default     = ""
   type        = string
 }
