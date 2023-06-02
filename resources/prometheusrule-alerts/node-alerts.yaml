@@ -196,4 +196,4 @@ spec:
       expr: count(node_uname_info) != count(node_uname_info offset 1m)
       for: 1m
       labels:
-        severity: warning
+        severity: info-warning
