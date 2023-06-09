@@ -244,6 +244,16 @@ config: |-
   - aws_namespace: AWS/ES
     aws_metric_name: AutomatedSnapshotFailure
     aws_dimensions: [DomainName, ClientId]
+  
+  - aws_namespace: secretsManager
+    aws_metric_name: PutSecretValue
+    aws_dimensions: [SecretId, UserArn]
+    aws_statistics: [Sum]
+
+  - aws_namespace: secretsManager
+    aws_metric_name: DeleteSecret
+    aws_dimensions: [SecretId, UserArn]
+    aws_statistics: [Sum]
 
 
 serviceMonitor:
