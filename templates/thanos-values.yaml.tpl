@@ -8,10 +8,12 @@ metrics:
 
 storegateway:
   enabled: true
+  persistence:
+    size: 75Gi
   podAnnotations:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
   extraFlags:
-    - --min-time=-1w
+    - --min-time=-12w
 
 query:
   stores:

@@ -29,7 +29,7 @@ module "monitoring" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2.5 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=4.24.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >=2.6.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | >=3.2.1 |
@@ -71,7 +71,6 @@ module "monitoring" {
 | [helm_release.alertmanager_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.cloudwatch_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.ecr_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [helm_release.kibana_audit_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.kibana_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.metrics_server](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_operator_eks](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
@@ -103,7 +102,6 @@ module "monitoring" {
 | [template_file.alertmanager_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.alertmanager_receivers](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.alertmanager_routes](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-| [template_file.kibana_audit_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.kibana_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.prometheus_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.thanos_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
@@ -120,14 +118,12 @@ module "monitoring" {
 | <a name="input_eks_cluster_oidc_issuer_url"></a> [eks\_cluster\_oidc\_issuer\_url](#input\_eks\_cluster\_oidc\_issuer\_url) | This is going to be used when we create the IAM OIDC role | `string` | `""` | no |
 | <a name="input_enable_cloudwatch_exporter"></a> [enable\_cloudwatch\_exporter](#input\_enable\_cloudwatch\_exporter) | Enable or not Cloudwatch exporter | `bool` | `false` | no |
 | <a name="input_enable_ecr_exporter"></a> [enable\_ecr\_exporter](#input\_enable\_ecr\_exporter) | Enable or not ECR exporter | `bool` | `false` | no |
-| <a name="input_enable_kibana_audit_proxy"></a> [enable\_kibana\_audit\_proxy](#input\_enable\_kibana\_audit\_proxy) | Enable or not Kibana-audit proxy for authentication | `bool` | `false` | no |
 | <a name="input_enable_kibana_proxy"></a> [enable\_kibana\_proxy](#input\_enable\_kibana\_proxy) | Enable or not Kibana proxy for authentication | `bool` | `false` | no |
 | <a name="input_enable_large_nodesgroup"></a> [enable\_large\_nodesgroup](#input\_enable\_large\_nodesgroup) | Due to Prometheus resource consumption, enabling this will set k8s Prometheus resources to higher values | `bool` | `false` | no |
 | <a name="input_enable_prometheus_affinity_and_tolerations"></a> [enable\_prometheus\_affinity\_and\_tolerations](#input\_enable\_prometheus\_affinity\_and\_tolerations) | Enable or not Prometheus node affinity (check helm values for the expressions) | `bool` | `false` | no |
 | <a name="input_enable_thanos_compact"></a> [enable\_thanos\_compact](#input\_enable\_thanos\_compact) | Enable or not Thanos Compact - not semantically concurrency safe and must be deployed as a singleton against a bucket | `bool` | `false` | no |
 | <a name="input_enable_thanos_helm_chart"></a> [enable\_thanos\_helm\_chart](#input\_enable\_thanos\_helm\_chart) | Enable or not Thanos Helm Chart - (do NOT confuse this with thanos sidecar within prometheus-operator) | `bool` | `false` | no |
 | <a name="input_enable_thanos_sidecar"></a> [enable\_thanos\_sidecar](#input\_enable\_thanos\_sidecar) | Enable or not Thanos sidecar. Basically defines if we want to send cluster metrics to thanos's S3 bucket | `bool` | `false` | no |
-| <a name="input_kibana_audit_upstream"></a> [kibana\_audit\_upstream](#input\_kibana\_audit\_upstream) | ES upstream for audit logs | `string` | `""` | no |
 | <a name="input_kibana_upstream"></a> [kibana\_upstream](#input\_kibana\_upstream) | ES upstream for logs | `string` | `""` | no |
 | <a name="input_oidc_components_client_id"></a> [oidc\_components\_client\_id](#input\_oidc\_components\_client\_id) | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_components_client_secret"></a> [oidc\_components\_client\_secret](#input\_oidc\_components\_client\_secret) | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
