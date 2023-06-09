@@ -501,6 +501,12 @@ prometheus:
               operator: In
               values:
               - "true"
+          - matchExpressions:
+            - key: topology.kubernetes.io/zone
+              operator: In
+              values:
+              - "eu-west-2b"
+
     %{ endif ~}
 
     ## Prometheus StorageSpec for persistent data

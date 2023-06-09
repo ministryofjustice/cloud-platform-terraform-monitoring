@@ -208,35 +208,6 @@ config: |-
     aws_statistics:
     - Sum
 
-    # MQ Broker Metrics
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: CpuUtilization
-    aws_dimensions: [Broker]
-
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: CurrentConnectionsCount
-    aws_dimensions: [Broker]
-
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: OpenTransactionCount
-    aws_dimensions: [Broker]
- 
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: StorePercentUsage
-    aws_dimensions: [Broker]
-
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: TotalConsumerCount
-    aws_dimensions: [Broker]
- 
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: TotalMessageCount
-    aws_dimensions: [Broker]
- 
-  - aws_namespace: AWS/AmazonMQ
-    aws_metric_name: TotalProducerCount
-    aws_dimensions: [Broker] 
-
   # Elasticsearch Metrics
   - aws_namespace: AWS/ES
     aws_metric_name: ClusterStatus.green
@@ -273,6 +244,16 @@ config: |-
   - aws_namespace: AWS/ES
     aws_metric_name: AutomatedSnapshotFailure
     aws_dimensions: [DomainName, ClientId]
+  
+  - aws_namespace: secretsManager
+    aws_metric_name: PutSecretValue
+    aws_dimensions: [SecretId, UserArn]
+    aws_statistics: [Sum]
+
+  - aws_namespace: secretsManager
+    aws_metric_name: DeleteSecret
+    aws_dimensions: [SecretId, UserArn]
+    aws_statistics: [Sum]
 
 
 serviceMonitor:
@@ -281,11 +262,11 @@ serviceMonitor:
   # Set the namespace the ServiceMonitor should be deployed
   namespace: monitoring
   # Set how frequently Prometheus should scrape
-  interval: 240s
+  interval: 300s
   # Set path to cloudwatch-exporter telemtery-path
   telemetryPath: /metrics
   # Set labels for the ServiceMonitor, use this to define your scrape label for Prometheus Operator
   labels:
     app: prometheus-cloudwatch-exporter
   # Set timeout for scrape
-  timeout: 180s
+  timeout: 240s
