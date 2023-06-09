@@ -189,3 +189,11 @@ spec:
       for: 5m
       labels:
         severity: critical
+    - alert: ChangeInNodeCount
+      annotations:
+        message: The Node count has changed to {{ $value }}
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
+      expr: count(node_uname_info) != count(node_uname_info offset 3m)
+      for: 10s
+      labels:
+        severity: info-warning
