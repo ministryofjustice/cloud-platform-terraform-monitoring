@@ -192,8 +192,8 @@ grafana:
     annotations:
       eks.amazonaws.com/role-arn: "${grafana_assumerolearn}"
 
-  adminUser: "${ random_username }"
-  adminPassword: "${ random_password }"
+  adminUser:
+  adminPassword:
 
   ingress:
     enabled: true
@@ -237,7 +237,7 @@ grafana:
   %{ endif ~}
 
   env:
-    GF_SERVER_ROOT_URL: "${ grafana_root }"
+    GF_SERVER_ROOT_URL:
     GF_ANALYTICS_REPORTING_ENABLED: "false"
     GF_AUTH_DISABLE_LOGIN_FORM: "true"
     GF_USERS_ALLOW_SIGN_UP: "false"
