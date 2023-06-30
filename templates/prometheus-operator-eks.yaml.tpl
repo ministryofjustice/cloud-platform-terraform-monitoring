@@ -199,11 +199,11 @@ grafana:
     enabled: true
     ingressClassName: default
     pathType: ImplementationSpecific
-    annotations: {
-      external-dns.alpha.kubernetes.io/aws-weight: "100",
-      external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}",
+    annotations: 
+      external-dns.alpha.kubernetes.io/aws-weight: "100"
+      external-dns.alpha.kubernetes.io/set-identifier: "dns-${clusterName}"
       cloud-platform.justice.gov.uk/ignore-external-dns-weight: "true"
-    }
+      nginx.ingress.kubernetes.io/server-snippet: location = /metrics { deny all; }
     hosts:
     - "${ grafana_ingress }"
     tls:
