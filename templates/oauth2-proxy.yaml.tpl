@@ -5,9 +5,9 @@
 replicaCount: 2
 
 config:
-  clientID: "${client_id}"
-  clientSecret: "${client_secret}"
-  cookieSecret: "${cookie_secret}"
+  clientID:
+  clientSecret:
+  cookieSecret:
   # Custom configuration file: oauth2_proxy.cfg
   # configFile: |-
   #   pass_basic_auth = false
