@@ -12,9 +12,6 @@ data "template_file" "prometheus_proxy" {
     )
     exclude_paths        = "^/-/healthy$"
     issuer_url           = var.oidc_issuer_url
-    client_id            = var.oidc_components_client_id
-    client_secret        = var.oidc_components_client_secret
-    cookie_secret        = random_id.session_secret.b64_std
     clusterName          = terraform.workspace
     ingress_redirect     = terraform.workspace == local.live_workspace ? true : false
     live_domain_hostname = "prometheus.${local.live_domain}"
@@ -31,6 +28,22 @@ resource "helm_release" "prometheus_proxy" {
   values = [
     data.template_file.prometheus_proxy.rendered,
   ]
+
+  set_sensitive {
+    name = "config.clientID"
+    value = var.oidc_components_client_id
+  }
+
+  set_sensitive {
+    name = "config.clientSecret"
+    value = var.oidc_components_client_secret
+  }
+
+  set_sensitive {
+    name = "config.cookieSecret"
+    value = random_id.session_secret.b64_std
+  }
+
 
   depends_on = [
     random_id.session_secret,
@@ -56,9 +69,6 @@ data "template_file" "alertmanager_proxy" {
     )
     exclude_paths        = "^/-/healthy$"
     issuer_url           = var.oidc_issuer_url
-    client_id            = var.oidc_components_client_id
-    client_secret        = var.oidc_components_client_secret
-    cookie_secret        = random_id.session_secret.b64_std
     clusterName          = terraform.workspace
     ingress_redirect     = local.ingress_redirect
     live_domain_hostname = "alertmanager.${local.live_domain}"
@@ -75,6 +85,21 @@ resource "helm_release" "alertmanager_proxy" {
   values = [
     data.template_file.alertmanager_proxy.rendered,
   ]
+
+  set_sensitive {
+    name = "config.clientID"
+    value = var.oidc_components_client_id
+  }
+
+  set_sensitive {
+    name = "config.clientSecret"
+    value = var.oidc_components_client_secret
+  }
+
+  set_sensitive {
+    name = "config.cookieSecret"
+    value = random_id.session_secret.b64_std
+  }
 
   depends_on = [
     random_id.session_secret,
@@ -100,9 +125,6 @@ data "template_file" "kibana_proxy" {
     )
     exclude_paths    = "^/-/healthy$"
     issuer_url       = var.oidc_issuer_url
-    client_id        = var.oidc_components_client_id
-    client_secret    = var.oidc_components_client_secret
-    cookie_secret    = random_id.session_secret.b64_std
     ingress_redirect = false
     clusterName      = terraform.workspace
   }
@@ -119,6 +141,21 @@ resource "helm_release" "kibana_proxy" {
   values = [
     data.template_file.kibana_proxy.rendered,
   ]
+
+  set_sensitive {
+    name = "config.clientID"
+    value = var.oidc_components_client_id
+  }
+
+  set_sensitive {
+    name = "config.clientSecret"
+    value = var.oidc_components_client_secret
+  }
+
+  set_sensitive {
+    name = "config.cookieSecret"
+    value = random_id.session_secret.b64_std
+  }
 
   depends_on = [
     random_id.session_secret,
@@ -145,9 +182,6 @@ data "template_file" "thanos_proxy" {
     )
     exclude_paths        = "^/-/healthy$"
     issuer_url           = var.oidc_issuer_url
-    client_id            = var.oidc_components_client_id
-    client_secret        = var.oidc_components_client_secret
-    cookie_secret        = random_id.session_secret.b64_std
     clusterName          = terraform.workspace
     ingress_redirect     = local.ingress_redirect
     live_domain_hostname = "thanos.${local.live_domain}"
@@ -164,6 +198,21 @@ resource "helm_release" "thanos_proxy" {
   values = [
     data.template_file.thanos_proxy.rendered,
   ]
+
+  set_sensitive {
+    name = "config.clientID"
+    value = var.oidc_components_client_id
+  }
+
+  set_sensitive {
+    name = "config.clientSecret"
+    value = var.oidc_components_client_secret
+  }
+
+  set_sensitive {
+    name = "config.cookieSecret"
+    value = random_id.session_secret.b64_std
+  }
 
   depends_on = [
     random_id.session_secret,
