@@ -1,5 +1,4 @@
 module "secret_manager" {
-  count = terraform.workspace == "live" ? 1 : 0
   source = "github.com/ministryofjustice/cloud-platform-terraform-secrets-manager?ref=2.0.0"
 
   team_name              = "webops"
@@ -20,10 +19,9 @@ module "secret_manager" {
   }
 }
 
-data "aws_secretsmanager_secret" "slack_webhook_url" {
-  name = module.secret_manager.secrets["slack_webhook_url"].name
-}
-
-data "aws_secretsmanager_secret_version" "slack_webhook_url" {
-  secret_id = data.aws_secretsmanager_secret.slack_webhook_url.id
+data "kubernetes_secret" "slack_webhook_url" {
+  metadata {
+    name      = "slack_webhook_url"
+    namespace = kubernetes_namespace.monitoring.id
+  }
 }

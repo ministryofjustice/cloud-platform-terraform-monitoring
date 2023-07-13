@@ -104,3 +104,8 @@ variable "dependence_ingress_controller" {
   description = "Ingress controller module dependences in order to be executed."
   type        = list(string)
 }
+
+variable "slack_webhook_url" {
+  description = "url used for kibana to post alerts to a channel"
+  type        = string
+}
