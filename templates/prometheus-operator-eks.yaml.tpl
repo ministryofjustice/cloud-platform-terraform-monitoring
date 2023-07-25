@@ -436,8 +436,8 @@ prometheus:
         memory: "14000Mi"
         cpu: "1300m"
       limits:
-        memory: "62000Mi"
-        cpu: "6000m"
+        memory: "110000Mi"
+        cpu: "12000m"
     %{ endif }
 
     ## If true, a nil or {} value for prometheus.prometheusSpec.ruleSelector will cause the
