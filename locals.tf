@@ -38,5 +38,5 @@ locals {
     thanosrulers         = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml"
   }
   
-  ecr_exporter_sa = "ecr-exporter-${var.cluster_domain_name}"
+  ecr_exporter_sa = "ecr-exporter"
 }
