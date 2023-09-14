@@ -22,11 +22,6 @@ resource "helm_release" "ecr_exporter" {
   }
 
   set {
-    name  = "aws.role"
-    value = module.iam_assumable_role_ecr_exporter[0].role_arn
-  }
-
-  set {
     name  = "aws.region"
     value = "eu-west-2"
   }
