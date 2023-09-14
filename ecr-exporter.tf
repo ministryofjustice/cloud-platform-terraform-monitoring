@@ -8,16 +8,17 @@ resource "helm_release" "ecr_exporter" {
   name       = "ecr-exporter"
   namespace  = kubernetes_namespace.monitoring.id
   chart      = "prometheus-ecr-exporter"
+  version    = "0.4.0"
   repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
+
+  set {
+    name  = "serviceAccount.name"
+    value = local.ecr_exporter_sa
+  }
 
   set {
     name  = "serviceMonitor.enabled"
     value = true
-  }
-
-  set {
-    name  = "aws.role"
-    value = module.iam_assumable_role_ecr_exporter.this_iam_role_name
   }
 
   set {
@@ -48,22 +49,33 @@ data "aws_iam_policy_document" "ecr_exporter" {
   }
 }
 
-# IRSA
-
-module "iam_assumable_role_ecr_exporter" {
-  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "3.13.0"
-  create_role                   = var.enable_ecr_exporter ? true : false
-  role_name                     = "ecr-exporter.${var.cluster_domain_name}"
-  provider_url                  = var.eks_cluster_oidc_issuer_url
-  role_policy_arns              = [var.enable_ecr_exporter ? aws_iam_policy.ecr_exporter[0].arn : ""]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:monitoring:default"]
-}
 
 resource "aws_iam_policy" "ecr_exporter" {
   count = var.enable_ecr_exporter ? 1 : 0
 
-  name_prefix = "cloudwatch_exporter"
+  name_prefix = "ecr_exporter"
   description = "EKS ECR Exporter policy for cluster ${var.cluster_domain_name}"
   policy      = data.aws_iam_policy_document.ecr_exporter.json
 }
+
+# IRSA
+module "irsa" {
+  count = var.enable_ecr_exporter ? 1 : 0
+  source           = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=2.0.0"
+  eks_cluster_name = terraform.workspace
+  namespace        = kubernetes_namespace.monitoring.id
+  role_policy_arns = {
+    irsa = aws_iam_policy.ecr_exporter[0].arn
+  }
+  service_account_name = local.ecr_exporter_sa
+
+    # Tags
+  # Tags
+  business_unit          = var.business_unit
+  application            = var.application
+  is_production          = var.is_production
+  team_name              = var.team_name
+  environment_name       = var.environment
+  infrastructure_support = var.infrastructure_support
+}
+
