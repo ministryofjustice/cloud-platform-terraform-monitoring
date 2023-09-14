@@ -104,3 +104,31 @@ variable "dependence_ingress_controller" {
   description = "Ingress controller module dependences in order to be executed."
   type        = list(string)
 }
+
+variable "eks_cluster_name" {
+  default = "live"
+}
+
+variable "business_unit" {
+  default = "Platforms"
+}
+
+variable "application" {
+  default = "Monitoring"
+}
+
+variable "is_production" {
+  default = "true"
+}
+
+variable "team_name" {
+  default = "webops"
+}
+
+variable "environment" {
+  default = "production"
+}
+
+variable "infrastructure_support" {
+  default = "Cloud Platform"
+}
