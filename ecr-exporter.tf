@@ -23,7 +23,7 @@ resource "helm_release" "ecr_exporter" {
 
   set {
     name  = "aws.role"
-    value = module.iam_assumable_role_ecr_exporter.this_iam_role_name
+    value = module.iam_assumable_role_ecr_exporter[0].role_arn
   }
 
   set {
@@ -70,7 +70,7 @@ module "irsa" {
   eks_cluster_name = terraform.workspace
   namespace        = kubernetes_namespace.monitoring.id
   role_policy_arns = {
-    irsa = aws_iam_policy.ecr_exporter.arn
+    irsa = aws_iam_policy.ecr_exporter[0].arn
   }
   service_account_name = local.ecr_exporter_sa
 
