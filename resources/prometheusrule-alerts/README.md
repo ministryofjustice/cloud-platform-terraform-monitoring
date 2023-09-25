@@ -365,6 +365,8 @@ Run the following command to get a list of nodes and confirm the node with the i
 
 Look at the 'Conditions' Section for possible more info such as a disk space issue on the node is general and not just root.
 
+The disk space is set to 100Gb during cluster creation. If that has changed to any lower number, then the value provided is not used. Check the eks module changes in [cloud-platform-infrastructure](https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/cluster.tf) for any recent updates to the module.
+
 SSH into the node and run `lsblk` and `df -h` to list the block devices attached to the instance and disk usage.
 
 The following command can be used to search files by size to help identify/delete/backup files that may be causing the disk to fill up:
@@ -398,6 +400,8 @@ Run the following command to get a list of nodes and confirm the node with the i
 `$ kubectl describe node <node_name>`
 
 Look at the 'Conditions' Section for possible more info such as a disk space issue on the node is general and not just root.
+
+The disk space is set to 100Gb during cluster creation. If that has changed to any lower number, then the value provided is not used. Check the eks module changes in [cloud-platform-infrastructure](https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/cluster.tf) for any recent updates to the module.
 
 SSH into the node and run `lsblk` and `df -h` to list the block devices attached to the instance and disk usage.
 
