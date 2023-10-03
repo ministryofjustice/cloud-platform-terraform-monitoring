@@ -410,7 +410,7 @@ spec:
         message: One of the following vital namespaces no longer exists - "cert-manager", "default", "ingress-controllers", "kube-system", "logging", "monitoring", "opa", "velero", "kubectl -n kuberhealthy describe khstate namespace-kh-check". Also check failing pod logs.
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-kuberhealthy/tree/main/cmd/namespace-check/README.md
       expr: |-
-        kuberhealthy_check{check="kuberhealthy/namespace-kh-check", container="kuberhealthy", endpoint="http", exported_namespace="kuberhealthy",  job="kuberhealthy", namespace="kuberhealthy",  service="kuberhealthy", status!="1"}
+        kuberhealthy_check{container="kuberhealthy",endpoint="http",exported_namespace="kuberhealthy",job="kuberhealthy",namespace="kuberhealthy",service="kuberhealthy",status!="1",error=~"Namespace check failed:missing namespaces:.+"}
       for: 1m
       labels:
         severity: warning
