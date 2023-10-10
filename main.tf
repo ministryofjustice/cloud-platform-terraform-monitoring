@@ -8,7 +8,8 @@ resource "kubernetes_namespace" "monitoring" {
     name = "monitoring"
 
     labels = {
-      "component" = "monitoring"
+      "component"                        = "monitoring"
+      "pod-security.kubernetes.io/audit" = "privileged"
     }
 
     annotations = {
