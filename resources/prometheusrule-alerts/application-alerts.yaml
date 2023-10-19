@@ -423,3 +423,12 @@ spec:
       for: 5m
       labels:
         severity: warning
+    - alert: PrometheusServerMemCritical
+      annotations:
+        message: The Prometheus server uses a lot of memory and has ocassionally OOMKilled bringing down prometheus. Bump the node group monitoring instance size
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-infrastructure/commit/3dc05e588c9115c7aa44c2a9b5e26feff985f965
+      expr: |-
+        sum(container_memory_working_set_bytes{namespace="monitoring", pod="prometheus-prometheus-operator-kube-p-prometheus-0", container="prometheus"}) / sum(kube_pod_container_resource_limits{namespace="monitoring", pod="prometheus-prometheus-operator-kube-p-prometheus-0", resource="memory", container="prometheus"}) * 100 > 90
+      for: 2m
+      labels:
+        severity: critical
