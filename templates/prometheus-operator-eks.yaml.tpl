@@ -407,6 +407,7 @@ prometheus:
   ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
   ##
   prometheusSpec:
+    logLevel: debug
 
     %{ if enable_prometheus_affinity_and_tolerations ~}
     ## Tolerations for use with node taints
