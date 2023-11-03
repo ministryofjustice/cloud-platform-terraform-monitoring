@@ -420,6 +420,17 @@ prometheus:
         effect: "NoSchedule"
     %{ endif ~}
 
+    # Adjust the liveness and readiness probe to accomodate slow prometheus until investigating
+    # the cause of the slowness
+    containers:
+    - name: prometheus
+      livenessProbe:
+        periodSeconds: 8
+        timeoutSeconds: 6
+      readinessProbe:
+        periodSeconds: 8
+        timeoutSeconds: 6
+
     ## External labels to add to any time series or alerts when communicating with external systems
     ##    
     externalLabels:
