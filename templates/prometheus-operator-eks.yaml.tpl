@@ -19,7 +19,7 @@ global:
   - name: "dockerhub-credentials"
 
   rbac:
-    pspEnabled: true
+    pspEnabled: false
 
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
@@ -179,7 +179,7 @@ grafana:
   enabled: true
 
   rbac:
-    pspEnabled: true
+    pspEnabled: false
 
   image:
     pullSecrets:
@@ -365,11 +365,11 @@ kube-state-metrics:
     - storageclasses
 
   podSecurityPolicy:
-    enabled: true
+    enabled: false
 
 prometheus-node-exporter:
   rbac:
-    pspEnabled: true
+    pspEnabled: false
 
 ## Manages Prometheus and Alertmanager components
 ##
