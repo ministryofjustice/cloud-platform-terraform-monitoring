@@ -22,10 +22,6 @@ resource "kubernetes_namespace" "monitoring" {
       "cloud-platform-out-of-hours-alert"                        = "true"
     }
   }
-
-  lifecycle {
-    ignore_changes = [metadata]
-  }
 }
 
 ##################
