@@ -189,13 +189,23 @@ spec:
       for: 5m
       labels:
         severity: critical
-    - alert: ChangeInNodeCount
+    - alert: IncreaseInNodeCount
       annotations:
-        message: 'The Node count has changed from {{ with query "count(node_uname_info offset 3m)" }}
+        message: 'The Node count has increased from {{ with query "count(node_uname_info offset 135s)" }}
           {{ . | first | value | humanize }}
         {{ end }} to {{ $value }}'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
-      expr: count(node_uname_info) != count(node_uname_info offset 3m)
-      for: 10s
+      expr: count(node_uname_info) > count(node_uname_info offset 135s)
+      for: 15s
+      labels:
+        severity: info-warning
+    - alert: DecreaseInNodeCount
+      annotations:
+        message: 'The Node count has decreased from {{ with query "count(node_uname_info offset 135s)" }}
+          {{ . | first | value | humanize }}
+        {{ end }} to {{ $value }}'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
+      expr: count(node_uname_info) < count(node_uname_info offset 135s)
+      for: 15s
       labels:
         severity: info-warning
