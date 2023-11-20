@@ -309,7 +309,7 @@ spec:
     - alert: VeleroBackupPartialFailure-velero-allnamespacebackup
       annotations:
         message: A Velero backup partial failure in past 3 hours - velero-allnamespacebackup
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md
+        runbook_url: https://runbooks.cloud-platform.service.justice.gov.uk/disaster-recovery-scenarios.html#resolving-a-partiallyfailed-backup-alert
       expr: sum(increase(velero_backup_partial_failure_total{schedule="velero-allnamespacebackup"}[3h])) > 0
       for: 1m
       labels:
@@ -317,7 +317,7 @@ spec:
     - alert: VeleroBackupFailure-velero-allnamespacebackup
       annotations:
         message: A Velero backup failure in past 3 hours - velero-allnamespacebackup
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md
+        runbook_url: https://runbooks.cloud-platform.service.justice.gov.uk/disaster-recovery-scenarios.html#resolving-a-partiallyfailed-backup-alert
       expr: sum(increase(velero_backup_failure_total{schedule="velero-allnamespacebackup"}[3h])) > 0
       for: 1m
       labels:
@@ -325,7 +325,7 @@ spec:
     - alert: VeleroBackupNotSuccessfulForOverFourHours-velero-allnamespacebackup
       annotations:
         message: The Velero backup schedule for AllNamespaceBackup does not have a successful timestamp for over 4 hours
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md
+        runbook_url: https://runbooks.cloud-platform.service.justice.gov.uk/disaster-recovery-scenarios.html#resolving-a-partiallyfailed-backup-alert
       expr: (time() - velero_backup_last_successful_timestamp{schedule="velero-allnamespacebackup"}) / 60 / 60 > 4
       for: 1m
       labels:
@@ -333,7 +333,7 @@ spec:
     - alert: VeleroBackupPartialFailure
       annotations:
         message: A Velero backup partial failure notification
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md
+        runbook_url: https://runbooks.cloud-platform.service.justice.gov.uk/disaster-recovery-scenarios.html#resolving-a-partiallyfailed-backup-alert
       expr: sum(increase(velero_backup_partial_failure_total[2m])) > 0
       for: 1m
       labels:
@@ -341,7 +341,7 @@ spec:
     - alert: VeleroBackupFailure
       annotations:
         message: A Velero backup failure notification
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md
+        runbook_url: https://runbooks.cloud-platform.service.justice.gov.uk/disaster-recovery-scenarios.html#resolving-a-partiallyfailed-backup-alert
       expr: sum(increase(velero_backup_failure_total[2m])) > 0
       for: 1m
       labels:
