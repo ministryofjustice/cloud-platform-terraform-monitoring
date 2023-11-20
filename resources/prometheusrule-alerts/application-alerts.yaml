@@ -396,15 +396,6 @@ spec:
       for: 1m
       labels:
         severity: warning
-    - alert: KuberhealthyOverallClusterStateCheck
-      annotations:
-        message: Check for any Kuberhealthy checks with status "fail". "kubectl -n kuberhealthy get khstate". Also check failing pod logs.
-        runbook_url: https://github.com/kuberhealthy/kuberhealthy
-      expr: |-
-        kuberhealthy_cluster_state!=1
-      for: 1m
-      labels:
-        severity: warning
     - alert: KuberhealthyNamespaceExistsCheck
       annotations:
         message: One of the following vital namespaces no longer exists - "cert-manager", "default", "ingress-controllers", "kube-system", "logging", "monitoring", "opa", "velero", "kubectl -n kuberhealthy describe khstate namespace-kh-check". Also check failing pod logs.
