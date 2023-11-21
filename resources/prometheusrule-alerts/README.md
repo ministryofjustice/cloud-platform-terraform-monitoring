@@ -347,11 +347,11 @@ $ kubectl logs <nginx-ingress-container> -n nginx-controllers
 RootVolUtilisation-High
 Severity: warning
 ```
-This alert is triggered when the root volume has 85% of the capacity used
+This alert is triggered when the root volume has 90% of the capacity used
 
 Expression:
 ```
-expr: (node_filesystem_size_bytes {mountpoint="/"} - node_filesystem_avail_bytes {mountpoint="/"} ) / (node_filesystem_size_bytes {mountpoint="/"} ) * 100 >85
+expr: (node_filesystem_size_bytes {mountpoint="/"} - node_filesystem_avail_bytes {mountpoint="/"} ) / (node_filesystem_size_bytes {mountpoint="/"} ) * 100 >90
 for: 5m
 ```
 
