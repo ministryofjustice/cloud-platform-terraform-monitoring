@@ -308,25 +308,25 @@ spec:
         severity: warning
     - alert: VeleroBackupPartialFailure-velero-allnamespacebackup
       annotations:
-        message: A Velero backup partial failure in past 3 hours - velero-allnamespacebackup
+        message: A Velero backup partial failure in past 6 hours - velero-allnamespacebackup
         runbook_url: https://runbooks.cloud-platform.service.justice.gov.uk/disaster-recovery-scenarios.html#resolving-a-partiallyfailed-backup-alert
-      expr: sum(increase(velero_backup_partial_failure_total{schedule="velero-allnamespacebackup"}[3h])) > 0
+      expr: sum(increase(velero_backup_partial_failure_total{schedule="velero-allnamespacebackup"}[3h])) > 1
       for: 1m
       labels:
         severity: warning
     - alert: VeleroBackupFailure-velero-allnamespacebackup
       annotations:
-        message: A Velero backup failure in past 3 hours - velero-allnamespacebackup
+        message: A Velero backup failure in past 6 hours - velero-allnamespacebackup
         runbook_url: https://runbooks.cloud-platform.service.justice.gov.uk/disaster-recovery-scenarios.html#resolving-a-partiallyfailed-backup-alert
-      expr: sum(increase(velero_backup_failure_total{schedule="velero-allnamespacebackup"}[3h])) > 0
+      expr: sum(increase(velero_backup_failure_total{schedule="velero-allnamespacebackup"}[3h])) > 1
       for: 1m
       labels:
         severity: warning
-    - alert: VeleroBackupNotSuccessfulForOverFourHours-velero-allnamespacebackup
+    - alert: VeleroBackupNotSuccessfulForOverEightHours-velero-allnamespacebackup
       annotations:
-        message: The Velero backup schedule for AllNamespaceBackup does not have a successful timestamp for over 4 hours
+        message: The Velero backup schedule for AllNamespaceBackup does not have a successful timestamp for over 8 hours
         runbook_url: https://runbooks.cloud-platform.service.justice.gov.uk/disaster-recovery-scenarios.html#resolving-a-partiallyfailed-backup-alert
-      expr: (time() - velero_backup_last_successful_timestamp{schedule="velero-allnamespacebackup"}) / 60 / 60 > 4
+      expr: (time() - velero_backup_last_successful_timestamp{schedule="velero-allnamespacebackup"}) / 60 / 60 > 8
       for: 1m
       labels:
         severity: warning
