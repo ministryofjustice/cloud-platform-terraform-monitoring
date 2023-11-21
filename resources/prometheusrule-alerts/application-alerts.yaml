@@ -386,16 +386,6 @@ spec:
       for: 1m
       labels:
         severity: warning
-    - alert: KuberhealthyDNSStatusCheckInternal
-      annotations:
-        message: Checks for failures with DNS, including resolving within the cluster "kubectl -n kuberhealthy describe khstate dns-status-internal". 
-          Also check failing checker pod logs.
-        runbook_url: https://github.com/kuberhealthy/kuberhealthy/blob/master/cmd/dns-resolution-check/README.md
-      expr: |-
-        kuberhealthy_check{check="kuberhealthy/dns-status-internal", container="kuberhealthy", endpoint="http", exported_namespace="kuberhealthy",  job="kuberhealthy", namespace="kuberhealthy",  service="kuberhealthy", status!="1"}
-      for: 1m
-      labels:
-        severity: warning
     - alert: KuberhealthyNamespaceExistsCheck
       annotations:
         message: One of the following vital namespaces no longer exists - "cert-manager", "default", "ingress-controllers", "kube-system", "logging", "monitoring", "opa", "velero", "kubectl -n kuberhealthy describe khstate namespace-kh-check". Also check failing pod logs.
