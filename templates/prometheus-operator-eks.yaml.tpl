@@ -378,7 +378,7 @@ kube-state-metrics:
   # https://github.com/kubernetes/kube-state-metrics/issues/2041#issuecomment-1614327806
   customResourceState:
     enabled: true
-    config: |
+    config: 
       kind: CustomResourceStateMetrics
       spec:
         resources:
