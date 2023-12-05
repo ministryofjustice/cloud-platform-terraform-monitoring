@@ -425,11 +425,11 @@ prometheus:
     containers:
     - name: prometheus
       livenessProbe:
-        periodSeconds: 8
-        timeoutSeconds: 6
+        periodSeconds: 15
+        timeoutSeconds: 12
       readinessProbe:
-        periodSeconds: 8
-        timeoutSeconds: 6
+        periodSeconds: 15
+        timeoutSeconds: 12
 
     ## External labels to add to any time series or alerts when communicating with external systems
     ##    
