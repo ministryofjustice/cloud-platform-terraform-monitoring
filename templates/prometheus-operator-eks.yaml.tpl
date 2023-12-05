@@ -368,14 +368,17 @@ kube-state-metrics:
       - apiGroups: ["autoscaling.k8s.io"]
         resources: ["verticalpodautoscalers"]
         verbs: ["list", "watch"]
+      - apiGroups: ["apiextensions.k8s.io"]
+      - resources: ["customresourcedefinitions"]
+      - verbs: ["list", "watch"]
   prometheus:
-    monitor:
-      enabled: true
+      monitor:
+        enabled: true
   # https://github.com/kubernetes/kube-state-metrics/blob/main/docs/customresourcestate-metrics.md#verticalpodautoscaler
   # https://github.com/kubernetes/kube-state-metrics/issues/2041#issuecomment-1614327806
   customResourceState:
     enabled: true
-    config:
+    config: |
       kind: CustomResourceStateMetrics
       spec:
         resources:
