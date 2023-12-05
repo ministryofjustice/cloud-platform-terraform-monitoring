@@ -369,8 +369,8 @@ kube-state-metrics:
         resources: ["verticalpodautoscalers"]
         verbs: ["list", "watch"]
       - apiGroups: ["apiextensions.k8s.io"]
-      - resources: ["customresourcedefinitions"]
-      - verbs: ["list", "watch"]
+        resources: ["customresourcedefinitions"]
+        verbs: ["list", "watch"]
   prometheus:
       monitor:
         enabled: true
