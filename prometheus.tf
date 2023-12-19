@@ -109,6 +109,7 @@ resource "helm_release" "prometheus_operator_eks" {
   namespace  = kubernetes_namespace.monitoring.id
   version    = "41.9.1"
   skip_crds  = true # Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds
+  timeout    = 600
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
