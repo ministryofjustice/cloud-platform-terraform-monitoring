@@ -24,6 +24,7 @@ resource "helm_release" "prometheus_proxy" {
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
   version    = "6.2.1"
+  timeout    = 600
 
   values = [
     data.template_file.prometheus_proxy.rendered,
@@ -81,6 +82,7 @@ resource "helm_release" "alertmanager_proxy" {
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
   version    = "6.2.1"
+  timeout    = 600
 
   values = [
     data.template_file.alertmanager_proxy.rendered,
@@ -194,6 +196,7 @@ resource "helm_release" "thanos_proxy" {
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
   version    = "6.2.1"
+  timeout    = 600
 
   values = [
     data.template_file.thanos_proxy.rendered,
