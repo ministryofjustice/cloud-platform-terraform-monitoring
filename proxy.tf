@@ -47,8 +47,7 @@ resource "helm_release" "prometheus_proxy" {
 
 
   depends_on = [
-    random_id.session_secret,
-    var.dependence_ingress_controller
+    random_id.session_secret
   ]
 
   lifecycle {
@@ -104,8 +103,7 @@ resource "helm_release" "alertmanager_proxy" {
   }
 
   depends_on = [
-    random_id.session_secret,
-    var.dependence_ingress_controller
+    random_id.session_secret
   ]
 
   lifecycle {
@@ -161,8 +159,7 @@ resource "helm_release" "kibana_proxy" {
 
   depends_on = [
     random_id.session_secret,
-    kubernetes_namespace.monitoring,
-    var.dependence_ingress_controller
+    kubernetes_namespace.monitoring
   ]
 
   lifecycle {
@@ -218,8 +215,7 @@ resource "helm_release" "thanos_proxy" {
   }
 
   depends_on = [
-    random_id.session_secret,
-    var.dependence_ingress_controller
+    random_id.session_secret
   ]
 
   lifecycle {
