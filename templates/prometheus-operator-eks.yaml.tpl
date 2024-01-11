@@ -186,7 +186,12 @@ grafana:
     - "dockerhub-credentials"
     repository: grafana/grafana
     pullPolicy: IfNotPresent
-
+  
+  containerSecurityContext:
+    capabilities:
+      drop:
+      - ALL
+      
   serviceAccount:
     create: true
     annotations:
@@ -256,6 +261,10 @@ grafana:
   sidecar:
     image:
       repository: quay.io/kiwigrid/k8s-sidecar
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
     alerts:
       enabled: true
       label: grafana_alert
