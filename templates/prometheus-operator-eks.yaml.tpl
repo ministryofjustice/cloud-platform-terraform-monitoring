@@ -342,7 +342,7 @@ kube-state-metrics:
 ##    
   image:
     repository: registry.k8s.io/kube-state-metrics/kube-state-metrics
-    tag: v2.7.0  
+    tag: v2.9.2
 ##
 ## -----------------------------------------------------------------  
 
