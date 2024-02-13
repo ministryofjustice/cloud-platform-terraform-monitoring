@@ -176,6 +176,21 @@ config: |-
     aws_metric_name: NetworkPacketsOut
     aws_dimensions:
     - CacheClusterId
+
+  - aws_namespace: AWS/ElastiCache
+    aws_metric_name: EngineCPUUtilization
+    aws_dimensions:
+    - CacheClusterId
+
+  - aws_namespace: AWS/ElastiCache
+    aws_metric_name: ReplicationBytes
+    aws_dimensions:
+    - CacheClusterId
+
+  - aws_namespace: AWS/ElastiCache
+    aws_metric_name: ReplicationLag
+    aws_dimensions:
+    - CacheClusterId
  
     # DynamoDB Metrics   
   - aws_namespace: AWS/DynamoDB
@@ -245,6 +260,7 @@ config: |-
     aws_metric_name: AutomatedSnapshotFailure
     aws_dimensions: [DomainName, ClientId]
   
+  # Secrets Manager
   - aws_namespace: secretsManager
     aws_metric_name: PutSecretValue
     aws_dimensions: [SecretId, UserArn]
