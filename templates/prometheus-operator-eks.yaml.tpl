@@ -334,11 +334,10 @@ kubeStateMetrics:
 kube-state-metrics:
 ##
 ## ----------------------------------------------------------------
-## NOTE: overriding kube-state-metrics default image tag from v.2.6.0 to v2.7.0 for kube-prometheus-stack chart version 41.9.1 is a temporary measure to workaround
+## NOTE: overriding kube-state-metrics default image tag from v.2.6.0 to v2.9.2 for kube-prometheus-stack chart version 41.9.1 is a temporary measure to workaround
 ## autoscaling/v2/beta2 removal in EKS 1.26. Once we start upgrading the whole module, the following image: section can be removed. 
 ## See:
 ## - https://github.com/kubernetes/kube-state-metrics?tab=readme-ov-file#compatibility-matrix
-## - https://github.com/kubernetes/kube-state-metrics/releases/tag/v2.7.0
 ##    
   image:
     repository: registry.k8s.io/kube-state-metrics/kube-state-metrics
