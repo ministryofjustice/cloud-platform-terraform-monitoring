@@ -194,7 +194,7 @@ resource "kubernetes_network_policy" "allow_cloud_platform_monitoring_alerts" {
       from {
         namespace_selector {
           match_labels = {
-            cloud-platform.justice.gov.uk/service = "cloud-platform-monitoring-alerts"
+            "cloud-platform.justice.gov.uk/service" = "cloud-platform-monitoring-alerts"
           }
         }
       }
