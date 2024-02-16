@@ -189,7 +189,11 @@ resource "kubernetes_network_policy" "allow_cloud_platform_monitoring_alerts" {
   }
 
   spec {
-    pod_selector {}
+    pod_selector {
+      match_labels = {
+        app = "monitoring-alerts"
+      }
+    }
     ingress {
       from {
         namespace_selector {
