@@ -181,3 +181,25 @@ resource "kubernetes_network_policy" "allow_alertmanager_api" {
     policy_types = ["Ingress"]
   }
 }
+
+resource "kubernetes_network_policy" "allow_cloud_platform_monitoring_alerts" {
+  metadata {
+    name      = "allow-cloud-platform-monitoring-alerts"
+    namespace = kubernetes_namespace.monitoring.id
+  }
+
+  spec {
+    pod_selector {}
+    ingress {
+      from {
+        namespace_selector {
+          match_labels = {
+            cloud-platform.justice.gov.uk/service = "cloud-platform-monitoring-alerts"
+          }
+        }
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
