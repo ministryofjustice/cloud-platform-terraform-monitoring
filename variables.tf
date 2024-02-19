@@ -100,11 +100,6 @@ variable "prometheus_operator_crd_version" {
   description = "The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module"
 }
 
-variable "dependence_ingress_controller" {
-  description = "Ingress controller module dependences in order to be executed."
-  type        = list(string)
-}
-
 variable "eks_cluster_name" {
   default = "live"
 }
