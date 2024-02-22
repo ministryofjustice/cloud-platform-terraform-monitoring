@@ -22,6 +22,7 @@ config: |-
   region: eu-west-2
   period_seconds: 240
   set_timestamp: false
+  warn_on_empty_list_dimensions: true
   metrics:
   # RDS Metrics
   - aws_namespace: AWS/RDS
