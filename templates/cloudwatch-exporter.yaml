@@ -22,7 +22,7 @@ config: |-
   region: eu-west-2
   period_seconds: 240
   set_timestamp: false
-  warn_on_empty_list_dimensions: true
+  warn_on_empty_list_dimensions: false
   metrics:
   # RDS Metrics
   - aws_namespace: AWS/RDS
@@ -131,15 +131,12 @@ config: |-
   - aws_namespace: AWS/SNS
     aws_metric_name: NumberOfNotificationsFilteredOut-NoMessageAttributes
     aws_dimensions: [TopicName]
-    aws_dimensions: [TopicName]
-    aws_namespace: AWS/SNS
     aws_statistics:
     - Sum
 
   - aws_namespace: AWS/SNS
     aws_metric_name: NumberOfNotificationsFilteredOut-InvalidAttributes
     aws_dimensions: [TopicName]
-    aws_namespace: AWS/SNS
     aws_statistics:
     - Sum
     
@@ -213,14 +210,12 @@ config: |-
   - aws_namespace: AWS/DynamoDB
     aws_metric_name: WriteThrottleEvents
     aws_dimensions: ["TableName","GlobalSecondaryIndexName"]
-    aws_namespace: AWS/DynamoDB
     aws_statistics:
     - Sum
 
   - aws_namespace: AWS/DynamoDB
     aws_metric_name: ReadThrottleEvents
     aws_dimensions: ["TableName","GlobalSecondaryIndexName"]
-    aws_namespace: AWS/DynamoDB
     aws_statistics:
     - Sum
 
