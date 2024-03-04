@@ -32,10 +32,8 @@ locals {
     alertmanagers        = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml"
     podmonitors          = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml"
     probes               = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_probes.yaml"
-    prometheusagents     = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_prometheusagents.yaml"
     prometheuses         = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml"
     prometheusrules      = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml"
-    scrapeconfigs        = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_scrapeconfigs.yaml"
     servicemonitors      = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml"
     thanosrulers         = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml"
   }
