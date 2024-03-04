@@ -340,7 +340,8 @@ kube-state-metrics:
 ## - https://github.com/kubernetes/kube-state-metrics?tab=readme-ov-file#compatibility-matrix
 ##    
   image:
-    repository: registry.k8s.io/kube-state-metrics/kube-state-metrics
+    registry: registry.k8s.io
+    repository: kube-state-metrics/kube-state-metrics
     tag: v2.9.2
 ##
 ## -----------------------------------------------------------------  

@@ -96,7 +96,7 @@ variable "kibana_upstream" {
 }
 
 variable "prometheus_operator_crd_version" {
-  default     = "v0.60.1"
+  default     = "v0.68.0"
   description = "The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module"
 }
 
