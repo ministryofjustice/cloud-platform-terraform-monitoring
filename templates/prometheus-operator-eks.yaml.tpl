@@ -551,6 +551,7 @@ prometheus:
     thanos: 
       baseImage: quay.io/thanos/thanos
       objectStorageConfig:
-        key: thanos.yaml
-        name: thanos-objstore-config 
+        existingSecret:
+          key: thanos.yaml
+          name: thanos-objstore-config 
 %{ endif ~}
