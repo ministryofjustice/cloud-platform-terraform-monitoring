@@ -134,7 +134,7 @@ module "monitoring" {
 | <a name="input_oidc_components_client_secret"></a> [oidc\_components\_client\_secret](#input\_oidc\_components\_client\_secret) | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_issuer_url"></a> [oidc\_issuer\_url](#input\_oidc\_issuer\_url) | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_pagerduty_config"></a> [pagerduty\_config](#input\_pagerduty\_config) | Add PagerDuty key to allow integration with a PD service. | `any` | n/a | yes |
-| <a name="input_prometheus_operator_crd_version"></a> [prometheus\_operator\_crd\_version](#input\_prometheus\_operator\_crd\_version) | The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module | `string` | `"v0.68.0"` | no |
+| <a name="input_prometheus_operator_crd_version"></a> [prometheus\_operator\_crd\_version](#input\_prometheus\_operator\_crd\_version) | The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module | `string` | `"v0.71.0"` | no |
 | <a name="input_team_name"></a> [team\_name](#input\_team\_name) | n/a | `string` | `"webops"` | no |
 
 ## Outputs
