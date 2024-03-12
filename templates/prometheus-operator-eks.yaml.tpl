@@ -255,7 +255,8 @@ grafana:
 
   sidecar:
     image:
-      repository: quay.io/kiwigrid/k8s-sidecar
+      registry: quay.io
+      repository: kiwigrid/k8s-sidecar
     alerts:
       enabled: true
       label: grafana_alert
