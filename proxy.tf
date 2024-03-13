@@ -23,8 +23,8 @@ resource "helm_release" "prometheus_proxy" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "6.2.1"
-  timeout    = 600
+  version    = "7.1.0"
+  timeout    = 900
 
   values = [
     data.template_file.prometheus_proxy.rendered,
