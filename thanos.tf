@@ -11,8 +11,8 @@ resource "helm_release" "thanos" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "thanos"
-  version    = "11.6.2"
-
+  version    = "12.23.2"
+  timeout    = 900
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
     enabled_compact     = var.enable_thanos_compact
     monitoring_aws_role = module.iam_assumable_role_monitoring.this_iam_role_name
