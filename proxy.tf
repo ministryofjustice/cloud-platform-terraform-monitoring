@@ -80,8 +80,8 @@ resource "helm_release" "alertmanager_proxy" {
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "6.2.1"
-  timeout    = 600
+  version    = "7.1.0"
+  timeout    = 900
 
   values = [
     data.template_file.alertmanager_proxy.rendered,
@@ -136,7 +136,8 @@ resource "helm_release" "kibana_proxy" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "6.2.1"
+  version    = "7.1.0"
+  timeout    = 900
 
   values = [
     data.template_file.kibana_proxy.rendered,
@@ -192,8 +193,8 @@ resource "helm_release" "thanos_proxy" {
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "6.2.1"
-  timeout    = 600
+  version    = "7.1.0"
+  timeout    = 900
 
   values = [
     data.template_file.thanos_proxy.rendered,
