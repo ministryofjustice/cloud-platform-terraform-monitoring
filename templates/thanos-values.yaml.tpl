@@ -1,6 +1,3 @@
-
-existingServiceAccount: prometheus-operator-kube-p-prometheus
-
 metrics:
   enabled: true
   serviceMonitor:

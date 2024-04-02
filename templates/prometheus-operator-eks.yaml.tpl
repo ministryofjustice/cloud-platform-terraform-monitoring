@@ -407,8 +407,11 @@ prometheus:
   enabled: true
 
   serviceAccount:
+    create: true
+    name: "${prometheus_sa_name}"
     annotations:
       eks.amazonaws.com/role-arn: "${eks_service_account}"
+
 
   # Service for thanos service discovery on sidecar
   # Enable this can make Thanos Query can use

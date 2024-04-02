@@ -39,6 +39,9 @@ locals {
     servicemonitors      = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml"
     thanosrulers         = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml"
   }
-  
+
+  prometheus_sa_name = "prometheus-operator-kube-p-prometheus"
+
   ecr_exporter_sa = "ecr-exporter"
 }
+
