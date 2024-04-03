@@ -1,13 +1,21 @@
-
-existingServiceAccount: prometheus-operator-kube-p-prometheus
-
 metrics:
   enabled: true
   serviceMonitor:
     enabled: true
 
 storegateway:
+  resources:
+    limits:
+      cpu: 1600m
+      memory: 24Gi
+    requests:
+      cpu: 10m
+      memory: 100Mi
+
   enabled: true
+  serviceAccount:
+    create: false
+    name: "${prometheus_sa_name}"
   persistence:
     size: 75Gi
   podAnnotations:
@@ -16,11 +24,32 @@ storegateway:
     - --min-time=-12w
 
 query:
+  resources:
+    limits:
+      cpu: 1600m
+      memory: 24Gi
+    requests:
+      cpu: 10m
+      memory: 100Mi
+
   stores:
     - prometheus-prometheus-operator-kube-p-prometheus-0.prometheus-operated.monitoring.svc:10901
 
+queryFrontend:
+  resources:
+    limits:
+      cpu: 1600m
+      memory: 24Gi
+    requests:
+      cpu: 10m
+      memory: 100Mi
+
+
 ruler:
   enabled: true
+  serviceAccount:
+    create: false
+    name: "${prometheus_sa_name}"
   podAnnotations:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
   alertmanagers:
@@ -39,6 +68,13 @@ compactor:
     size: 500Gi
 
 bucketweb:
+  resources:
+    limits:
+      cpu: 1600m
+      memory: 24Gi
+    requests:
+      cpu: 10m
+      memory: 100Mi
   enabled: true
 
 existingObjstoreSecret: thanos-objstore-config
