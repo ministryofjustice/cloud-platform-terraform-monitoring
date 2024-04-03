@@ -407,6 +407,8 @@ prometheus:
   enabled: true
 
   serviceAccount:
+    create: true
+    name: "${prometheus_sa_name}"
     annotations:
       eks.amazonaws.com/role-arn: "${eks_service_account}"
 

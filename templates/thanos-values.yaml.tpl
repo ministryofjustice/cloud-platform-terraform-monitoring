@@ -1,4 +1,3 @@
-
 existingServiceAccount: prometheus-operator-kube-p-prometheus
 
 metrics:

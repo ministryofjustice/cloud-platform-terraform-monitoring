@@ -123,23 +123,24 @@ resource "helm_release" "prometheus_operator_eks" {
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
     enable_large_nodesgroup                    = var.enable_large_nodesgroup
+    prometheus_sa_name                         = local.prometheus_sa_name
     eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
     storage_class                              = can(regex("live", terraform.workspace)) ? "io1-expand" : "gp2-expand"
     storage_size                               = can(regex("live", terraform.workspace)) ? "750Gi" : "75Gi"
   })]
 
   set_sensitive {
-    name = "grafana.env.GF_SERVER_ROOT_URL"
+    name  = "grafana.env.GF_SERVER_ROOT_URL"
     value = local.grafana_root
   }
 
   set_sensitive {
-    name = "grafana.adminUser"
+    name  = "grafana.adminUser"
     value = random_id.username.hex
   }
 
   set_sensitive {
-    name = "grafana.adminPassword"
+    name  = "grafana.adminPassword"
     value = random_id.password.hex
   }
 
