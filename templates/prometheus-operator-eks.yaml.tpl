@@ -412,7 +412,6 @@ prometheus:
     annotations:
       eks.amazonaws.com/role-arn: "${eks_service_account}"
 
-
   # Service for thanos service discovery on sidecar
   # Enable this can make Thanos Query can use
   # `--store=dnssrv+_grpc._tcp.$kube-prometheus-stack.fullname-thanos-discovery.$namespace.svc.cluster.local` to discovery
