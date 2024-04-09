@@ -171,6 +171,10 @@ alertmanager:
     ## 	The external URL the Alertmanager instances will be available under. This is necessary to generate correct URLs. This is necessary if Alertmanager is not served from root of a DNS name.	string	false
     ##
     externalUrl: "${ alertmanager_ingress }"
+    
+    ## Priority class assigned to the Pods
+    ##
+    priorityClassName: system-cluster-critical
 
 
 ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
@@ -385,6 +389,9 @@ kube-state-metrics:
 prometheus-node-exporter:
   rbac:
     pspEnabled: false
+  
+  ## Assign a PriorityClassName to pods if set
+  priorityClassName: system-cluster-critical
 
 ## Manages Prometheus and Alertmanager components
 ##
@@ -399,6 +406,9 @@ prometheusOperator:
 
   admissionWebhooks:
     enabled: false
+    
+    ## Assign a PriorityClassName to pods if set
+    priorityClassName: system-cluster-critical
 
 ## Deploy a Prometheus instance
 ##
@@ -516,6 +526,10 @@ prometheus:
     ## How long to retain metrics
     ##
     retention: 1d
+
+    ## Priority class assigned to the Pods
+    ##
+    priorityClassName: system-cluster-critical
 
     %{ if enable_prometheus_affinity_and_tolerations ~}
     ## Assign custom affinity rules to the prometheus instance

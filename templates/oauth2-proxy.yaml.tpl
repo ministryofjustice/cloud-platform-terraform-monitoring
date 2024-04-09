@@ -69,3 +69,5 @@ redis:
   # provision an instance of the redis sub-chart
   enabled: true
   architecture: standalone
+
+priorityClassName: system-cluster-critical
