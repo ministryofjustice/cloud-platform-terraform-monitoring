@@ -444,7 +444,7 @@ prometheus:
         periodSeconds: 15
         timeoutSeconds: 12
 
-    maximumStartupDurationSeconds: 900
+    maximumStartupDurationSeconds: 1800
 
     ## External labels to add to any time series or alerts when communicating with external systems
     ##    
