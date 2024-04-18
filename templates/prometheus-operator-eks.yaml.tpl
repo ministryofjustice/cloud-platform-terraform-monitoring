@@ -460,8 +460,8 @@ prometheus:
     %{ if enable_large_nodesgroup }
     resources:
       requests:
-        memory: "14000Mi"
-        cpu: "1300m"
+        memory: "180000Mi"
+        cpu: "4000m"
       limits:
         memory: "320000Mi"
         cpu: "28000m"
