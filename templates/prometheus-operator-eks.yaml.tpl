@@ -420,6 +420,8 @@ prometheus:
   ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
   ##
   prometheusSpec:
+    enableFeatures: ["memory-snapshot-on-shutdown"]
+
     logLevel: debug
 
     %{ if enable_prometheus_affinity_and_tolerations ~}
