@@ -60,7 +60,7 @@ resource "aws_iam_policy" "ecr_exporter" {
 
 # IRSA
 module "irsa" {
-  count = var.enable_ecr_exporter ? 1 : 0
+  count            = var.enable_ecr_exporter ? 1 : 0
   source           = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=2.0.0"
   eks_cluster_name = terraform.workspace
   namespace        = kubernetes_namespace.monitoring.id
@@ -69,7 +69,7 @@ module "irsa" {
   }
   service_account_name = local.ecr_exporter_sa
 
-    # Tags
+  # Tags
   # Tags
   business_unit          = var.business_unit
   application            = var.application
