@@ -130,6 +130,8 @@ module "monitoring" {
 | <a name="input_infrastructure_support"></a> [infrastructure\_support](#input\_infrastructure\_support) | n/a | `string` | `"Cloud Platform"` | no |
 | <a name="input_is_production"></a> [is\_production](#input\_is\_production) | n/a | `string` | `"true"` | no |
 | <a name="input_kibana_upstream"></a> [kibana\_upstream](#input\_kibana\_upstream) | ES upstream for logs | `string` | `""` | no |
+| <a name="input_large_nodesgroup_cpu_requests"></a> [large\_nodesgroup\_cpu\_requests](#input\_large\_nodesgroup\_cpu\_requests) | CPU requests for large nodesgroup | `string` | `""` | no |
+| <a name="input_large_nodesgroup_memory_requests"></a> [large\_nodesgroup\_memory\_requests](#input\_large\_nodesgroup\_memory\_requests) | Memory requests for large nodesgroup | `string` | `""` | no |
 | <a name="input_oidc_components_client_id"></a> [oidc\_components\_client\_id](#input\_oidc\_components\_client\_id) | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_components_client_secret"></a> [oidc\_components\_client\_secret](#input\_oidc\_components\_client\_secret) | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_issuer_url"></a> [oidc\_issuer\_url](#input\_oidc\_issuer\_url) | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
