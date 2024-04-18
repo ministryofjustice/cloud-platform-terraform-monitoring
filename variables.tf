@@ -86,13 +86,13 @@ variable "enable_large_nodesgroup" {
 variable "large_nodesgroup_cpu_requests" {
   description = "CPU requests for large nodesgroup"
   type        = string
-  default     = ""  
+  default     = "1300m"
 }
 
 variable "large_nodesgroup_memory_requests" {
   description = "Memory requests for large nodesgroup"
   type        = string
-  default     = ""
+  default     = "14000Mi"
 }
 
 variable "dockerhub_password" {
