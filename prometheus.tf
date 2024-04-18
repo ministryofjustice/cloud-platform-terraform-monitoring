@@ -107,8 +107,9 @@ resource "helm_release" "prometheus_operator_eks" {
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
-  version    = "41.9.1"
+  version    = "56.21.4"
   skip_crds  = true # Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds
+  timeout    = 600
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
@@ -122,23 +123,26 @@ resource "helm_release" "prometheus_operator_eks" {
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
     enable_large_nodesgroup                    = var.enable_large_nodesgroup
+    large_nodesgroup_cpu_requests             = var.large_nodesgroup_cpu_requests
+    large_nodesgroup_memory_requests          = var.large_nodesgroup_memory_requests
+    prometheus_sa_name                         = local.prometheus_sa_name
     eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
     storage_class                              = can(regex("live", terraform.workspace)) ? "io1-expand" : "gp2-expand"
     storage_size                               = can(regex("live", terraform.workspace)) ? "750Gi" : "75Gi"
   })]
 
   set_sensitive {
-    name = "grafana.env.GF_SERVER_ROOT_URL"
+    name  = "grafana.env.GF_SERVER_ROOT_URL"
     value = local.grafana_root
   }
 
   set_sensitive {
-    name = "grafana.adminUser"
+    name  = "grafana.adminUser"
     value = random_id.username.hex
   }
 
   set_sensitive {
-    name = "grafana.adminPassword"
+    name  = "grafana.adminPassword"
     value = random_id.password.hex
   }
 
@@ -149,8 +153,7 @@ resource "helm_release" "prometheus_operator_eks" {
     local.prometheus_operator_crds_dependency,
     kubernetes_secret.grafana_secret,
     kubernetes_secret.thanos_config,
-    kubernetes_secret.dockerhub_credentials,
-    var.dependence_ingress_controller
+    kubernetes_secret.dockerhub_credentials
   ]
 
   provisioner "local-exec" {

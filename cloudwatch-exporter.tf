@@ -7,7 +7,7 @@ resource "helm_release" "cloudwatch_exporter" {
   name       = "cloudwatch-exporter"
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://prometheus-community.github.io/helm-charts"
-  version    = "0.22.0"
+  version    = "0.23.0"
   chart      = "prometheus-cloudwatch-exporter"
 
   values = [templatefile("${path.module}/templates/cloudwatch-exporter.yaml", {

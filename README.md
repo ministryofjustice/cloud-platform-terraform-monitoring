@@ -33,7 +33,7 @@ module "monitoring" {
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=4.24.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >=2.6.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | >=3.2.1 |
-| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >=1.13.2 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 2.0.4 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >=2.12.1 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.4.3 |
 | <a name="requirement_template"></a> [template](#requirement\_template) | >=2.2.0 |
@@ -45,7 +45,7 @@ module "monitoring" {
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >=4.24.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.6.0 |
 | <a name="provider_http"></a> [http](#provider\_http) | >=3.2.1 |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >=1.13.2 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 2.0.4 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >=2.12.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.4.3 |
 | <a name="provider_template"></a> [template](#provider\_template) | >=2.2.0 |
@@ -77,7 +77,7 @@ module "monitoring" {
 | [helm_release.prometheus_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.thanos](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.thanos_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [kubectl_manifest.prometheus_operator_crds](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
+| [kubectl_manifest.prometheus_operator_crds](https://registry.terraform.io/providers/alekc/kubectl/2.0.4/docs/resources/manifest) | resource |
 | [kubernetes_ingress_v1.ingress_redirect_grafana](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/ingress_v1) | resource |
 | [kubernetes_limit_range.monitoring](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) | resource |
 | [kubernetes_namespace.monitoring](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
@@ -114,7 +114,6 @@ module "monitoring" {
 | <a name="input_application"></a> [application](#input\_application) | n/a | `string` | `"Monitoring"` | no |
 | <a name="input_business_unit"></a> [business\_unit](#input\_business\_unit) | n/a | `string` | `"Platforms"` | no |
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain - used by externalDNS and certmanager to create URLs | `any` | n/a | yes |
-| <a name="input_dependence_ingress_controller"></a> [dependence\_ingress\_controller](#input\_dependence\_ingress\_controller) | Ingress controller module dependences in order to be executed. | `list(string)` | n/a | yes |
 | <a name="input_dockerhub_password"></a> [dockerhub\_password](#input\_dockerhub\_password) | DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
 | <a name="input_dockerhub_username"></a> [dockerhub\_username](#input\_dockerhub\_username) | DockerHub username - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
 | <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | n/a | `string` | `"live"` | no |
@@ -131,11 +130,13 @@ module "monitoring" {
 | <a name="input_infrastructure_support"></a> [infrastructure\_support](#input\_infrastructure\_support) | n/a | `string` | `"Cloud Platform"` | no |
 | <a name="input_is_production"></a> [is\_production](#input\_is\_production) | n/a | `string` | `"true"` | no |
 | <a name="input_kibana_upstream"></a> [kibana\_upstream](#input\_kibana\_upstream) | ES upstream for logs | `string` | `""` | no |
+| <a name="input_large_nodesgroup_cpu_requests"></a> [large\_nodesgroup\_cpu\_requests](#input\_large\_nodesgroup\_cpu\_requests) | CPU requests for large nodesgroup | `string` | `"1300m"` | no |
+| <a name="input_large_nodesgroup_memory_requests"></a> [large\_nodesgroup\_memory\_requests](#input\_large\_nodesgroup\_memory\_requests) | Memory requests for large nodesgroup | `string` | `"14000Mi"` | no |
 | <a name="input_oidc_components_client_id"></a> [oidc\_components\_client\_id](#input\_oidc\_components\_client\_id) | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_components_client_secret"></a> [oidc\_components\_client\_secret](#input\_oidc\_components\_client\_secret) | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_issuer_url"></a> [oidc\_issuer\_url](#input\_oidc\_issuer\_url) | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_pagerduty_config"></a> [pagerduty\_config](#input\_pagerduty\_config) | Add PagerDuty key to allow integration with a PD service. | `any` | n/a | yes |
-| <a name="input_prometheus_operator_crd_version"></a> [prometheus\_operator\_crd\_version](#input\_prometheus\_operator\_crd\_version) | The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module | `string` | `"v0.60.1"` | no |
+| <a name="input_prometheus_operator_crd_version"></a> [prometheus\_operator\_crd\_version](#input\_prometheus\_operator\_crd\_version) | The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module | `string` | `"v0.71.0"` | no |
 | <a name="input_team_name"></a> [team\_name](#input\_team\_name) | n/a | `string` | `"webops"` | no |
 
 ## Outputs

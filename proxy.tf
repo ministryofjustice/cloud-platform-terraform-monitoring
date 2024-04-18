@@ -23,31 +23,31 @@ resource "helm_release" "prometheus_proxy" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "6.2.1"
+  version    = "7.1.0"
+  timeout    = 900
 
   values = [
     data.template_file.prometheus_proxy.rendered,
   ]
 
   set_sensitive {
-    name = "config.clientID"
+    name  = "config.clientID"
     value = var.oidc_components_client_id
   }
 
   set_sensitive {
-    name = "config.clientSecret"
+    name  = "config.clientSecret"
     value = var.oidc_components_client_secret
   }
 
   set_sensitive {
-    name = "config.cookieSecret"
+    name  = "config.cookieSecret"
     value = random_id.session_secret.b64_std
   }
 
 
   depends_on = [
-    random_id.session_secret,
-    var.dependence_ingress_controller
+    random_id.session_secret
   ]
 
   lifecycle {
@@ -80,30 +80,30 @@ resource "helm_release" "alertmanager_proxy" {
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "6.2.1"
+  version    = "7.1.0"
+  timeout    = 900
 
   values = [
     data.template_file.alertmanager_proxy.rendered,
   ]
 
   set_sensitive {
-    name = "config.clientID"
+    name  = "config.clientID"
     value = var.oidc_components_client_id
   }
 
   set_sensitive {
-    name = "config.clientSecret"
+    name  = "config.clientSecret"
     value = var.oidc_components_client_secret
   }
 
   set_sensitive {
-    name = "config.cookieSecret"
+    name  = "config.cookieSecret"
     value = random_id.session_secret.b64_std
   }
 
   depends_on = [
-    random_id.session_secret,
-    var.dependence_ingress_controller
+    random_id.session_secret
   ]
 
   lifecycle {
@@ -136,31 +136,31 @@ resource "helm_release" "kibana_proxy" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "6.2.1"
+  version    = "7.1.0"
+  timeout    = 900
 
   values = [
     data.template_file.kibana_proxy.rendered,
   ]
 
   set_sensitive {
-    name = "config.clientID"
+    name  = "config.clientID"
     value = var.oidc_components_client_id
   }
 
   set_sensitive {
-    name = "config.clientSecret"
+    name  = "config.clientSecret"
     value = var.oidc_components_client_secret
   }
 
   set_sensitive {
-    name = "config.cookieSecret"
+    name  = "config.cookieSecret"
     value = random_id.session_secret.b64_std
   }
 
   depends_on = [
     random_id.session_secret,
-    kubernetes_namespace.monitoring,
-    var.dependence_ingress_controller
+    kubernetes_namespace.monitoring
   ]
 
   lifecycle {
@@ -193,30 +193,30 @@ resource "helm_release" "thanos_proxy" {
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "6.2.1"
+  version    = "7.1.0"
+  timeout    = 900
 
   values = [
     data.template_file.thanos_proxy.rendered,
   ]
 
   set_sensitive {
-    name = "config.clientID"
+    name  = "config.clientID"
     value = var.oidc_components_client_id
   }
 
   set_sensitive {
-    name = "config.clientSecret"
+    name  = "config.clientSecret"
     value = var.oidc_components_client_secret
   }
 
   set_sensitive {
-    name = "config.cookieSecret"
+    name  = "config.cookieSecret"
     value = random_id.session_secret.b64_std
   }
 
   depends_on = [
-    random_id.session_secret,
-    var.dependence_ingress_controller
+    random_id.session_secret
   ]
 
   lifecycle {

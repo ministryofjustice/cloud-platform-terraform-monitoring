@@ -171,6 +171,10 @@ alertmanager:
     ## 	The external URL the Alertmanager instances will be available under. This is necessary to generate correct URLs. This is necessary if Alertmanager is not served from root of a DNS name.	string	false
     ##
     externalUrl: "${ alertmanager_ingress }"
+    
+    ## Priority class assigned to the Pods
+    ##
+    priorityClassName: system-cluster-critical
 
 
 ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
@@ -255,7 +259,8 @@ grafana:
 
   sidecar:
     image:
-      repository: quay.io/kiwigrid/k8s-sidecar
+      registry: quay.io
+      repository: kiwigrid/k8s-sidecar
     alerts:
       enabled: true
       label: grafana_alert
@@ -370,6 +375,9 @@ kube-state-metrics:
 prometheus-node-exporter:
   rbac:
     pspEnabled: false
+  
+  ## Assign a PriorityClassName to pods if set
+  priorityClassName: system-cluster-critical
 
 ## Manages Prometheus and Alertmanager components
 ##
@@ -384,6 +392,9 @@ prometheusOperator:
 
   admissionWebhooks:
     enabled: false
+    
+    ## Assign a PriorityClassName to pods if set
+    priorityClassName: system-cluster-critical
 
 ## Deploy a Prometheus instance
 ##
@@ -392,6 +403,8 @@ prometheus:
   enabled: true
 
   serviceAccount:
+    create: true
+    name: "${prometheus_sa_name}"
     annotations:
       eks.amazonaws.com/role-arn: "${eks_service_account}"
 
@@ -431,6 +444,8 @@ prometheus:
         periodSeconds: 15
         timeoutSeconds: 12
 
+    maximumStartupDurationSeconds: 1800
+
     ## External labels to add to any time series or alerts when communicating with external systems
     ##    
     externalLabels:
@@ -445,10 +460,10 @@ prometheus:
     %{ if enable_large_nodesgroup }
     resources:
       requests:
-        memory: "14000Mi"
-        cpu: "1300m"
+        memory: "${large_nodesgroup_memory_requests}"
+        cpu: "${large_nodesgroup_cpu_requests}"
       limits:
-        memory: "200000Mi"
+        memory: "320000Mi"
         cpu: "28000m"
     %{ endif }
 
@@ -500,6 +515,10 @@ prometheus:
     ##
     retention: 1d
 
+    ## Priority class assigned to the Pods
+    ##
+    priorityClassName: system-cluster-critical
+
     %{ if enable_prometheus_affinity_and_tolerations ~}
     ## Assign custom affinity rules to the prometheus instance
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
@@ -537,6 +556,7 @@ prometheus:
     thanos: 
       baseImage: quay.io/thanos/thanos
       objectStorageConfig:
-        key: thanos.yaml
-        name: thanos-objstore-config 
+        existingSecret:
+          key: thanos.yaml
+          name: thanos-objstore-config 
 %{ endif ~}

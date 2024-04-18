@@ -11,16 +11,17 @@ resource "helm_release" "thanos" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "thanos"
-  version    = "11.6.2"
-
+  version    = "15.0.0"
+  timeout    = 900
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
+    prometheus_sa_name  = local.prometheus_sa_name
     enabled_compact     = var.enable_thanos_compact
     monitoring_aws_role = module.iam_assumable_role_monitoring.this_iam_role_name
     clusterName         = terraform.workspace
   })]
 
   depends_on = [
-    local.prometheus_dependency,
+    helm_release.prometheus_operator_eks,
   ]
 
   lifecycle {

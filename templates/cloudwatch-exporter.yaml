@@ -22,6 +22,7 @@ config: |-
   region: eu-west-2
   period_seconds: 240
   set_timestamp: false
+  warn_on_empty_list_dimensions: false
   metrics:
   # RDS Metrics
   - aws_namespace: AWS/RDS
@@ -130,15 +131,12 @@ config: |-
   - aws_namespace: AWS/SNS
     aws_metric_name: NumberOfNotificationsFilteredOut-NoMessageAttributes
     aws_dimensions: [TopicName]
-    aws_dimensions: [TopicName]
-    aws_namespace: AWS/SNS
     aws_statistics:
     - Sum
 
   - aws_namespace: AWS/SNS
     aws_metric_name: NumberOfNotificationsFilteredOut-InvalidAttributes
     aws_dimensions: [TopicName]
-    aws_namespace: AWS/SNS
     aws_statistics:
     - Sum
     
@@ -176,6 +174,21 @@ config: |-
     aws_metric_name: NetworkPacketsOut
     aws_dimensions:
     - CacheClusterId
+
+  - aws_namespace: AWS/ElastiCache
+    aws_metric_name: EngineCPUUtilization
+    aws_dimensions:
+    - CacheClusterId
+
+  - aws_namespace: AWS/ElastiCache
+    aws_metric_name: ReplicationBytes
+    aws_dimensions:
+    - CacheClusterId
+
+  - aws_namespace: AWS/ElastiCache
+    aws_metric_name: ReplicationLag
+    aws_dimensions:
+    - CacheClusterId
  
     # DynamoDB Metrics   
   - aws_namespace: AWS/DynamoDB
@@ -197,14 +210,12 @@ config: |-
   - aws_namespace: AWS/DynamoDB
     aws_metric_name: WriteThrottleEvents
     aws_dimensions: ["TableName","GlobalSecondaryIndexName"]
-    aws_namespace: AWS/DynamoDB
     aws_statistics:
     - Sum
 
   - aws_namespace: AWS/DynamoDB
     aws_metric_name: ReadThrottleEvents
     aws_dimensions: ["TableName","GlobalSecondaryIndexName"]
-    aws_namespace: AWS/DynamoDB
     aws_statistics:
     - Sum
 
@@ -245,6 +256,7 @@ config: |-
     aws_metric_name: AutomatedSnapshotFailure
     aws_dimensions: [DomainName, ClientId]
   
+  # Secrets Manager
   - aws_namespace: secretsManager
     aws_metric_name: PutSecretValue
     aws_dimensions: [SecretId, UserArn]
