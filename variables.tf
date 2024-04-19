@@ -83,6 +83,18 @@ variable "enable_large_nodesgroup" {
   default     = false
 }
 
+variable "large_nodesgroup_cpu_requests" {
+  description = "CPU requests for large nodesgroup"
+  type        = string
+  default     = "1300m"
+}
+
+variable "large_nodesgroup_memory_requests" {
+  description = "Memory requests for large nodesgroup"
+  type        = string
+  default     = "14000Mi"
+}
+
 variable "dockerhub_password" {
   description = "DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters"
   default     = ""

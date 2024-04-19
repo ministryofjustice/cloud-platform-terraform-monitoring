@@ -31,17 +31,17 @@ resource "helm_release" "prometheus_proxy" {
   ]
 
   set_sensitive {
-    name = "config.clientID"
+    name  = "config.clientID"
     value = var.oidc_components_client_id
   }
 
   set_sensitive {
-    name = "config.clientSecret"
+    name  = "config.clientSecret"
     value = var.oidc_components_client_secret
   }
 
   set_sensitive {
-    name = "config.cookieSecret"
+    name  = "config.cookieSecret"
     value = random_id.session_secret.b64_std
   }
 
@@ -88,17 +88,17 @@ resource "helm_release" "alertmanager_proxy" {
   ]
 
   set_sensitive {
-    name = "config.clientID"
+    name  = "config.clientID"
     value = var.oidc_components_client_id
   }
 
   set_sensitive {
-    name = "config.clientSecret"
+    name  = "config.clientSecret"
     value = var.oidc_components_client_secret
   }
 
   set_sensitive {
-    name = "config.cookieSecret"
+    name  = "config.cookieSecret"
     value = random_id.session_secret.b64_std
   }
 
@@ -144,17 +144,17 @@ resource "helm_release" "kibana_proxy" {
   ]
 
   set_sensitive {
-    name = "config.clientID"
+    name  = "config.clientID"
     value = var.oidc_components_client_id
   }
 
   set_sensitive {
-    name = "config.clientSecret"
+    name  = "config.clientSecret"
     value = var.oidc_components_client_secret
   }
 
   set_sensitive {
-    name = "config.cookieSecret"
+    name  = "config.cookieSecret"
     value = random_id.session_secret.b64_std
   }
 
@@ -201,17 +201,17 @@ resource "helm_release" "thanos_proxy" {
   ]
 
   set_sensitive {
-    name = "config.clientID"
+    name  = "config.clientID"
     value = var.oidc_components_client_id
   }
 
   set_sensitive {
-    name = "config.clientSecret"
+    name  = "config.clientSecret"
     value = var.oidc_components_client_secret
   }
 
   set_sensitive {
-    name = "config.cookieSecret"
+    name  = "config.cookieSecret"
     value = random_id.session_secret.b64_std
   }
 
