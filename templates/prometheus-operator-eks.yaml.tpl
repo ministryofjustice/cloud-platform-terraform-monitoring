@@ -340,7 +340,7 @@ kube-state-metrics:
   metricAnnotationsAllowList:
     - namespaces=[*]
 
-  image:
+  containers:
     env:
     - name: TZ
       value: "Europe/London"
