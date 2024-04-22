@@ -340,6 +340,11 @@ kube-state-metrics:
   metricAnnotationsAllowList:
     - namespaces=[*]
 
+
+  image:
+    env:
+      - name: TZ
+        value: "Europe/London"
   serviceAccount:
     imagePullSecrets:
     - name: "dockerhub-credentials"
