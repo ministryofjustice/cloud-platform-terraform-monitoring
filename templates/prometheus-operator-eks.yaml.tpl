@@ -342,8 +342,8 @@ kube-state-metrics:
 
   initContainers:
     - name: set-timezone
-    image: busybox
-    command: ["sh", "-c", "export TZ=Europe/London"]
+      image: busybox
+      command: ["sh", "-c", "export TZ=Europe/London"]
 
   serviceAccount:
     imagePullSecrets:
