@@ -340,10 +340,11 @@ kube-state-metrics:
   metricAnnotationsAllowList:
     - namespaces=[*]
 
-  containers:
-    env:
-    - name: TZ
-      value: "Europe/London"
+  initContainers:
+    - name: set-timezone
+    image: busybox
+    command: ["sh", "-c", "export TZ=Europe/London"]
+
   serviceAccount:
     imagePullSecrets:
     - name: "dockerhub-credentials"
