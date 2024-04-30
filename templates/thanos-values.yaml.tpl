@@ -66,7 +66,9 @@ compactor:
   retentionResolution1h: 365d
   persistence:
     size: 500Gi
-
+  serviceAccount:
+    create: false
+    name: "${prometheus_sa_name}"
 bucketweb:
   resources:
     limits:
