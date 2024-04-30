@@ -76,6 +76,9 @@ bucketweb:
       cpu: 10m
       memory: 100Mi
   enabled: true
+  serviceAccount:
+    create: false
+    name: "${prometheus_sa_name}"
 
 existingObjstoreSecret: thanos-objstore-config
 existingObjstoreSecretItems:
