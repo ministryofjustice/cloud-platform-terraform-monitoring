@@ -69,6 +69,13 @@ compactor:
   serviceAccount:
     create: false
     name: "${prometheus_sa_name}"
+  resources:
+    requests:
+      cpu: 200m
+      memory: 200Mi
+    limits:
+      cpu: 500m
+      memory: 500Mi
 bucketweb:
   resources:
     limits:
