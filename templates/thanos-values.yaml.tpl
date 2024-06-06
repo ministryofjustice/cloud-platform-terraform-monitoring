@@ -71,10 +71,10 @@ compactor:
     name: "${prometheus_sa_name}"
   resources:
     requests:
-      cpu: 200m
+      cpu: 500m
       memory: 200Mi
     limits:
-      cpu: 500m
+      cpu: 1000m
       memory: 500Mi
 bucketweb:
   resources:
