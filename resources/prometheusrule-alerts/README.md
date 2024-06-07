@@ -536,6 +536,31 @@ The are a number of severity levels that can be defined in the error_log. The fo
 + alert - Prompt action is required.
 + emerg - The system is in an unusable state and requires immediate attention.
 
+## Nginx Success rate
+
+```
+NginxIngressSuccessRate-default-ingress
+Severity: warning
+```
+
+This alert is triggered when the nginx controller pods are sending a non 4xx|5xx responses at a rate less than 95%.
+
+
+Expression:
+```
+sum(rate(nginx_ingress_controller_requests{status!~"[4-5].*", controller_class=~"k8s.io/ingress-default"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-default"}[5m]))-
+        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 < 95
+```
+
+### Action
+
+There has been previous situations when the response rate was improved when the number of replicas of ingress controller are incremented.
+
+Check in grafana dashboard if the number of requests are increased in past few months. 
+
+NOTE: Currently the ingress controller handles 23.0million requests with success rate at 98.9% over 3 hours period with 30 replicas. If the traffic has increased with the similar time period, the reduced success rate might be because of the number of ingress controller pods.
+
+
 ## Kube API Latency Warning
 
 ```

@@ -413,6 +413,14 @@ spec:
       for: 2m
       labels:
         severity: critical
+    - alert: External-DNSDown
+      expr: kube_deployment_status_replicas_available{deployment="external-dns"} == 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations: 
+        message: external-dns container has not been running in the namespace 'kube-system' for 5 minutes.
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#kubednsdown
     - alert: CanaryAppCPUHigh
       annotations:
         message: CPU throttling detected in the {{ $labels.namespace }} namespace. Please investigate and increase CPU limts if neccesary. 

@@ -57,80 +57,7 @@ spec:
         severity: critical
       annotations:
         message: '{{ $labels.instance }} has high memory usage for than 5 minutes. Instance {{ $labels.instance }} memory has critically high usage.'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#memory-critical 
-    - alert: External-DNSDown
-      expr: kube_deployment_status_replicas_available{deployment="external-dns"} == 0
-      for: 5m
-      labels:
-        severity: warning
-      annotations: 
-        message: external-dns container has not been running in the namespace 'kube-system' for 5 minutes.
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#kubednsdown
-    - alert: NginxIngressPodDown-default-ingress
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
-          1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"nginx-ingress-acme-controller-.*"})>
-        0
-      for: 5m
-      labels:
-        severity: warning
-
-    - alert: NginxIngressPodDown-modsec-ingress
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
-          1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"modsec01.*"})>
-        0
-      for: 5m
-      labels:
-        severity: warning
-
-    - alert: NginxIngressDown-default-ingress
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
-          1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
-      expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"nginx-ingress-acme-controller-.*"})>
-        5
-      for: 5m
-      labels:
-        severity: critical
-
-    - alert: NginxIngressDown-modsec-ingress
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
-          1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
-      expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"modsec01.*"})>
-        3
-      for: 5m
-      labels:
-        severity: critical
-
-    - alert: NginxIngressPodPending-default-ingress
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
-          1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown",pod=~"nginx-ingress-acme-controller-.*"})>
-        0
-      for: 5m
-      labels:
-        severity: warning
-
-    - alert: NginxIngressPodPending-modsec-ingress
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
-          1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown",pod=~"modsec01.*"})>
-        0
-      for: 5m
-      labels:
-        severity: warning
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#memory-critical
 
     - alert: RootVolUtilisation-High
       expr: (node_filesystem_size_bytes {mountpoint="/"} - node_filesystem_avail_bytes {mountpoint="/"} ) / (node_filesystem_size_bytes {mountpoint="/"} ) * 100 >90
@@ -148,47 +75,6 @@ spec:
       annotations:
         message: '{{ $labels.instance }} has exceeded the threshold of root volume utilisation with a value of {{ $value }}. Instance {{ $labels.instance }} root volume utilisation usage is critically high'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#root-volume-utilisation---critical
-    - alert: NginxIngress-Latency(ms)-modsec-ingress-High
-      expr: sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_sum{ingress=~".*",pod=~"modsec01.*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_count{ingress=~".*",pod=~"modsec01.*"}[5m])) * 1000 > 300
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        message: '{{ $labels.pod}} - modsec01 ingress -latency delays are on the high side, with a value of {{ $value }} {{ $labels.namespace}} namespace. Please investigate'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#NginxIngress-Latency(ms)---warning
-    - alert: NginxIngress-Latency(ms)-nginx-ingress-acme-ingress-High
-      expr: sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_sum{ingress=~".*",pod=~"nginx-ingress-acme.*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_count{ingress=~".*",pod=~"nginx-ingress-acme.*"}[5m])) * 1000 > 300
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        message: '{{ $labels.pod}} - nginx-ingress-acme ingress ---latency delays are on the high side, with a value of {{ $value }} {{ $labels.namespace}} namespace. Please investigate'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#NginxIngress-Latency(ms)---warning
-    - alert: NginxIngress-Latency(ms)-k8snginx-ingress-High
-      expr: sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_sum{ingress=~".*",pod=~"k8snginx.*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_count{ingress=~".*",pod=~"k8snginx.*"}[5m])) * 1000 > 300
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        message: '{{ $labels.pod}} - k8snginx ingress ---latency delays are on the high side, with a value of {{ $value }} {{ $labels.namespace}} namespace. Please investigate'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#NginxIngress-Latency(ms)---warning
-
-    - alert: NginxConfigReloadFailureWarning
-      annotations:
-        message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure
-      expr: nginx_ingress_controller_config_last_reload_successful == 0
-      for: 3m
-      labels:
-        severity: warning
-    - alert: NginxConfigReloadFailure
-      annotations:
-        message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure:x
-      expr: nginx_ingress_controller_config_last_reload_successful == 0
-      for: 5m
-      labels:
-        severity: critical
     - alert: IncreaseInNodeCount
       annotations:
         message: 'The Node count has increased from {{ with query "count(node_uname_info offset 135s)" }}
