@@ -32,8 +32,15 @@ query:
       cpu: 10m
       memory: 100Mi
 
+  ## @param query.replicaLabel Replica indicator(s) along which data is de-duplicated
+
+  replicaLabel:
+    - prometheus_replica
+
   stores:
     - prometheus-prometheus-operator-kube-p-prometheus-0.prometheus-operated.monitoring.svc:10901
+    - prometheus-prometheus-operator-kube-p-prometheus-1.prometheus-operated.monitoring.svc:10901
+    - prometheus-prometheus-operator-kube-p-prometheus-2.prometheus-operated.monitoring.svc:10901
 
 queryFrontend:
   resources:
