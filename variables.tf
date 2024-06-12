@@ -107,11 +107,6 @@ variable "kibana_upstream" {
   type        = string
 }
 
-variable "prometheus_operator_crd_version" {
-  default     = "v0.71.0"
-  description = "The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module"
-}
-
 variable "eks_cluster_name" {
   default = "live"
 }
