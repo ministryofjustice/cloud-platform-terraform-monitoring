@@ -66,7 +66,16 @@ compactor:
   retentionResolution1h: 365d
   persistence:
     size: 500Gi
-
+  serviceAccount:
+    create: false
+    name: "${prometheus_sa_name}"
+  resources:
+    requests:
+      cpu: 500m
+      memory: 200Mi
+    limits:
+      cpu: 1000m
+      memory: 500Mi
 bucketweb:
   resources:
     limits:
@@ -76,6 +85,9 @@ bucketweb:
       cpu: 10m
       memory: 100Mi
   enabled: true
+  serviceAccount:
+    create: false
+    name: "${prometheus_sa_name}"
 
 existingObjstoreSecret: thanos-objstore-config
 existingObjstoreSecretItems:

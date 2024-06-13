@@ -413,3 +413,20 @@ spec:
       for: 2m
       labels:
         severity: critical
+    - alert: External-DNSDown
+      expr: kube_deployment_status_replicas_available{deployment="external-dns"} == 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations: 
+        message: external-dns container has not been running in the namespace 'kube-system' for 5 minutes.
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#kubednsdown
+    - alert: CanaryAppCPUHigh
+      annotations:
+        message: CPU throttling detected in the {{ $labels.namespace }} namespace. Please investigate and increase CPU limts if neccesary. 
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-environments/pull/22575/commits/d821477fa2b30649a12573ae0a5eecced7fbb213
+      expr: |-
+        sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace="cloud-platform-canary-app-eks"}) / sum(kube_pod_container_resource_limits{ namespace="cloud-platform-canary-app-eks", resource="cpu"}) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
