@@ -7,7 +7,7 @@ jobs:
   push-terraform-module-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version@main
         env:
           API_URL: ${{ vars.TERRAFORM_MODULE_VERSIONS_API_URL }}
