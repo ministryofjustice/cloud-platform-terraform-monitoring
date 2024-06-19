@@ -78,7 +78,7 @@ compactor:
       memory: 200Mi
     limits:
       cpu: 2000m
-      memory: 1000Mi
+      memory: 2000Mi
 bucketweb:
   resources:
     limits:
