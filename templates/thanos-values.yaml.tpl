@@ -62,6 +62,7 @@ ruler:
 compactor:
   enabled:  ${enabled_compact}
   extraFlags:
+    - --compact.enable-vertical-compaction
     - --deduplication.replica-label="prometheus_replica"
   retentionResolutionRaw: 30d
   retentionResolution5m: 183d
