@@ -64,6 +64,7 @@ compactor:
   extraFlags:
     - --compact.enable-vertical-compaction
     - --deduplication.replica-label="prometheus_replica"
+    - --deduplication.func=penalty
   retentionResolutionRaw: 30d
   retentionResolution5m: 183d
   retentionResolution1h: 365d
