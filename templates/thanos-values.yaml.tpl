@@ -63,7 +63,7 @@ compactor:
   enabled:  ${enabled_compact}
   extraFlags:
     - --compact.enable-vertical-compaction
-    - --deduplication.replica-label="prometheus_replica"
+    - --deduplication.replica-label=prometheus_replica
     - --deduplication.func=penalty
   retentionResolutionRaw: 30d
   retentionResolution5m: 183d
