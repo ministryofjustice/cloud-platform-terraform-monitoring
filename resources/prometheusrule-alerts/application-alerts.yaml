@@ -449,4 +449,13 @@ spec:
       for: 5m
       labels:
         severity: warning
+    - alert: ThanosCompactorHalted
+      annotations:
+        message: The Thanos Compactor has encounted errors compacting and halted, please investigate
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/pull/241/files
+      expr: |-
+        sum(thanos_compact_halted) > 0
+      for: 5m
+      labels:
+        severity: warning
 
