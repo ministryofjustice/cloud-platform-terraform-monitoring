@@ -73,6 +73,7 @@ compactor:
     - --deduplication.replica-label=prometheus_replica
     - --deduplication.func=penalty
     - --compact.concurrency=4
+    - --delete-delay=24h
   retentionResolutionRaw: 30d
   retentionResolution5m: 183d
   retentionResolution1h: 365d
