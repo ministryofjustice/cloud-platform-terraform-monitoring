@@ -430,3 +430,23 @@ spec:
       for: 5m
       labels:
         severity: warning
+    - alert: ThanosCompactorCPUHigh
+      annotations:
+        message: CPU throttling detected in the {{ $labels.namespace }} namespace. Please investigate and increase CPU limts if neccesary.
+          https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/pull/241/files
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/pull/241/files
+      expr: |-
+        sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{clusterName="manager", namespace="monitoring", container="compactor"}) / sum(kube_pod_container_resource_limits{clusterName="manager", namespace="monitoring", container="compactor", resource="cpu"}) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+    - alert: ThanosCompactorMemHigh
+      annotations:
+        message: The Thanos Compactor is usuing a lot of memory and could be OOMKilled. Please investigate and increase the container MEM limits if neccesary.
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/pull/241/files
+      expr: |-
+        sum(container_memory_working_set_bytes{clusterName="manager", namespace="monitoring", container="compactor"}) / sum(kube_pod_container_resource_limits{clusterName="manager", namespace="monitoring", container="compactor", resource="memory"}) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+
