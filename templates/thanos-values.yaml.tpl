@@ -76,8 +76,8 @@ compactor:
     name: "${prometheus_sa_name}"
   resources:
     requests:
-      cpu: 500m
-      memory: 200Mi
+      cpu: 1500m
+      memory: 1000Mi
     limits:
       cpu: 4000m
       memory: 3000Mi
