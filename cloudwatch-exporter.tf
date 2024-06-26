@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "cloudwatch_exporter" {
 
 module "iam_assumable_role_cloudwatch_exporter" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "4.24.1"
+  version                       = "5.39.1"
   create_role                   = var.enable_cloudwatch_exporter ? true : false
   role_name                     = "cloudwatch.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
