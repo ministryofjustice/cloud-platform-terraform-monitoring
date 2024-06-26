@@ -44,8 +44,6 @@ module "monitoring" {
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >=4.24.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.6.0 |
-| <a name="provider_http"></a> [http](#provider\_http) | >=3.2.1 |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 2.0.4 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >=2.12.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.4.3 |
 | <a name="provider_template"></a> [template](#provider\_template) | >=2.2.0 |
@@ -77,7 +75,6 @@ module "monitoring" {
 | [helm_release.prometheus_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.thanos](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.thanos_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [kubectl_manifest.prometheus_operator_crds](https://registry.terraform.io/providers/alekc/kubectl/2.0.4/docs/resources/manifest) | resource |
 | [kubernetes_ingress_v1.ingress_redirect_grafana](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/ingress_v1) | resource |
 | [kubernetes_limit_range.monitoring](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) | resource |
 | [kubernetes_namespace.monitoring](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
@@ -98,7 +95,6 @@ module "monitoring" {
 | [aws_iam_policy_document.ecr_exporter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.grafana_datasource_irsa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.monitoring](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [http_http.prometheus_crd_yamls](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
 | [template_file.alertmanager_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.alertmanager_receivers](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.alertmanager_routes](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
@@ -136,7 +132,6 @@ module "monitoring" {
 | <a name="input_oidc_components_client_secret"></a> [oidc\_components\_client\_secret](#input\_oidc\_components\_client\_secret) | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_issuer_url"></a> [oidc\_issuer\_url](#input\_oidc\_issuer\_url) | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_pagerduty_config"></a> [pagerduty\_config](#input\_pagerduty\_config) | Add PagerDuty key to allow integration with a PD service. | `any` | n/a | yes |
-| <a name="input_prometheus_operator_crd_version"></a> [prometheus\_operator\_crd\_version](#input\_prometheus\_operator\_crd\_version) | The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module | `string` | `"v0.71.0"` | no |
 | <a name="input_team_name"></a> [team\_name](#input\_team\_name) | n/a | `string` | `"webops"` | no |
 
 ## Outputs
@@ -144,5 +139,4 @@ module "monitoring" {
 | Name | Description |
 |------|-------------|
 | <a name="output_helm_prometheus_operator_eks_status"></a> [helm\_prometheus\_operator\_eks\_status](#output\_helm\_prometheus\_operator\_eks\_status) | n/a |
-| <a name="output_prometheus_operator_crds_status"></a> [prometheus\_operator\_crds\_status](#output\_prometheus\_operator\_crds\_status) | n/a |
 <!-- END_TF_DOCS -->
