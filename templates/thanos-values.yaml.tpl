@@ -72,7 +72,8 @@ compactor:
     - --compact.enable-vertical-compaction
     - --deduplication.replica-label=prometheus_replica
     - --deduplication.func=penalty
-    - --compact.concurrency=8
+    - --compact.concurrency=32
+    - --compact.blocks-fetch-concurrency=16
     - --delete-delay=12h
   retentionResolutionRaw: 30d
   retentionResolution5m: 183d
