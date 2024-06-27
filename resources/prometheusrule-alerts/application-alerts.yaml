@@ -458,4 +458,19 @@ spec:
       for: 5m
       labels:
         severity: warning
-
+    - alert: PodCpuLimitExceeded
+      annotations:
+        message: Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is using more than 4 CPU cores.
+      expr: |-
+        (rate(container_cpu_usage_seconds_total[5m]) > 4) unless (kube_pod_info{namespace="monitoring"})
+      for: 5m
+      labels:
+        severity: warning
+    - alert: PodMemoryLimitExceeded
+      annotations:
+        message: Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is using more than 16GiB of memory.
+      expr: |-
+        (container_memory_usage_bytes > 16 * 1024 * 1024 * 1024) unless (kube_pod_info{namespace="monitoring"})
+      for: 5m
+      labels:
+        severity: warning
