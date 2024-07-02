@@ -1,0 +1,641 @@
+# Default values for yet-another-cloudwatch-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  registry: ghcr.io
+  repository: nerdswords/yet-another-cloudwatch-exporter
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Labels to add to the service account
+  labels: {}
+  # -- Annotations to add to the service account
+  annotations:
+    eks.amazonaws.com/role-arn: "${eks_service_account}"
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "cloud-platform-yace-cloudwatch-exporter"
+  # This defaults to "true" so that YACE tries to automount ServiceAccountTokens by default
+  # You may want to set this to false in your environment to pass security policies.  Otherwise,
+  # the default will probably be fine.
+  automountServiceAccountToken: true
+
+podAnnotations: {}
+
+podLabels: {}
+
+portName: http
+
+containerPort: 5000
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  runAsUser: 65534
+  fsGroup: 65534
+
+service:
+  type: ClusterIP
+  port: 80
+  # -- Annotations to add to the service
+  annotations: {}
+
+testConnection: true
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+priorityClassName:
+
+tolerations: []
+
+affinity: {}
+
+extraEnv: []
+  # Define extra environmental variables list as follows
+  # - name : key1
+  #   value: value1
+
+extraEnvFrom: []
+  # Define extra environmental variables from secrets or configmaps
+  # - secretRef:
+  #     name: secrets
+
+extraArgs:
+  scraping-interval: 300
+  labels-snake-case: true
+  debug: false
+  enable-feature: aws-sdk-v2
+
+extraVolumeMounts: []
+  # Additional volumeMounts to the container.
+  # - name: secrets-store01-inline
+  #   mountPath: /mnt/secrets-store
+
+extraVolumes: []
+# Additional volumes to the pod.
+# - csi:
+#     driver: secrets-store.csi.k8s.io
+#     readOnly: true
+#     volumeAttributes:
+#       secretProviderClass: "secret-csi-provider"
+#   name : secrets-store01-inline
+
+# Container lifecycle hooks
+# Ref. https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+lifecycle: {}
+
+aws:
+  role: ${iam_role}
+
+  # The name of a pre-created secret in which AWS credentials are stored. When
+  # set, aws_access_key_id is assumed to be in a field called access_key,
+  # aws_secret_access_key is assumed to be in a field called secret_key, and the
+  # session token, if it exists, is assumed to be in a field called
+  # security_token
+  secret:
+    name:
+    includesSessionToken: false
+
+  # Note: Do not specify the aws_access_key_id and aws_secret_access_key if you specified role or secret.name before
+  aws_access_key_id:
+  aws_secret_access_key:
+
+serviceMonitor:
+  # When set true then use a ServiceMonitor to configure scraping
+  enabled: true
+  # Set the namespace the ServiceMonitor should be deployed
+  namespace: monitoring
+  # Set how frequently Prometheus should scrape
+  interval: 300s
+  # Set path to cloudwatch-exporter telemtery-path
+  telemetryPath: /metrics
+  # Set labels for the ServiceMonitor, use this to define your scrape label for Prometheus Operator
+  labels:
+    app: prometheus-yace-cloudwatch-exporter
+  # Set timeout for scrape
+  timeout: 29s
+  # Set relabelings for the ServiceMonitor, use to apply to samples before scraping
+  # relabelings: []
+
+  # Set metricRelabelings for the ServiceMonitor, use to apply to samples for ingestion
+  # Example - note the Kubernetes convention of camelCase instead of Prometheus' snake_case
+  metricRelabelings:
+    - action: labelmap
+      regex: dimension_(.+)
+    - action: labeldrop
+      regex: dimension_(.+)
+    - action: labeldrop
+      regex: account_alias
+    - action: labeldrop
+      regex: account_id
+    - action: labeldrop
+      regex: endpoint
+    - action: labeldrop
+      regex: region
+
+
+prometheusRule:
+  # Specifies whether a PrometheusRule should be created
+  enabled: false
+  # Set the namespace the PrometheusRule should be deployed
+  # namespace: monitoring
+  # Set labels for the PrometheusRule, use this to define your scrape label for Prometheus Operator
+  # labels:
+  # Example - note the Kubernetes convention of camelCase instead of Prometheus'
+  # rules:
+  #    - alert: ELB-Low-BurstBalance
+  #      annotations:
+  #        message: The ELB BurstBalance during the last 10 minutes is lower than 80%.
+  #      expr: aws_ebs_burst_balance_average < 80
+  #      for: 10m
+  #      labels:
+  #        severity: warning
+  #    - alert: ELB-Low-BurstBalance
+  #      annotations:
+  #        message: The ELB BurstBalance during the last 10 minutes is lower than 50%.
+  #      expr: aws_ebs_burst_balance_average < 50
+  #      for: 10m
+  #      labels:
+  #        severity: warning
+  #    - alert: ELB-Low-BurstBalance
+  #      annotations:
+  #        message: The ELB BurstBalance during the last 10 minutes is lower than 30%.
+  #      expr: aws_ebs_burst_balance_average < 30
+  #      for: 10m
+  #      labels:
+  #        severity: critical
+
+config: |-
+  apiVersion: v1alpha1
+  sts-region: eu-west-2
+  customNamespace:
+    - name: secretsManager
+      namespace: secretsManager
+      regions:
+        - eu-west-2
+      metrics:
+        - name: PutSecretValue
+          statistics:
+            - Sum
+          nilToZero: true
+        - name: DeleteSecret
+          statistics:
+            - Sum
+          nilToZero: true
+  discovery:
+    jobs:
+    - type: AWS/RDS
+      regions:
+        - eu-west-2
+      metrics:
+        - name: CPUUtilization
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: FreeableMemory
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: DatabaseConnections
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: FreeStorageSpace
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ReadIOPS
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ReadLatency
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: WriteIOPS
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: WriteLatency
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+
+    - type: AWS/S3
+      regions:
+        - eu-west-1
+        - eu-west-2
+      metrics:
+        - name: BucketSizeBytes
+          length: 172800
+          period: 86400
+          statistics:
+            - Average
+          nilToZero: true
+        - name: NumberOfObjects
+          length: 172800
+          period: 86400
+          statistics:
+            - Average
+          nilToZero: true
+
+    - type: AWS/SQS
+      regions:
+        - eu-west-2
+      metrics:
+        - name: ApproximateAgeOfOldestMessage
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ApproximateNumberOfMessagesDelayed
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ApproximateNumberOfMessagesNotVisible
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ApproximateNumberOfMessagesVisible
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfEmptyReceives
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfMessagesDeleted
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfMessagesReceived
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfMessagesSent
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: SentMessageSize
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+
+    - type: AWS/SNS
+      regions:
+        - eu-west-2
+      metrics:
+        - name: NumberOfMessagesPublished
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfNotificationsDelivered
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfNotificationsFailed
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfNotificationsFilteredOut
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfNotificationsFilteredOut-NoMessageAttributes
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NumberOfNotificationsFilteredOut-InvalidAttributes
+          statistics:
+            - Sum
+          nilToZero: true
+        - name: PublishSize
+          statistics:
+            - Sum
+          nilToZero: true
+
+    - type: AWS/ElastiCache
+      regions:
+        - eu-west-2
+      metrics:
+        - name: CPUUtilization
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: FreeableMemory
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NetworkBytesIn
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NetworkBytesOut
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NetworkPacketsIn
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: NetworkPacketsOut
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: EngineCPUUtilization
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ReplicationBytes
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ReplicationLag
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+
+    - type: AWS/DynamoDB
+      regions:
+        - eu-west-2
+      metrics:
+        - name: SuccessfulRequestLatency
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ThrottledRequests
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ConsumedReadCapacityUnits
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ConsumedWriteCapacityUnits
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: WriteThrottleEvents
+          statistics:
+            - Sum
+          nilToZero: true
+        - name: ReadThrottleEvents
+          statistics:
+            - Sum
+          nilToZero: true
+
+    - type: AWS/ES
+      regions:
+        - eu-west-2
+      metrics:
+        - name: ClusterStatus.green
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ClusterStatus.yellow
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ClusterStatus.red
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: FreeStorageSpace
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: SearchableDocuments
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: CPUUtilization
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: JVMMemoryPressure
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ClusterIndexWritesBlocked
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: AutomatedSnapshotFailure
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
