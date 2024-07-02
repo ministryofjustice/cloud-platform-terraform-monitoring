@@ -72,7 +72,7 @@ compactor:
     - --compact.enable-vertical-compaction
     - --deduplication.replica-label=prometheus_replica
     - --deduplication.func=penalty
-    - --compact.concurrency=32
+    - --compact.concurrency=64
     - --compact.blocks-fetch-concurrency=16
     - --delete-delay=12h
   retentionResolutionRaw: 30d
@@ -88,8 +88,8 @@ compactor:
       cpu: 1500m
       memory: 1000Mi
     limits:
-      cpu: 4500m
-      memory: 3000Mi
+      cpu: 6500m
+      memory: 5000Mi
 bucketweb:
   resources:
     limits:
