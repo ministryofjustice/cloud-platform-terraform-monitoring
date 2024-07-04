@@ -93,7 +93,7 @@ resource "helm_release" "prometheus_operator_eks" {
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
-  version    = "56.21.4"
+  version    = "57.2.0"
   skip_crds  = true # Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds in core
   timeout    = 600
 
