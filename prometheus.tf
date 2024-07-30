@@ -109,8 +109,8 @@ resource "helm_release" "prometheus_operator_eks" {
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
     enable_large_nodesgroup                    = var.enable_large_nodesgroup
-    large_nodesgroup_cpu_requests             = var.large_nodesgroup_cpu_requests
-    large_nodesgroup_memory_requests          = var.large_nodesgroup_memory_requests
+    large_nodesgroup_cpu_requests              = var.large_nodesgroup_cpu_requests
+    large_nodesgroup_memory_requests           = var.large_nodesgroup_memory_requests
     prometheus_sa_name                         = local.prometheus_sa_name
     eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
     storage_class                              = can(regex("live", terraform.workspace)) ? "io1-expand" : "gp2-expand"
@@ -154,6 +154,22 @@ resource "helm_release" "prometheus_operator_eks" {
     ignore_changes = [keyring]
   }
 }
+
+# apply manager only alerts when the manager alerts are updated
+resource "null_resource" "manager_only_alerts" {
+  count = terraform.workspace == "manager" ? 1 : 0
+
+  triggers = {
+    file_changed = md5("${path.module}/resources/manager_only_alerts.yaml")
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl apply -n monitoring -f ${path.module}/resources/manager_only_alerts.yaml"
+  }
+
+  depends_on = [helm_release.prometheus_operator_eks]
+}
+
 
 # Alertmanager and Prometheus proxy
 # Ref: https://github.com/evry/docker-oidc-proxy

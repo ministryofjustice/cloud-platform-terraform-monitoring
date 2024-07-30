@@ -1,9 +1,3 @@
-##########
-# THANOS #
-##########
-
-# Thanos Helm Chart
-
 resource "helm_release" "thanos" {
   count = var.enable_thanos_helm_chart ? 1 : 0
 

@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: prometheus-operator
+    role: alert-rules
+    release: prometheus-operator
+  name: prometheus-operator-manager-custom-kubernetes-apps.rules
+spec:
+  groups:
+  - name: kubernetes-apps
+    rules:
+    - alert: ThanosCompactorCPUHigh
+      annotations:
+        message: CPU throttling detected in the {{ $labels.namespace }} namespace. Please investigate and increase CPU limts if neccesary.
+          https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/pull/241/files
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/pull/241/files
+      expr: |-
+        sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace="monitoring", pod=~"thanos-compactor-.*"}) / sum(kube_pod_container_resource_limits{namespace="monitoring", pod=~"thanos-compactor-.*", resource="cpu"}) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+    - alert: ThanosCompactorBacklogRising
+      annotations:
+        message: Thanos Compactor in Manager is no longer compacting metric blocks in s3, roll compactor and keep an eye on the logs `kubectl rollout restart deploy/thanos-compactor -n monitoring`
+        runbook_url: https://grafana.live.cloud-platform.service.justice.gov.uk/d/19fa341d-ae9d-4817-8a92-96b5df5ccd0a/thanos-overview?orgId=1&from=now-24h&to=now
+      expr: |-
+        sum(deriv(thanos_compact_todo_compactions[48h]) / 172800) > 0
+      for: 5m
+      labels:
+        severity: warning
+
