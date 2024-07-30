@@ -1,24 +1,3 @@
-##########
-# THANOS #
-##########
-
-resource "null_resource" "roll_thanos_compactor" {
-  count = terraform.workspace == "manager" ? 1 : 0
-
-  provisioner "local-exec" {
-    command = "kubectl rollout restart deploy/thanos-compactor"
-  }
-
-  lifecycle {
-    replace_triggered_by = [helm_release.prometheus_operator_eks]
-  }
-
-  depends_on = [
-    helm_release.thanos,
-    helm_release.prometheus_operator_eks,
-  ]
-}
-
 resource "helm_release" "thanos" {
   count = var.enable_thanos_helm_chart ? 1 : 0
 
@@ -41,9 +20,6 @@ resource "helm_release" "thanos" {
 
   lifecycle {
     ignore_changes = [keyring]
-    replace_triggered_by = [
-      helm_release.prometheus_operator_eks,
-    ]
   }
 }
 
