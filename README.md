@@ -45,6 +45,7 @@ module "monitoring" {
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >=4.24.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.6.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >=2.12.1 |
+| <a name="provider_null"></a> [null](#provider\_null) | n/a |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.4.3 |
 | <a name="provider_template"></a> [template](#provider\_template) | >=2.2.0 |
 
@@ -86,6 +87,7 @@ module "monitoring" {
 | [kubernetes_secret.dockerhub_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
 | [kubernetes_secret.grafana_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
 | [kubernetes_secret.thanos_config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
+| [null_resource.manager_only_alerts](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [random_id.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 | [random_id.session_secret](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 | [random_id.username](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
