@@ -25,7 +25,7 @@ spec:
         message: Thanos Compactor in Manager is no longer compacting metric blocks in s3, roll compactor and keep an eye on the logs `kubectl rollout restart deploy/thanos-compactor -n monitoring`
         runbook_url: https://grafana.live.cloud-platform.service.justice.gov.uk/d/19fa341d-ae9d-4817-8a92-96b5df5ccd0a/thanos-overview?orgId=1&from=now-24h&to=now
       expr: |-
-        sum(deriv(thanos_compact_todo_compactions[48h]) / 172800) > 0
+        sum(deriv(thanos_compact_todo_compactions[24h]) / 86400) > 0
       for: 5m
       labels:
         severity: warning

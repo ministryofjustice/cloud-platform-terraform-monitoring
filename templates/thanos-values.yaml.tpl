@@ -75,11 +75,12 @@ compactor:
     - --compact.concurrency=64
     - --compact.blocks-fetch-concurrency=16
     - --delete-delay=12h
+    - --no-debug.halt-on-error
   retentionResolutionRaw: 30d
   retentionResolution5m: 183d
   retentionResolution1h: 365d
   persistence:
-    size: 500Gi
+    size: 1000Gi
   serviceAccount:
     create: false
     name: "${prometheus_sa_name}"
