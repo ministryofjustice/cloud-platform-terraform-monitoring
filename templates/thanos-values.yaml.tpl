@@ -32,8 +32,10 @@ query:
       cpu: 10m
       memory: 100Mi
 
-  ## @param query.replicaLabel Replica indicator(s) along which data is de-duplicated
+  extraFlags:
+    - --query.timeout=5m
 
+  ## @param query.replicaLabel Replica indicator(s) along which data is de-duplicated
   replicaLabel:
     - prometheus_replica
 
