@@ -47,11 +47,11 @@ query:
 queryFrontend:
   resources:
     limits:
-      cpu: 1600m
-      memory: 24Gi
+      cpu: 2000m
+      memory: 38Gi
     requests:
-      cpu: 10m
-      memory: 100Mi
+      cpu: 800m
+      memory: 12Gi
 
 
 ruler:
