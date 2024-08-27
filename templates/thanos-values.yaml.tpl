@@ -6,7 +6,7 @@ metrics:
 storegateway:
   resources:
     limits:
-      cpu: 1600m
+      cpu: 2000m
       memory: 32Gi
     requests:
       cpu: 10m
