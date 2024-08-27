@@ -7,7 +7,7 @@ storegateway:
   resources:
     limits:
       cpu: 1600m
-      memory: 24Gi
+      memory: 32Gi
     requests:
       cpu: 10m
       memory: 100Mi
