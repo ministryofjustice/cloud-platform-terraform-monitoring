@@ -17,7 +17,6 @@ resource "kubernetes_namespace" "monitoring" {
       "cloud-platform.justice.gov.uk/business-unit"              = "Platforms"
       "cloud-platform.justice.gov.uk/owner"                      = "Cloud Platform: platforms@digital.justice.gov.uk"
       "cloud-platform.justice.gov.uk/source-code"                = "https://github.com/ministryofjustice/cloud-platform-infrastructure"
-      "iam.amazonaws.com/permitted"                              = ".*"
       "cloud-platform.justice.gov.uk/can-tolerate-master-taints" = "true"
       "cloud-platform-out-of-hours-alert"                        = "true"
     }
