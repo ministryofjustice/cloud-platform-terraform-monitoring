@@ -156,20 +156,16 @@ resource "helm_release" "prometheus_operator_eks" {
 }
 
 # apply manager only alerts when the manager alerts are updated
-resource "null_resource" "manager_only_alerts" {
+resource "kubectl_manifest" "manager_only_alerts" {
   count = terraform.workspace == "manager" ? 1 : 0
 
-  triggers = {
-    file_changed = md5("${path.module}/resources/manager_only_alerts.yaml")
-  }
-
-  provisioner "local-exec" {
-    command = "kubectl apply -n monitoring -f ${path.module}/resources/manager_only_alerts.yaml"
-  }
+  yaml_body  = file("${path.module}/resources/manager_only_alerts.yaml")
+  override_namespace = "monitoring"
+  
+  wait = true
 
   depends_on = [helm_release.prometheus_operator_eks]
 }
-
 
 # Alertmanager and Prometheus proxy
 # Ref: https://github.com/evry/docker-oidc-proxy
