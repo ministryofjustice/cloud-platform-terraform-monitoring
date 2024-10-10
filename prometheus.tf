@@ -161,7 +161,6 @@ resource "kubectl_manifest" "manager_only_alerts" {
 
   yaml_body  = file("${path.module}/resources/manager_only_alerts.yaml")
   override_namespace = "monitoring"
-  
   wait = true
 
   depends_on = [helm_release.prometheus_operator_eks]
