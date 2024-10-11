@@ -139,10 +139,6 @@ resource "helm_release" "prometheus_operator_eks" {
     kubernetes_secret.dockerhub_credentials
   ]
 
-  provisioner "local-exec" {
-    command = "kubectl apply -n monitoring -f ${path.module}/resources/prometheusrule-alerts/"
-  }
-
   # Delete Prometheus leftovers
   # Ref: https://github.com/coreos/prometheus-operator#removal
   provisioner "local-exec" {
@@ -153,6 +149,17 @@ resource "helm_release" "prometheus_operator_eks" {
   lifecycle {
     ignore_changes = [keyring]
   }
+}
+
+# apply prometheusrule alerts
+resource "kubectl_manifest" "prometheusrule_alerts" {
+  for_each = fileset("${path.module}/resources/prometheusrule-alerts", "*.yaml")
+
+  yaml_body = templatefile("${path.module}/resources/prometheusrule-alerts/${each.value}", {})
+  override_namespace = "monitoring"
+  wait_for_rollout = true
+
+  depends_on = [helm_release.prometheus_operator_eks]
 }
 
 # apply manager only alerts when the manager alerts are updated
