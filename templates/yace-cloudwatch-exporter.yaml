@@ -517,6 +517,14 @@ config: |-
             - Minimum
             - SampleCount
           nilToZero: true
+        - name: DatabaseMemoryUsagePercentage
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
 
     - type: AWS/DynamoDB
       regions:
