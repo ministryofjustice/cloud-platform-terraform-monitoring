@@ -69,7 +69,6 @@ module "monitoring" {
 | [aws_iam_role_policy_attachment.custom](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [helm_release.alertmanager_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.ecr_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [helm_release.kibana_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.metrics_server](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_operator_eks](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
@@ -101,7 +100,6 @@ module "monitoring" {
 | [template_file.alertmanager_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.alertmanager_receivers](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.alertmanager_routes](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-| [template_file.kibana_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.prometheus_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.thanos_proxy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 
@@ -119,7 +117,6 @@ module "monitoring" {
 | <a name="input_eks_cluster_oidc_issuer_url"></a> [eks\_cluster\_oidc\_issuer\_url](#input\_eks\_cluster\_oidc\_issuer\_url) | This is going to be used when we create the IAM OIDC role | `string` | `""` | no |
 | <a name="input_enable_cloudwatch_exporter"></a> [enable\_cloudwatch\_exporter](#input\_enable\_cloudwatch\_exporter) | Enable or not Cloudwatch exporter | `bool` | `false` | no |
 | <a name="input_enable_ecr_exporter"></a> [enable\_ecr\_exporter](#input\_enable\_ecr\_exporter) | Enable or not ECR exporter | `bool` | `false` | no |
-| <a name="input_enable_kibana_proxy"></a> [enable\_kibana\_proxy](#input\_enable\_kibana\_proxy) | Enable or not Kibana proxy for authentication | `bool` | `false` | no |
 | <a name="input_enable_large_nodesgroup"></a> [enable\_large\_nodesgroup](#input\_enable\_large\_nodesgroup) | Due to Prometheus resource consumption, enabling this will set k8s Prometheus resources to higher values | `bool` | `false` | no |
 | <a name="input_enable_prometheus_affinity_and_tolerations"></a> [enable\_prometheus\_affinity\_and\_tolerations](#input\_enable\_prometheus\_affinity\_and\_tolerations) | Enable or not Prometheus node affinity (check helm values for the expressions) | `bool` | `false` | no |
 | <a name="input_enable_thanos_compact"></a> [enable\_thanos\_compact](#input\_enable\_thanos\_compact) | Enable or not Thanos Compact - not semantically concurrency safe and must be deployed as a singleton against a bucket | `bool` | `false` | no |
@@ -128,7 +125,6 @@ module "monitoring" {
 | <a name="input_environment"></a> [environment](#input\_environment) | n/a | `string` | `"production"` | no |
 | <a name="input_infrastructure_support"></a> [infrastructure\_support](#input\_infrastructure\_support) | n/a | `string` | `"Cloud Platform"` | no |
 | <a name="input_is_production"></a> [is\_production](#input\_is\_production) | n/a | `string` | `"true"` | no |
-| <a name="input_kibana_upstream"></a> [kibana\_upstream](#input\_kibana\_upstream) | ES upstream for logs | `string` | `""` | no |
 | <a name="input_large_nodesgroup_cpu_requests"></a> [large\_nodesgroup\_cpu\_requests](#input\_large\_nodesgroup\_cpu\_requests) | CPU requests for large nodesgroup | `string` | `"1300m"` | no |
 | <a name="input_large_nodesgroup_memory_requests"></a> [large\_nodesgroup\_memory\_requests](#input\_large\_nodesgroup\_memory\_requests) | Memory requests for large nodesgroup | `string` | `"14000Mi"` | no |
 | <a name="input_oidc_components_client_id"></a> [oidc\_components\_client\_id](#input\_oidc\_components\_client\_id) | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |

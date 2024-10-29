@@ -111,65 +111,7 @@ resource "helm_release" "alertmanager_proxy" {
   }
 }
 
-# Kibana_live
-
-data "template_file" "kibana_proxy" {
-  template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
-
-  vars = {
-    upstream = var.kibana_upstream
-    hostname = terraform.workspace == local.live_workspace ? format("%s.%s", "kibana", local.live_domain) : format(
-      "%s.%s",
-      "kibana",
-      var.cluster_domain_name,
-    )
-    exclude_paths    = "^/-/healthy$"
-    issuer_url       = var.oidc_issuer_url
-    ingress_redirect = false
-    clusterName      = terraform.workspace
-  }
-}
-
-resource "helm_release" "kibana_proxy" {
-  count      = var.enable_kibana_proxy ? 1 : 0
-  name       = "kibana-proxy"
-  namespace  = kubernetes_namespace.monitoring.id
-  repository = "https://oauth2-proxy.github.io/manifests"
-  chart      = "oauth2-proxy"
-  version    = "7.1.0"
-  timeout    = 900
-
-  values = [
-    data.template_file.kibana_proxy.rendered,
-  ]
-
-  set_sensitive {
-    name  = "config.clientID"
-    value = var.oidc_components_client_id
-  }
-
-  set_sensitive {
-    name  = "config.clientSecret"
-    value = var.oidc_components_client_secret
-  }
-
-  set_sensitive {
-    name  = "config.cookieSecret"
-    value = random_id.session_secret.b64_std
-  }
-
-  depends_on = [
-    random_id.session_secret,
-    kubernetes_namespace.monitoring
-  ]
-
-  lifecycle {
-    ignore_changes = [keyring]
-  }
-}
-
 # Thanos
-
 data "template_file" "thanos_proxy" {
   template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
 
