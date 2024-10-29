@@ -43,12 +43,6 @@ variable "enable_prometheus_affinity_and_tolerations" {
   type        = bool
 }
 
-variable "enable_kibana_proxy" {
-  description = "Enable or not Kibana proxy for authentication"
-  default     = false
-  type        = bool
-}
-
 variable "cluster_domain_name" {
   description = "The cluster domain - used by externalDNS and certmanager to create URLs"
 }
@@ -97,12 +91,6 @@ variable "large_nodesgroup_memory_requests" {
 
 variable "dockerhub_password" {
   description = "DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters"
-  default     = ""
-  type        = string
-}
-
-variable "kibana_upstream" {
-  description = "ES upstream for logs"
   default     = ""
   type        = string
 }
