@@ -1,23 +1,4 @@
 # Prometheus proxy
-
-data "template_file" "prometheus_proxy" {
-  template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
-
-  vars = {
-    upstream = "http://prometheus-operator-kube-p-prometheus:9090"
-    hostname = format(
-      "%s.%s",
-      "prometheus",
-      var.cluster_domain_name,
-    )
-    exclude_paths        = "^/-/healthy$"
-    issuer_url           = var.oidc_issuer_url
-    clusterName          = terraform.workspace
-    ingress_redirect     = terraform.workspace == local.live_workspace ? true : false
-    live_domain_hostname = "prometheus.${local.live_domain}"
-  }
-}
-
 resource "helm_release" "prometheus_proxy" {
   name       = "prometheus-proxy"
   namespace  = kubernetes_namespace.monitoring.id
@@ -27,7 +8,19 @@ resource "helm_release" "prometheus_proxy" {
   timeout    = 900
 
   values = [
-    data.template_file.prometheus_proxy.rendered,
+    templatefile("${path.module}/templates/oauth2-proxy.yaml.tpl", {
+      upstream = "http://prometheus-operator-kube-p-prometheus:9090"
+      hostname = format(
+        "%s.%s",
+        "prometheus",
+        var.cluster_domain_name,
+      )
+      exclude_paths        = "^/-/healthy$"
+      issuer_url           = var.oidc_issuer_url
+      clusterName          = terraform.workspace
+      ingress_redirect     = terraform.workspace == local.live_workspace ? true : false
+      live_domain_hostname = "prometheus.${local.live_domain}"
+    }),
   ]
 
   set_sensitive {
@@ -57,24 +50,6 @@ resource "helm_release" "prometheus_proxy" {
 
 # Alertmanager proxy
 
-data "template_file" "alertmanager_proxy" {
-  template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
-
-  vars = {
-    upstream = "http://prometheus-operator-kube-p-alertmanager:9093"
-    hostname = format(
-      "%s.%s",
-      "alertmanager",
-      var.cluster_domain_name,
-    )
-    exclude_paths        = "^/-/healthy$"
-    issuer_url           = var.oidc_issuer_url
-    clusterName          = terraform.workspace
-    ingress_redirect     = local.ingress_redirect
-    live_domain_hostname = "alertmanager.${local.live_domain}"
-  }
-}
-
 resource "helm_release" "alertmanager_proxy" {
   name       = "alertmanager-proxy"
   namespace  = "monitoring"
@@ -84,7 +59,19 @@ resource "helm_release" "alertmanager_proxy" {
   timeout    = 900
 
   values = [
-    data.template_file.alertmanager_proxy.rendered,
+    templatefile("${path.module}/templates/oauth2-proxy.yaml.tpl", {
+      upstream = "http://prometheus-operator-kube-p-alertmanager:9093"
+      hostname = format(
+        "%s.%s",
+        "alertmanager",
+        var.cluster_domain_name,
+      )
+      exclude_paths        = "^/-/healthy$"
+      issuer_url           = var.oidc_issuer_url
+      clusterName          = terraform.workspace
+      ingress_redirect     = local.ingress_redirect
+      live_domain_hostname = "alertmanager.${local.live_domain}"
+    }),
   ]
 
   set_sensitive {
@@ -112,23 +99,6 @@ resource "helm_release" "alertmanager_proxy" {
 }
 
 # Thanos
-data "template_file" "thanos_proxy" {
-  template = file("${path.module}/templates/oauth2-proxy.yaml.tpl")
-
-  vars = {
-    upstream = "http://thanos-query-frontend:9090"
-    hostname = format(
-      "%s.%s",
-      "thanos",
-      var.cluster_domain_name,
-    )
-    exclude_paths        = "^/-/healthy$"
-    issuer_url           = var.oidc_issuer_url
-    clusterName          = terraform.workspace
-    ingress_redirect     = local.ingress_redirect
-    live_domain_hostname = "thanos.${local.live_domain}"
-  }
-}
 
 resource "helm_release" "thanos_proxy" {
   name       = "thanos-proxy"
@@ -139,7 +109,19 @@ resource "helm_release" "thanos_proxy" {
   timeout    = 900
 
   values = [
-    data.template_file.thanos_proxy.rendered,
+    templatefile("${path.module}/templates/oauth2-proxy.yaml.tpl", {
+      upstream = "http://thanos-query-frontend:9090"
+      hostname = format(
+        "%s.%s",
+        "thanos",
+        var.cluster_domain_name,
+      )
+      exclude_paths        = "^/-/healthy$"
+      issuer_url           = var.oidc_issuer_url
+      clusterName          = terraform.workspace
+      ingress_redirect     = local.ingress_redirect
+      live_domain_hostname = "thanos.${local.live_domain}"
+    }),
   ]
 
   set_sensitive {

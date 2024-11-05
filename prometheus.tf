@@ -24,67 +24,6 @@ resource "random_id" "password" {
   byte_length = 8
 }
 
-data "template_file" "alertmanager_routes" {
-  count = length(var.alertmanager_slack_receivers)
-
-  template = <<EOS
-- match:
-    severity: info-$${severity}
-  receiver: slack-info-$${severity}
-  continue: true
-- match:
-    severity: $${severity}
-  receiver: slack-$${severity}
-EOS
-
-
-  vars = var.alertmanager_slack_receivers[count.index]
-}
-
-data "template_file" "alertmanager_receivers" {
-  count = length(var.alertmanager_slack_receivers)
-
-  template = <<EOS
-- name: 'slack-$${severity}'
-  slack_configs:
-  - api_url: "$${webhook}"
-    channel: "$${channel}"
-    send_resolved: True
-    title: '{{ template "slack.cp.title" . }}'
-    text: '{{ template "slack.cp.text" . }}'
-    footer: ${local.alertmanager_ingress}
-    actions:
-    - type: button
-      text: 'Runbook :blue_book:'
-      url: '{{ (index .Alerts 0).Annotations.runbook_url }}'
-    - type: button
-      text: 'Query :mag:'
-      url: '{{ (index .Alerts 0).GeneratorURL }}'
-    - type: button
-      text: 'Dashboard :chart_with_upwards_trend:'
-      url: '{{ (index .Alerts 0).Annotations.dashboard_url }}'
-    - type: button
-      text: 'Silence :no_bell:'
-      url: '{{ template "__alert_silence_link" . }}'
-- name: 'slack-info-$${severity}'
-  slack_configs:
-  - api_url: "$${webhook}"
-    channel: "$${channel}"
-    send_resolved: False
-    title: '{{ template "slack.cp.title" . }}'
-    text: '{{ template "slack.cp.text" . }}'
-    color: 'good'
-    footer: ${local.alertmanager_ingress}
-    actions:
-    - type: button
-      text: 'Query :mag:'
-      url: '{{ (index .Alerts 0).GeneratorURL }}'
-EOS
-
-
-  vars = var.alertmanager_slack_receivers[count.index]
-}
-
 # NOTE: Make sure to update the correct CRD version(if required) using the terraform resource in core
 # `kubectl_manifest.prometheus_operator_crds` before upgrading prometheus operator
 resource "helm_release" "prometheus_operator_eks" {
@@ -101,8 +40,8 @@ resource "helm_release" "prometheus_operator_eks" {
     alertmanager_ingress                       = local.alertmanager_ingress
     grafana_ingress                            = local.grafana_ingress
     pagerduty_config                           = var.pagerduty_config
-    alertmanager_routes                        = join("", data.template_file.alertmanager_routes[*].rendered)
-    alertmanager_receivers                     = join("", data.template_file.alertmanager_receivers[*].rendered)
+    alertmanager_routes                        = join("", [for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_routes.tpl", { severity = receiver })])
+    alertmanager_receivers                     = join("", [for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_receivers.tpl", { severity = receiver })])
     prometheus_ingress                         = local.prometheus_ingress
     grafana_assumerolearn                      = aws_iam_role.grafana_role.arn
     clusterName                                = terraform.workspace
