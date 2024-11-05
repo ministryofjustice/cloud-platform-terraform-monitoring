@@ -31,7 +31,7 @@ locals {
   ecr_exporter_sa = "ecr-exporter"
 
   alertmanager_receivers = [
-    for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_receiver.tpl", {
+    for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_receivers.tpl", {
       severity = receiver.severity
       webhook  = receiver.webhook
       channel  = receiver.channel
