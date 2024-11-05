@@ -38,5 +38,11 @@ locals {
       ingress  = local.alertmanager_ingress
     })
   ]
+
+  alertmanager_routes = [
+    for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_routes.tpl", {
+      severity = receiver.severity
+    })
+  ]
 }
 

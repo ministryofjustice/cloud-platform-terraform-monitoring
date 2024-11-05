@@ -40,7 +40,7 @@ resource "helm_release" "prometheus_operator_eks" {
     alertmanager_ingress                       = local.alertmanager_ingress
     grafana_ingress                            = local.grafana_ingress
     pagerduty_config                           = var.pagerduty_config
-    alertmanager_routes                        = join("", [for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_routes.tpl", { severity = receiver })])
+    alertmanager_routes                        = join("", local.alertmanager_routes)
     alertmanager_receivers                     = join("", local.alertmanager_receivers)
     prometheus_ingress                         = local.prometheus_ingress
     grafana_assumerolearn                      = aws_iam_role.grafana_role.arn
