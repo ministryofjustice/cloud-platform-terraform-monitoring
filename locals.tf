@@ -29,5 +29,20 @@ locals {
   prometheus_sa_name = "prometheus-operator-kube-p-prometheus"
 
   ecr_exporter_sa = "ecr-exporter"
+
+  alertmanager_receivers = [
+    for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_receivers.tpl", {
+      severity = receiver.severity
+      webhook  = receiver.webhook
+      channel  = receiver.channel
+      ingress  = local.alertmanager_ingress
+    })
+  ]
+
+  alertmanager_routes = [
+    for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_routes.tpl", {
+      severity = receiver.severity
+    })
+  ]
 }
 
