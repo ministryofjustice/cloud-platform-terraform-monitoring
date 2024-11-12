@@ -78,6 +78,7 @@ compactor:
     - --compact.blocks-fetch-concurrency=16
     - --delete-delay=12h
     - --no-debug.halt-on-error
+    - --wait
   retentionResolutionRaw: 30d
   retentionResolution5m: 183d
   retentionResolution1h: 365d
