@@ -81,7 +81,7 @@ compactor:
     - --no-debug.halt-on-error
     - --wait
   retentionResolutionRaw: 30d
-  retentionResolution5m: 183d
+  retentionResolution5m: 180d
   retentionResolution1h: 365d
   persistence:
     size: 1000Gi
