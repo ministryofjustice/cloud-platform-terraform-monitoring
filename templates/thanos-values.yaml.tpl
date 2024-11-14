@@ -75,11 +75,13 @@ compactor:
     - --deduplication.replica-label=prometheus_replica
     - --deduplication.func=penalty
     - --compact.concurrency=64
+    - --downsampling.concurrency=64
     - --compact.blocks-fetch-concurrency=16
     - --delete-delay=12h
     - --no-debug.halt-on-error
+    - --wait
   retentionResolutionRaw: 30d
-  retentionResolution5m: 183d
+  retentionResolution5m: 180d
   retentionResolution1h: 365d
   persistence:
     size: 1000Gi
