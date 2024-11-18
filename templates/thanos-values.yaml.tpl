@@ -83,7 +83,7 @@ compactor:
   retentionResolution5m: 180d
   retentionResolution1h: 365d
   persistence:
-    size: 1000Gi
+    size: 2000Gi
   serviceAccount:
     create: false
     name: "${prometheus_sa_name}"
