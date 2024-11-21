@@ -75,7 +75,7 @@ compactor:
     - --deduplication.replica-label=prometheus_replica
     - --deduplication.func=penalty
     - --compact.concurrency=64
-    - --downsample.concurrency=32
+    - --downsample.concurrency=24
     - --compact.blocks-fetch-concurrency=16
     - --delete-delay=12h
     - --no-debug.halt-on-error

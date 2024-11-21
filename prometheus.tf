@@ -32,8 +32,8 @@ resource "helm_release" "prometheus_operator_eks" {
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
-  version    = "57.2.0"
-  skip_crds  = true # Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds in core
+  version    = "66.2.1"
+  skip_crds  = true # Crds are managed separately using resource kubectl_manifest.prometheus_operator_crds in core
   timeout    = 600
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
@@ -94,9 +94,9 @@ resource "helm_release" "prometheus_operator_eks" {
 resource "kubectl_manifest" "prometheusrule_alerts" {
   for_each = fileset("${path.module}/resources/prometheusrule-alerts", "*.yaml")
 
-  yaml_body = templatefile("${path.module}/resources/prometheusrule-alerts/${each.value}", {})
+  yaml_body          = templatefile("${path.module}/resources/prometheusrule-alerts/${each.value}", {})
   override_namespace = "monitoring"
-  wait_for_rollout = true
+  wait_for_rollout   = true
 
   depends_on = [helm_release.prometheus_operator_eks]
 }
@@ -105,9 +105,9 @@ resource "kubectl_manifest" "prometheusrule_alerts" {
 resource "kubectl_manifest" "manager_only_alerts" {
   count = terraform.workspace == "manager" ? 1 : 0
 
-  yaml_body  = file("${path.module}/resources/manager_only_alerts.yaml")
+  yaml_body          = file("${path.module}/resources/manager_only_alerts.yaml")
   override_namespace = "monitoring"
-  wait = true
+  wait               = true
 
   depends_on = [helm_release.prometheus_operator_eks]
 }
