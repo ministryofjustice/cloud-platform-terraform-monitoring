@@ -8,7 +8,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Export LATEST_TAG
+        run: |
+          echo "LATEST_TAG=$(curl \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "${{ github.api_url }}/repos/${{ github.repository }}/releases/latest" \
+          | jq -r .tag_name)" >> $GITHUB_ENV
+
       - uses: ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version@main
+        name: push version to go-get-module api
+        if: ${{ github.ref_name == env.LATEST_TAG }}
         env:
           API_URL: ${{ vars.TERRAFORM_MODULE_VERSIONS_API_URL }}
           API_KEY: ${{ secrets.TERRAFORM_MODULE_VERSIONS_API_KEY }}
