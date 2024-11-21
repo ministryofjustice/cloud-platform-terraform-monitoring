@@ -292,6 +292,14 @@ config: |-
             - Minimum
             - SampleCount
           nilToZero: true
+        - name: AllocatedStorage
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
 
     - type: AWS/S3
       regions:
