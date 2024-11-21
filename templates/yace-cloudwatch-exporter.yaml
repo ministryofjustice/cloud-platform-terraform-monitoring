@@ -292,7 +292,7 @@ config: |-
             - Minimum
             - SampleCount
           nilToZero: true
-        - name: AllottedStorage
+        - name: AllocatedStorage
           statistics:
             - Sum
             - Average
