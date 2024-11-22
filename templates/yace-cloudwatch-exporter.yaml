@@ -300,6 +300,39 @@ config: |-
             - Minimum
             - SampleCount
           nilToZero: true
+        - name: ReplicaLag
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: BinLogDiskUsage
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: OldestReplicationSlotLag
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: FailedSQLServerAgentJobsCount
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+            
 
     - type: AWS/S3
       regions:
