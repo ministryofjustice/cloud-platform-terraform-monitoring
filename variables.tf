@@ -122,3 +122,9 @@ variable "environment" {
 variable "infrastructure_support" {
   default = "Cloud Platform"
 }
+
+variable "enable_rds_exporter" {
+  description = "Whether or not to enable the RDS exporter"
+  default     = false
+  type        = bool
+}

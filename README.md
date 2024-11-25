@@ -54,6 +54,7 @@ module "monitoring" {
 | <a name="module_iam_assumable_role_monitoring"></a> [iam\_assumable\_role\_monitoring](#module\_iam\_assumable\_role\_monitoring) | terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc | 3.13.0 |
 | <a name="module_iam_assumable_role_yace_cloudwatch_exporter"></a> [iam\_assumable\_role\_yace\_cloudwatch\_exporter](#module\_iam\_assumable\_role\_yace\_cloudwatch\_exporter) | terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc | 4.24.1 |
 | <a name="module_irsa"></a> [irsa](#module\_irsa) | github.com/ministryofjustice/cloud-platform-terraform-irsa | 2.0.0 |
+| <a name="module_rds_exporter_irsa"></a> [rds\_exporter\_irsa](#module\_rds\_exporter\_irsa) | github.com/ministryofjustice/cloud-platform-terraform-irsa | 2.0.0 |
 
 ## Resources
 
@@ -62,6 +63,7 @@ module "monitoring" {
 | [aws_iam_policy.ecr_exporter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.grafana_datasource](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.monitoring](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_policy.rds_exporter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.yace_cloudwatch_exporter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.grafana_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.custom](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -70,6 +72,7 @@ module "monitoring" {
 | [helm_release.metrics_server](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_operator_eks](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.rds_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.thanos](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.thanos_proxy](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.yace_cloudwatch_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
@@ -94,6 +97,7 @@ module "monitoring" {
 | [aws_iam_policy_document.ecr_exporter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.grafana_datasource_irsa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.monitoring](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.rds_exporter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.yace_cloudwatch_exporter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
@@ -112,6 +116,7 @@ module "monitoring" {
 | <a name="input_enable_ecr_exporter"></a> [enable\_ecr\_exporter](#input\_enable\_ecr\_exporter) | Enable or not ECR exporter | `bool` | `false` | no |
 | <a name="input_enable_large_nodesgroup"></a> [enable\_large\_nodesgroup](#input\_enable\_large\_nodesgroup) | Due to Prometheus resource consumption, enabling this will set k8s Prometheus resources to higher values | `bool` | `false` | no |
 | <a name="input_enable_prometheus_affinity_and_tolerations"></a> [enable\_prometheus\_affinity\_and\_tolerations](#input\_enable\_prometheus\_affinity\_and\_tolerations) | Enable or not Prometheus node affinity (check helm values for the expressions) | `bool` | `false` | no |
+| <a name="input_enable_rds_exporter"></a> [enable\_rds\_exporter](#input\_enable\_rds\_exporter) | Whether or not to enable the RDS exporter | `bool` | `false` | no |
 | <a name="input_enable_thanos_compact"></a> [enable\_thanos\_compact](#input\_enable\_thanos\_compact) | Enable or not Thanos Compact - not semantically concurrency safe and must be deployed as a singleton against a bucket | `bool` | `false` | no |
 | <a name="input_enable_thanos_helm_chart"></a> [enable\_thanos\_helm\_chart](#input\_enable\_thanos\_helm\_chart) | Enable or not Thanos Helm Chart - (do NOT confuse this with thanos sidecar within prometheus-operator) | `bool` | `false` | no |
 | <a name="input_enable_thanos_sidecar"></a> [enable\_thanos\_sidecar](#input\_enable\_thanos\_sidecar) | Enable or not Thanos sidecar. Basically defines if we want to send cluster metrics to thanos's S3 bucket | `bool` | `false` | no |
