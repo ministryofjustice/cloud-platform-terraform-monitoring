@@ -75,7 +75,7 @@ compactor:
     - --deduplication.replica-label=prometheus_replica
     - --deduplication.func=penalty
     - --compact.concurrency=64
-    - --downsample.concurrency=24
+    - --downsample.concurrency=16
     - --compact.blocks-fetch-concurrency=16
     - --delete-delay=12h
     - --no-debug.halt-on-error
@@ -83,7 +83,7 @@ compactor:
   retentionResolution5m: 180d
   retentionResolution1h: 365d
   persistence:
-    size: 20000Gi
+    size: 16000Gi
   serviceAccount:
     create: false
     name: "${prometheus_sa_name}"
