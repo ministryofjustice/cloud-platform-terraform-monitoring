@@ -159,21 +159,31 @@ resource "kubernetes_network_policy" "allow_kube_api" {
   }
 }
 
-resource "kubernetes_network_policy" "allow_alertmanager_api" {
+resource "kubernetes_network_policy" "allow-monitoring-alerts" {
   metadata {
-    name      = "allow-alertmanager-api"
+    name      = "allow-monitoring-alerts"
     namespace = kubernetes_namespace.monitoring.id
   }
 
   spec {
     pod_selector {
       match_labels = {
-        app = "alertmanager"
+        "app.kubernetes.io/name" = prometheus
+        "app.kubernetes.io/name" = alertmanager
       }
     }
     ingress {
       from {
-        namespace_selector {}
+        namespace_selector {
+          match_labels = {
+            component = "cloud-platform-monitoring-alerts"
+          }
+        }
+        pod_selector {
+          match_labels = {
+            "app.kubernetes.io/name" = cloud-platform-monitoring-alerts
+          }
+        }
       }
     }
 
