@@ -168,8 +168,8 @@ resource "kubernetes_network_policy" "allow-monitoring-alerts" {
   spec {
     pod_selector {
       match_labels = {
-        app.kubernetes.io/name = "prometheus"
-        app.kubernetes.io/name = "alertmanager"
+        "app.kubernetes.io/name" = "prometheus"
+        "app.kubernetes.io/name" = "alertmanager"
       }
     }
     ingress {
@@ -181,7 +181,7 @@ resource "kubernetes_network_policy" "allow-monitoring-alerts" {
         }
         pod_selector {
           match_labels = {
-            app.kubernetes.io/name = "cloud-platform-monitoring-alerts"
+            "app.kubernetes.io/name" = "cloud-platform-monitoring-alerts"
           }
         }
       }
