@@ -165,12 +165,13 @@ resource "kubernetes_network_policy" "allow-monitoring-alerts" {
     namespace = kubernetes_namespace.monitoring.id
   }
 
-  spec {
+ spec {
     pod_selector {
-      match_labels = {
-        "app.kubernetes.io/name" = "prometheus"
-        "app.kubernetes.io/name" = "alertmanager"
-      }
+      match_expressions {
+          key      = "app.kubernetes.io/name"
+          operator = "In"
+          values   = ["prometheus", "alertmanager"]
+        }
     }
     ingress {
       from {
