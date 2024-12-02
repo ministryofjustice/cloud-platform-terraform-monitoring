@@ -128,3 +128,9 @@ variable "enable_rds_exporter" {
   default     = false
   type        = bool
 }
+
+variable "enable_subnet_exporter" {
+  description = "Whether or not to enable the Subnet exporter"
+  default     = false
+  type        = bool
+}

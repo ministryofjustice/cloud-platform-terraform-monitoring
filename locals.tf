@@ -32,6 +32,8 @@ locals {
 
   rds_exporter_sa = "rds-exporter"
 
+  subnet_exporter_sa = "subnet-exporter"
+
   alertmanager_receivers = [
     for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_receivers.tpl", {
       severity = receiver.severity
