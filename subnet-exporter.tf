@@ -8,6 +8,10 @@ resource "helm_release" "subnet_exporter" {
   repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts/"
 
   set {
+    name  = "image.tag"
+    value = var.aws_subnet_exporter_image_tag
+  }
+  set {
     name  = "awsSubnetExporter.region"
     value = "eu-west-2"
   }

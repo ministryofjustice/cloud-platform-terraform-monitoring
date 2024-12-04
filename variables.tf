@@ -134,3 +134,9 @@ variable "enable_subnet_exporter" {
   default     = false
   type        = bool
 }
+
+variable "aws_subnet_exporter_image_tag" {
+  description = "Tag of the subnet exporter image to use"
+  default     = ""
+  type        = string
+}
