@@ -110,6 +110,7 @@ module "monitoring" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_alertmanager_slack_receivers"></a> [alertmanager\_slack\_receivers](#input\_alertmanager\_slack\_receivers) | A list of configuration values for Slack receivers | `list(any)` | n/a | yes |
 | <a name="input_application"></a> [application](#input\_application) | n/a | `string` | `"Monitoring"` | no |
+| <a name="input_aws_subnet_exporter_image_tag"></a> [aws\_subnet\_exporter\_image\_tag](#input\_aws\_subnet\_exporter\_image\_tag) | Tag of the subnet exporter image to use | `string` | `""` | no |
 | <a name="input_business_unit"></a> [business\_unit](#input\_business\_unit) | n/a | `string` | `"Platforms"` | no |
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain - used by externalDNS and certmanager to create URLs | `any` | n/a | yes |
 | <a name="input_dockerhub_password"></a> [dockerhub\_password](#input\_dockerhub\_password) | DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
