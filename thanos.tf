@@ -8,10 +8,11 @@ resource "helm_release" "thanos" {
   version    = "15.0.0"
   timeout    = 900
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
-    prometheus_sa_name  = local.prometheus_sa_name
-    enabled_compact     = var.enable_thanos_compact
-    monitoring_aws_role = module.iam_assumable_role_monitoring.this_iam_role_name
-    clusterName         = terraform.workspace
+    prometheus_sa_name              = local.prometheus_sa_name
+    enabled_compact                 = var.enable_thanos_compact
+    monitoring_aws_role             = module.iam_assumable_role_monitoring.this_iam_role_name
+    clusterName                     = terraform.workspace
+    compactor_existing_pvc_claim_id = var.compactor_existing_pvc_claim_id
   })]
 
   depends_on = [

@@ -83,10 +83,29 @@ compactor:
   retentionResolution5m: 180d
   retentionResolution1h: 365d
   persistence:
+  %{ if eq compactor_existing_pvc_claim_id "disabled"}
+  %{ else ~}
+    existingClaim: "${compactor_existing_pvc_claim_id}"
+  %{ endif ~}
     size: 16000Gi
   serviceAccount:
     create: false
     name: "${prometheus_sa_name}"
+  tolerations:
+    - key: "thanos-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: cloud-platform.justice.gov.uk/thanos-ng
+            operator: In
+            values:
+            - "true"
   resources:
     requests:
       cpu: 1500m
