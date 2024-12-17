@@ -87,6 +87,21 @@ compactor:
   serviceAccount:
     create: false
     name: "${prometheus_sa_name}"
+  tolerations:
+    - key: "thanos-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: cloud-platform.justice.gov.uk/thanos-ng
+            operator: In
+            values:
+            - "true"
   resources:
     requests:
       cpu: 1500m
