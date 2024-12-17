@@ -83,9 +83,6 @@ compactor:
   retentionResolution5m: 180d
   retentionResolution1h: 365d
   persistence:
-  %{ if compactor_existing_pvc_claim_id != "disabled" ~}
-    existingClaim: "${compactor_existing_pvc_claim_id}"
-  %{ endif ~}
     size: 16000Gi
   serviceAccount:
     create: false

@@ -140,8 +140,3 @@ variable "aws_subnet_exporter_image_tag" {
   default     = ""
   type        = string
 }
-
-variable "compactor_existing_pvc_claim_id" {
-  description = "this is an existing pvc that thanos compactor should connect with"
-  default     = "disabled"
-}
