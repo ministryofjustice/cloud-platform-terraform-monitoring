@@ -113,6 +113,7 @@ module "monitoring" {
 | <a name="input_aws_subnet_exporter_image_tag"></a> [aws\_subnet\_exporter\_image\_tag](#input\_aws\_subnet\_exporter\_image\_tag) | Tag of the subnet exporter image to use | `string` | `""` | no |
 | <a name="input_business_unit"></a> [business\_unit](#input\_business\_unit) | n/a | `string` | `"Platforms"` | no |
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain - used by externalDNS and certmanager to create URLs | `any` | n/a | yes |
+| <a name="input_compactor_existing_pvc_claim_id"></a> [compactor\_existing\_pvc\_claim\_id](#input\_compactor\_existing\_pvc\_claim\_id) | this is an existing pvc that thanos compactor should connect with | `string` | `"disabled"` | no |
 | <a name="input_dockerhub_password"></a> [dockerhub\_password](#input\_dockerhub\_password) | DockerHub password - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
 | <a name="input_dockerhub_username"></a> [dockerhub\_username](#input\_dockerhub\_username) | DockerHub username - required to avoid hitting Dockerhub API limits in EKS clusters | `string` | `""` | no |
 | <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | n/a | `string` | `"live"` | no |
