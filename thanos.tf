@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "monitoring" {
 # IRSA
 module "iam_assumable_role_monitoring" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "3.13.0"
+  version                       = "5.52.1"
   create_role                   = true
   role_name                     = "monitoring.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url
