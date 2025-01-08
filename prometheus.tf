@@ -51,7 +51,7 @@ resource "helm_release" "prometheus_operator_eks" {
     large_nodesgroup_cpu_requests              = var.large_nodesgroup_cpu_requests
     large_nodesgroup_memory_requests           = var.large_nodesgroup_memory_requests
     prometheus_sa_name                         = local.prometheus_sa_name
-    eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
+    eks_service_account                        = module.iam_assumable_role_monitoring.iam_role_arn
     storage_class                              = can(regex("live", terraform.workspace)) ? "io1-expand" : "gp2-expand"
     storage_size                               = can(regex("live", terraform.workspace)) ? "750Gi" : "75Gi"
   })]
