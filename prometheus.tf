@@ -24,82 +24,7 @@ resource "random_id" "password" {
   byte_length = 8
 }
 
-data "template_file" "alertmanager_routes" {
-  count = length(var.alertmanager_slack_receivers)
-
-  template = <<EOS
-- match:
-    severity: info-$${severity}
-  receiver: slack-info-$${severity}
-  continue: true
-- match:
-    severity: $${severity}
-  receiver: slack-$${severity}
-EOS
-
-
-  vars = var.alertmanager_slack_receivers[count.index]
-}
-
-data "template_file" "alertmanager_receivers" {
-  count = length(var.alertmanager_slack_receivers)
-
-  template = <<EOS
-- name: 'slack-$${severity}'
-  slack_configs:
-  - api_url: "$${webhook}"
-    channel: "$${channel}"
-    send_resolved: True
-    title: '{{ template "slack.cp.title" . }}'
-    text: '{{ template "slack.cp.text" . }}'
-    footer: ${local.alertmanager_ingress}
-    actions:
-    - type: button
-      text: 'Runbook :blue_book:'
-      url: '{{ (index .Alerts 0).Annotations.runbook_url }}'
-    - type: button
-      text: 'Query :mag:'
-      url: '{{ (index .Alerts 0).GeneratorURL }}'
-    - type: button
-      text: 'Dashboard :chart_with_upwards_trend:'
-      url: '{{ (index .Alerts 0).Annotations.dashboard_url }}'
-    - type: button
-      text: 'Silence :no_bell:'
-      url: '{{ template "__alert_silence_link" . }}'
-- name: 'slack-info-$${severity}'
-  slack_configs:
-  - api_url: "$${webhook}"
-    channel: "$${channel}"
-    send_resolved: False
-    title: '{{ template "slack.cp.title" . }}'
-    text: '{{ template "slack.cp.text" . }}'
-    color: 'good'
-    footer: ${local.alertmanager_ingress}
-    actions:
-    - type: button
-      text: 'Query :mag:'
-      url: '{{ (index .Alerts 0).GeneratorURL }}'
-EOS
-
-
-  vars = var.alertmanager_slack_receivers[count.index]
-}
-
-
-# Prometheus crd yaml pulled from kube-prometheus-stack helm chart.
-# Upate variable `prometheus_operator_crd_version` to manage the crd version
-data "http" "prometheus_crd_yamls" {
-  for_each = local.prometheus_crd_yamls
-  url      = each.value
-}
-
-resource "kubectl_manifest" "prometheus_operator_crds" {
-  server_side_apply = true
-  for_each          = data.http.prometheus_crd_yamls
-  yaml_body         = each.value["body"]
-}
-
-# NOTE: Make sure to update the correct CRD version(if required) using above resource
+# NOTE: Make sure to update the correct CRD version(if required) using the terraform resource in core
 # `kubectl_manifest.prometheus_operator_crds` before upgrading prometheus operator
 resource "helm_release" "prometheus_operator_eks" {
 
@@ -107,26 +32,26 @@ resource "helm_release" "prometheus_operator_eks" {
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
-  version    = "56.21.4"
-  skip_crds  = true # Crds are managed seperately using resource kubectl_manifest.prometheus_operator_crds
+  version    = "66.2.1"
+  skip_crds  = true # Crds are managed separately using resource kubectl_manifest.prometheus_operator_crds in core
   timeout    = 600
 
   values = [templatefile("${path.module}/templates/prometheus-operator-eks.yaml.tpl", {
     alertmanager_ingress                       = local.alertmanager_ingress
     grafana_ingress                            = local.grafana_ingress
     pagerduty_config                           = var.pagerduty_config
-    alertmanager_routes                        = join("", data.template_file.alertmanager_routes[*].rendered)
-    alertmanager_receivers                     = join("", data.template_file.alertmanager_receivers[*].rendered)
+    alertmanager_routes                        = join("\n", local.alertmanager_routes)
+    alertmanager_receivers                     = join("\n", local.alertmanager_receivers)
     prometheus_ingress                         = local.prometheus_ingress
     grafana_assumerolearn                      = aws_iam_role.grafana_role.arn
     clusterName                                = terraform.workspace
     enable_prometheus_affinity_and_tolerations = var.enable_prometheus_affinity_and_tolerations
     enable_thanos_sidecar                      = var.enable_thanos_sidecar
     enable_large_nodesgroup                    = var.enable_large_nodesgroup
-    large_nodesgroup_cpu_requests             = var.large_nodesgroup_cpu_requests
-    large_nodesgroup_memory_requests          = var.large_nodesgroup_memory_requests
+    large_nodesgroup_cpu_requests              = var.large_nodesgroup_cpu_requests
+    large_nodesgroup_memory_requests           = var.large_nodesgroup_memory_requests
     prometheus_sa_name                         = local.prometheus_sa_name
-    eks_service_account                        = module.iam_assumable_role_monitoring.this_iam_role_arn
+    eks_service_account                        = module.iam_assumable_role_monitoring.iam_role_arn
     storage_class                              = can(regex("live", terraform.workspace)) ? "io1-expand" : "gp2-expand"
     storage_size                               = can(regex("live", terraform.workspace)) ? "750Gi" : "75Gi"
   })]
@@ -146,19 +71,12 @@ resource "helm_release" "prometheus_operator_eks" {
     value = random_id.password.hex
   }
 
-
-
   # Depends on Helm being installed
   depends_on = [
-    local.prometheus_operator_crds_dependency,
     kubernetes_secret.grafana_secret,
     kubernetes_secret.thanos_config,
     kubernetes_secret.dockerhub_credentials
   ]
-
-  provisioner "local-exec" {
-    command = "kubectl apply -n monitoring -f ${path.module}/resources/prometheusrule-alerts/"
-  }
 
   # Delete Prometheus leftovers
   # Ref: https://github.com/coreos/prometheus-operator#removal
@@ -170,6 +88,28 @@ resource "helm_release" "prometheus_operator_eks" {
   lifecycle {
     ignore_changes = [keyring]
   }
+}
+
+# apply prometheusrule alerts
+resource "kubectl_manifest" "prometheusrule_alerts" {
+  for_each = fileset("${path.module}/resources/prometheusrule-alerts", "*.yaml")
+
+  yaml_body          = templatefile("${path.module}/resources/prometheusrule-alerts/${each.value}", {})
+  override_namespace = "monitoring"
+  wait_for_rollout   = true
+
+  depends_on = [helm_release.prometheus_operator_eks]
+}
+
+# apply manager only alerts when the manager alerts are updated
+resource "kubectl_manifest" "manager_only_alerts" {
+  count = terraform.workspace == "manager" ? 1 : 0
+
+  yaml_body          = file("${path.module}/resources/manager_only_alerts.yaml")
+  override_namespace = "monitoring"
+  wait               = true
+
+  depends_on = [helm_release.prometheus_operator_eks]
 }
 
 # Alertmanager and Prometheus proxy

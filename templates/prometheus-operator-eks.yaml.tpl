@@ -399,7 +399,6 @@ prometheusOperator:
 ## Deploy a Prometheus instance
 ##
 prometheus:
-
   enabled: true
 
   serviceAccount:
@@ -414,13 +413,18 @@ prometheus:
   # Thanos sidecar on prometheus nodes
   # (Please remember to change $kube-prometheus-stack.fullname and $namespace. Not just copy and paste!)
   thanosService:
-    enabled: true      
+    enabled: true
+
 
   ## Settings affecting prometheusSpec
   ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
   ##
   prometheusSpec:
     logLevel: debug
+    ## Number of replicas of each shard to deploy for a Prometheus deployment.
+    ## Number of replicas multiplied by shards is the total number of Pods created.
+    ##
+    replicas: 3
 
     %{ if enable_prometheus_affinity_and_tolerations ~}
     ## Tolerations for use with node taints
@@ -536,7 +540,18 @@ prometheus:
             - key: topology.kubernetes.io/zone
               operator: In
               values:
+              - "eu-west-2a"
               - "eu-west-2b"
+              - "eu-west-2c"
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - prometheus-operator-kube-p-prometheus
+            topologyKey: topology.kubernetes.io/zone
 
     %{ endif ~}
 

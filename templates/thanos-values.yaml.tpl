@@ -6,8 +6,8 @@ metrics:
 storegateway:
   resources:
     limits:
-      cpu: 1600m
-      memory: 24Gi
+      cpu: 2000m
+      memory: 32Gi
     requests:
       cpu: 10m
       memory: 100Mi
@@ -32,17 +32,26 @@ query:
       cpu: 10m
       memory: 100Mi
 
+  extraFlags:
+    - --query.timeout=5m
+
+  ## @param query.replicaLabel Replica indicator(s) along which data is de-duplicated
+  replicaLabel:
+    - prometheus_replica
+
   stores:
     - prometheus-prometheus-operator-kube-p-prometheus-0.prometheus-operated.monitoring.svc:10901
+    - prometheus-prometheus-operator-kube-p-prometheus-1.prometheus-operated.monitoring.svc:10901
+    - prometheus-prometheus-operator-kube-p-prometheus-2.prometheus-operated.monitoring.svc:10901
 
 queryFrontend:
   resources:
     limits:
-      cpu: 1600m
-      memory: 24Gi
+      cpu: 2000m
+      memory: 38Gi
     requests:
-      cpu: 10m
-      memory: 100Mi
+      cpu: 800m
+      memory: 12Gi
 
 
 ruler:
@@ -61,21 +70,45 @@ ruler:
 
 compactor:
   enabled:  ${enabled_compact}
+  extraFlags:
+    - --compact.enable-vertical-compaction
+    - --deduplication.replica-label=prometheus_replica
+    - --deduplication.func=penalty
+    - --compact.concurrency=64
+    - --downsample.concurrency=16
+    - --compact.blocks-fetch-concurrency=16
+    - --delete-delay=12h
+    - --no-debug.halt-on-error
   retentionResolutionRaw: 30d
-  retentionResolution5m: 183d
+  retentionResolution5m: 180d
   retentionResolution1h: 365d
   persistence:
-    size: 500Gi
+    size: 16000Gi
   serviceAccount:
     create: false
     name: "${prometheus_sa_name}"
+  tolerations:
+    - key: "thanos-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: cloud-platform.justice.gov.uk/thanos-ng
+            operator: In
+            values:
+            - "true"
   resources:
     requests:
-      cpu: 500m
-      memory: 200Mi
+      cpu: 1500m
+      memory: 1000Mi
     limits:
-      cpu: 1000m
-      memory: 500Mi
+      cpu: 7800m
+      memory: 30000Mi
 bucketweb:
   resources:
     limits:

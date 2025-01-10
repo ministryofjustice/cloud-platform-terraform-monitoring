@@ -17,7 +17,6 @@ resource "kubernetes_namespace" "monitoring" {
       "cloud-platform.justice.gov.uk/business-unit"              = "Platforms"
       "cloud-platform.justice.gov.uk/owner"                      = "Cloud Platform: platforms@digital.justice.gov.uk"
       "cloud-platform.justice.gov.uk/source-code"                = "https://github.com/ministryofjustice/cloud-platform-infrastructure"
-      "iam.amazonaws.com/permitted"                              = ".*"
       "cloud-platform.justice.gov.uk/can-tolerate-master-taints" = "true"
       "cloud-platform-out-of-hours-alert"                        = "true"
     }
@@ -160,21 +159,32 @@ resource "kubernetes_network_policy" "allow_kube_api" {
   }
 }
 
-resource "kubernetes_network_policy" "allow_alertmanager_api" {
+resource "kubernetes_network_policy" "allow-monitoring-alerts" {
   metadata {
-    name      = "allow-alertmanager-api"
+    name      = "allow-monitoring-alerts"
     namespace = kubernetes_namespace.monitoring.id
   }
 
-  spec {
+ spec {
     pod_selector {
-      match_labels = {
-        app = "alertmanager"
-      }
+      match_expressions {
+          key      = "app.kubernetes.io/name"
+          operator = "In"
+          values   = ["prometheus", "alertmanager"]
+        }
     }
     ingress {
       from {
-        namespace_selector {}
+        namespace_selector {
+          match_labels = {
+            component = "cloud-platform-monitoring-alerts"
+          }
+        }
+        pod_selector {
+          match_labels = {
+            "app.kubernetes.io/name" = "cloud-platform-monitoring-alerts"
+          }
+        }
       }
     }
 

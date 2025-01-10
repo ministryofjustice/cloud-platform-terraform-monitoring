@@ -25,23 +25,28 @@ locals {
     var.cluster_domain_name,
   )
   prometheus_dependency               = helm_release.prometheus_operator_eks
-  prometheus_operator_crds_dependency = kubectl_manifest.prometheus_operator_crds
-
-  prometheus_crd_yamls = {
-    alertmanager_configs = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagerconfigs.yaml"
-    alertmanagers        = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml"
-    podmonitors          = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml"
-    probes               = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_probes.yaml"
-    prometheusagents     = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_prometheusagents.yaml"
-    prometheuses         = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml"
-    prometheusrules      = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml"
-    scrapeconfigs        = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_scrapeconfigs.yaml"
-    servicemonitors      = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml"
-    thanosrulers         = "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/${var.prometheus_operator_crd_version}/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml"
-  }
 
   prometheus_sa_name = "prometheus-operator-kube-p-prometheus"
 
   ecr_exporter_sa = "ecr-exporter"
+
+  rds_exporter_sa = "rds-exporter"
+
+  subnet_exporter_sa = "subnet-exporter"
+
+  alertmanager_receivers = [
+    for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_receivers.tpl", {
+      severity = receiver.severity
+      webhook  = receiver.webhook
+      channel  = receiver.channel
+      ingress  = local.alertmanager_ingress
+    })
+  ]
+
+  alertmanager_routes = [
+    for receiver in var.alertmanager_slack_receivers : templatefile("${path.module}/templates/alertmanager_routes.tpl", {
+      severity = receiver.severity
+    })
+  ]
 }
 

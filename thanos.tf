@@ -1,9 +1,3 @@
-##########
-# THANOS #
-##########
-
-# Thanos Helm Chart
-
 resource "helm_release" "thanos" {
   count = var.enable_thanos_helm_chart ? 1 : 0
 
@@ -16,7 +10,7 @@ resource "helm_release" "thanos" {
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
     prometheus_sa_name  = local.prometheus_sa_name
     enabled_compact     = var.enable_thanos_compact
-    monitoring_aws_role = module.iam_assumable_role_monitoring.this_iam_role_name
+    monitoring_aws_role = module.iam_assumable_role_monitoring.iam_role_name
     clusterName         = terraform.workspace
   })]
 
@@ -74,7 +68,7 @@ data "aws_iam_policy_document" "monitoring" {
 # IRSA
 module "iam_assumable_role_monitoring" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "3.13.0"
+  version                       = "5.52.1"
   create_role                   = true
   role_name                     = "monitoring.${var.cluster_domain_name}"
   provider_url                  = var.eks_cluster_oidc_issuer_url

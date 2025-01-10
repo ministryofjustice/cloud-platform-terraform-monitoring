@@ -43,12 +43,6 @@ variable "enable_prometheus_affinity_and_tolerations" {
   type        = bool
 }
 
-variable "enable_kibana_proxy" {
-  description = "Enable or not Kibana proxy for authentication"
-  default     = false
-  type        = bool
-}
-
 variable "cluster_domain_name" {
   description = "The cluster domain - used by externalDNS and certmanager to create URLs"
 }
@@ -101,17 +95,6 @@ variable "dockerhub_password" {
   type        = string
 }
 
-variable "kibana_upstream" {
-  description = "ES upstream for logs"
-  default     = ""
-  type        = string
-}
-
-variable "prometheus_operator_crd_version" {
-  default     = "v0.71.0"
-  description = "The version of the prometheus operator crds matching the prometheus chart that is installed in monitoring module"
-}
-
 variable "eks_cluster_name" {
   default = "live"
 }
@@ -138,4 +121,22 @@ variable "environment" {
 
 variable "infrastructure_support" {
   default = "Cloud Platform"
+}
+
+variable "enable_rds_exporter" {
+  description = "Whether or not to enable the RDS exporter"
+  default     = false
+  type        = bool
+}
+
+variable "enable_subnet_exporter" {
+  description = "Whether or not to enable the Subnet exporter"
+  default     = false
+  type        = bool
+}
+
+variable "aws_subnet_exporter_image_tag" {
+  description = "Tag of the subnet exporter image to use"
+  default     = ""
+  type        = string
 }
