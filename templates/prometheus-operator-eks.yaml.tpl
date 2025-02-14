@@ -551,6 +551,10 @@ prometheus:
                   operator: In
                   values:
                   - prometheus-operator-kube-p-prometheus
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - query
             topologyKey: topology.kubernetes.io/zone
 
     %{ endif ~}

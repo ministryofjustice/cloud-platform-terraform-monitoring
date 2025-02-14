@@ -136,6 +136,7 @@ module "monitoring" {
 | <a name="input_oidc_issuer_url"></a> [oidc\_issuer\_url](#input\_oidc\_issuer\_url) | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_pagerduty_config"></a> [pagerduty\_config](#input\_pagerduty\_config) | Add PagerDuty key to allow integration with a PD service. | `any` | n/a | yes |
 | <a name="input_team_name"></a> [team\_name](#input\_team\_name) | n/a | `string` | `"webops"` | no |
+| <a name="input_thanos_query_replica_count"></a> [thanos\_query\_replica\_count](#input\_thanos\_query\_replica\_count) | the number of thanos query replicas | `number` | `1` | no |
 
 ## Outputs
 

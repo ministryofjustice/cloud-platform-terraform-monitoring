@@ -12,6 +12,7 @@ resource "helm_release" "thanos" {
     enabled_compact     = var.enable_thanos_compact
     monitoring_aws_role = module.iam_assumable_role_monitoring.iam_role_name
     clusterName         = terraform.workspace
+    thanos_query_replica_count = var.thanos_query_replica_count
   })]
 
   depends_on = [
