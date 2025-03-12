@@ -95,11 +95,4 @@ spec:
       for: 15s
       labels:
         severity: info-warning
-    - alert: NodeNotReadyState
-      annotations:
-        message: 'The Node is in a state of NotReady, investigate further'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
-      expr: (kube_node_status_condition{condition="NotReady", status="true"})
-      for: 15m
-      labels:
-        severity: warning
+  
