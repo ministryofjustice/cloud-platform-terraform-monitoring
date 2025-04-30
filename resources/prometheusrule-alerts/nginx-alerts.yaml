@@ -24,31 +24,41 @@ spec:
       annotations:
         message: '{{ $labels.pod}} - nginx-ingress-default ingress ---latency delays are on the high side, with a value of {{ $value }} {{ $labels.namespace}} namespace. Please investigate'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#NginxIngress-Latency(ms)---warning
-    - alert: NginxIngress-Latency(ms)-production-only-ingress-High
-      expr: sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_sum{ingress=~".*",pod=~"nginx-ingress-production-only.*"}[5m])) / sum by(pod)(rate(nginx_ingress_controller_ingress_upstream_latency_seconds_count{ingress=~".*",pod=~"nginx-ingress-production-only.*"}[5m])) * 1000 > 300
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        message: '{{ $labels.pod}} - production only ingress ---latency delays are on the high side, with a value of {{ $value }} {{ $labels.namespace}} namespace. Please investigate'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#NginxIngress-Latency(ms)---warning
 
-    - alert: NginxConfigReloadFailureWarning
+    - alert: ModsecNginxConfigReloadFailureWarning
       annotations:
         message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure
-      expr: nginx_ingress_controller_config_last_reload_successful == 0
+      expr: nginx_ingress_controller_config_last_reload_successful{controller_class="k8s.io/ingress-modsec"} == 0
       for: 3m
       labels:
         severity: warning
-    - alert: NginxConfigReloadFailure
+    - alert: ModsecNginxConfigReloadFailure
       annotations:
         message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure:x
-      expr: nginx_ingress_controller_config_last_reload_successful == 0
+      expr: nginx_ingress_controller_config_last_reload_successful{controller_class="k8s.io/ingress-modsec"} == 0
       for: 5m
       labels:
         severity: critical
+
+    - alert: DefaultNginxConfigReloadFailureWarning
+      annotations:
+        message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure
+      expr: nginx_ingress_controller_config_last_reload_successful{controller_class="k8s.io/ingress-default"} == 0
+      for: 3m
+      labels:
+        severity: warning
+    - alert: DefaultNginxConfigReloadFailure
+      annotations:
+        message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure:x
+      expr: nginx_ingress_controller_config_last_reload_successful{controller_class="k8s.io/ingress-default"} == 0
+      for: 5m
+      labels:
+        severity: critical
+
     - alert: NginxIngressPodDown-default-ingress
       annotations:
         message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
@@ -104,17 +114,6 @@ spec:
       labels:
         severity: critical
   
-    - alert: NginxIngressDown-production-only-ingress
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
-          3 or more production-only nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
-      expr: sum by(namespace) (kube_pod_status_phase{namespace="ingress-controllers",phase="Failed",pod=~"nginx-ingress-production-only.*"})>
-        3
-      for: 5m
-      labels:
-        severity: critical
-
     - alert: NginxIngressPodPending-default-ingress
       annotations:
         message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
@@ -137,17 +136,6 @@ spec:
       labels:
         severity: warning
 
-    - alert: NginxIngressPodPending-production-only-ingress
-      annotations:
-        message: '{{ $labels.pod}} pod unavailable in the {{ $labels.namespace}} namespace.
-          1 or more nginx-ingress pods have been unavailable for 5 minutes'
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginxingresspoddown
-      expr: sum by(pod) (kube_pod_status_phase{namespace="ingress-controllers",phase=~"Pending|Unknown",pod=~"nginx-ingress-production-only.*"})>
-        0
-      for: 5m
-      labels:
-        severity: warning
-
     - alert: NginxIngressSuccessRate-default-ingress
       annotations:
         message: 'Percentage of successful requests of nginx-default over the last 15 minutes is less than 95%.
@@ -160,11 +148,11 @@ spec:
         severity: warning
     - alert: NginxIngressSuccessRate-modsec-ingress
       annotations:
-        message: 'Percentage of successful requests of nginx-modsec  over the last 15 minutes is less than 95%.
+        message: 'Percentage of successful requests of nginx-modsec  over the last 30 minutes is less than 95%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status!~"[4-5].*", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
         sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 < 95
-      for: 15m
+      for: 30m
       labels:
         severity: warning
