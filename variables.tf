@@ -37,6 +37,12 @@ variable "enable_thanos_compact" {
   type        = bool
 }
 
+variable "thanos_query_replica_count" {
+  description = "the number of thanos query replicas"
+  default     = 1
+  type        = number
+}
+
 variable "enable_prometheus_affinity_and_tolerations" {
   description = "Enable or not Prometheus node affinity (check helm values for the expressions)"
   default     = false

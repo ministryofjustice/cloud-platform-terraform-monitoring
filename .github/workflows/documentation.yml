@@ -6,12 +6,12 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Render terraform docs and push changes back to PR
-      uses: terraform-docs/gh-actions@v1.3.0
+      uses: terraform-docs/gh-actions@aeae0038ed47a547e0c0fca5c059d3335f48fb25 # v1.3.0
       with:
         working-dir: .
         output-file: README.md

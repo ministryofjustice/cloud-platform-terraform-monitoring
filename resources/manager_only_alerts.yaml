@@ -12,7 +12,7 @@ spec:
     rules:
     - alert: ThanosCompactorCPUHigh
       annotations:
-        message: CPU throttling detected in the {{ $labels.namespace }} namespace. Please investigate and increase CPU limts if neccesary.
+        message: CPU throttling detected in the {{ $labels.namespace }} namespace. Please investigate and increase CPU limits if necessary.
           https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/pull/241/files
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/pull/241/files
       expr: |-
@@ -26,7 +26,7 @@ spec:
         runbook_url: https://grafana.live.cloud-platform.service.justice.gov.uk/d/19fa341d-ae9d-4817-8a92-96b5df5ccd0a/thanos-overview?orgId=1&from=now-24h&to=now
       expr: |-
         sum(deriv(thanos_compact_todo_compactions[24h]) / 86400) > 0
-      for: 5m
+      for: 12h
       labels:
         severity: warning
 

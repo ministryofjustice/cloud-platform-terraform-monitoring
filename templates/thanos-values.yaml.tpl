@@ -24,13 +24,43 @@ storegateway:
     - --min-time=-12w
 
 query:
+  replicaCount: "${thanos_query_replica_count}"
   resources:
     limits:
-      cpu: 1600m
-      memory: 24Gi
+      cpu: 3000m
+      memory: 45Gi
     requests:
       cpu: 10m
       memory: 100Mi
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: cloud-platform.justice.gov.uk/monitoring-ng
+            operator: In
+            values:
+            - "true"
+        - matchExpressions:
+          - key: topology.kubernetes.io/zone
+            operator: In
+            values:
+            - "eu-west-2a"
+            - "eu-west-2b"
+            - "eu-west-2c"
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                - prometheus-operator-kube-p-prometheus
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                - query
+          topologyKey: topology.kubernetes.io/zone
 
   extraFlags:
     - --query.timeout=5m
