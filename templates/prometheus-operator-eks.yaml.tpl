@@ -467,7 +467,7 @@ prometheus:
         memory: "${large_nodesgroup_memory_requests}"
         cpu: "${large_nodesgroup_cpu_requests}"
       limits:
-        memory: "320000Mi"
+        memory: "450000Mi"
         cpu: "28000m"
     %{ endif }
 
