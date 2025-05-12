@@ -170,7 +170,7 @@ resource "kubernetes_network_policy" "allow-monitoring-alerts" {
       match_expressions {
           key      = "app.kubernetes.io/name"
           operator = "In"
-          values   = ["prometheus", "alertmanager"]
+          values   = ["prometheus", "alertmanager", "thanos"]
         }
     }
     ingress {
