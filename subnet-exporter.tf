@@ -51,6 +51,7 @@ statement {
     effect = "Allow"
     actions = [
       "ec2:DescribeSubnets",
+      "ec2:DescribeNetworkInterfaces",
       "ec2:DescribeTags",
     ]
     resources = [
