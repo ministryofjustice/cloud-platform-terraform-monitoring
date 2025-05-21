@@ -99,7 +99,7 @@ spec:
       annotations:
         message: The remaining available IP prefixes for the cluster is below 10% of it total availablity, {{ $value }} remaining. This must be addressed before no IP prefixes run out otherwise .
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
-      expr: sum(aws_subnet_exporter_available_prefixes) < ((sum(aws_subnet_exporter_available_prefixes)+sum(aws_subnet_exporter_used_prefixes)) / 10)
+      expr: sum(aws_subnet_exporter_available_prefixes{vpcid="${vpcid}"}) < ((sum(aws_subnet_exporter_available_prefixes{vpcid="${vpcid}"})+sum(aws_subnet_exporter_used_prefixes{vpcid="${vpcid}"})) / 10)
       for: 15s
       labels:
         severity: warning

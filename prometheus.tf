@@ -24,6 +24,10 @@ resource "random_id" "password" {
   byte_length = 8
 }
 
+data "aws_eks_cluster" "cluster" {
+  name = terraform.workspace
+}
+
 # NOTE: Make sure to update the correct CRD version(if required) using the terraform resource in core
 # `kubectl_manifest.prometheus_operator_crds` before upgrading prometheus operator
 resource "helm_release" "prometheus_operator_eks" {
@@ -94,7 +98,9 @@ resource "helm_release" "prometheus_operator_eks" {
 resource "kubectl_manifest" "prometheusrule_alerts" {
   for_each = fileset("${path.module}/resources/prometheusrule-alerts", "*.yaml")
 
-  yaml_body          = templatefile("${path.module}/resources/prometheusrule-alerts/${each.value}", {})
+  yaml_body          = templatefile("${path.module}/resources/prometheusrule-alerts/${each.value}", {
+    vpcid = data.aws_eks_cluster.cluster.vpc_config[0].vpc_id
+  })
   override_namespace = "monitoring"
   wait_for_rollout   = true
 
