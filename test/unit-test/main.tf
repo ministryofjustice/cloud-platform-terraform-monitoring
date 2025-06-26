@@ -21,7 +21,7 @@ module "prometheus" {
   enable_large_nodesgroup                    = false
   enable_thanos_compact                      = false
 
-  cluster_domain_name           = "prometheus.cloud-platform.service.justice.gov.uk"
+  cluster_domain_name           = sensitive("prometheus.cloud-platform.service.justice.gov.uk")
   oidc_components_client_id     = "XXX"
   oidc_components_client_secret = "XXX"
   oidc_issuer_url               = "https://justice-cloud-platform.eu.auth0.com/"
