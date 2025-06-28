@@ -182,22 +182,22 @@ spec:
 
     - alert: NginxIngress5xxRate-modsec-ingress
       annotations:
-        message: 'Percentage of 5xx requests of nginx-modsec  over the last 15 minutes is more than 5%.
+        message: 'Percentage of 5xx requests of nginx-modsec  over the last 15 minutes is more than 10%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
       expr: sum(rate(nginx_ingress_controller_requests{status=~"5.*", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
-        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 > 5
+        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 > 10
       for: 15m
       labels:
         severity: warning
 
     - alert: NginxIngress5xxRate-default-ingress
       annotations:
-        message: 'Percentage of 5xx requests of nginx-default over the last 15 minutes is more than 5%.
+        message: 'Percentage of 5xx requests of nginx-default over the last 15 minutes is more than 10%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
       expr: sum(rate(nginx_ingress_controller_requests{status=~"5.*", controller_class=~"k8s.io/ingress-default"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-default"}[5m]))-
-        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 > 5
+        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 > 10
       for: 15m
       labels:
         severity: warning
