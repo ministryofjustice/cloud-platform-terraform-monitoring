@@ -138,22 +138,22 @@ spec:
 
     - alert: NginxIngressSuccessRate-default-ingress
       annotations:
-        message: 'Percentage of successful requests of nginx-default over the last 15 minutes is less than 85%.
+        message: 'Percentage of successful requests of nginx-default over the last 15 minutes is less than 80%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status=~"[1-3].*", controller_class=~"k8s.io/ingress-default"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-default"}[5m]))-
-        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 < 85
+        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 < 80
       for: 15m
       labels:
         severity: warning
 
     - alert: NginxIngressSuccessRate-modsec-ingress
       annotations:
-        message: 'Percentage of successful requests of nginx-modsec  over the last 15 minutes is less than 85%.
+        message: 'Percentage of successful requests of nginx-modsec  over the last 15 minutes is less than 80%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status=~"[1-3].*", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
-        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 < 85
+        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 < 80
       for: 15m
       labels:
         severity: warning
@@ -226,44 +226,44 @@ spec:
 
     - alert: NginxIngress404Rate-modsec-ingress
       annotations:
-        message: 'Percentage of 404 requests of nginx-modsec  over the last 30 minutes is more than 20%.
+        message: 'Percentage of 404 requests of nginx-modsec  over the last 30 minutes is more than 30%.
           NOTE: Ignoring 499s in this metric, since a  499 is a normal response when client closes the connection early eg. closed tab'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status="404", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
-        sum(rate(nginx_ingress_controller_requests{status="499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 > 20
+        sum(rate(nginx_ingress_controller_requests{status="499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 > 30
       for: 30m
       labels:
         severity: warning
 
     - alert: NginxIngress404Rate-default-ingress
       annotations:
-        message: 'Percentage of 404 requests of nginx-default over the last 30 minutes is more than 20%.
+        message: 'Percentage of 404 requests of nginx-default over the last 30 minutes is more than 30%.
           NOTE: Ignoring 499s in this metric, since a  499 is a normal response when client closes the connection early eg. closed tab'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status="404", controller_class=~"k8s.io/ingress-default"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-default"}[5m]))-
-        sum(rate(nginx_ingress_controller_requests{status="499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 > 20
+        sum(rate(nginx_ingress_controller_requests{status="499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 > 30
       for: 30m
       labels:
         severity: warning
 
     - alert: NginxIngress200Rate-modsec-ingress
       annotations:
-        message: 'Percentage of 200 requests of nginx-modsec over the last 15 minutes is less than 40%.
+        message: 'Percentage of 200 requests of nginx-modsec over the last 15 minutes is less than 30%.
           NOTE: Ignoring 404s and 499s in this metric, since a  499 is a normal response when client closes the connection early eg. closed tab'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status="200", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
-        sum(rate(nginx_ingress_controller_requests{status=~"499|404", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 < 40
+        sum(rate(nginx_ingress_controller_requests{status=~"499|404", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 < 30
       for: 15m
       labels:
         severity: warning
 
     - alert: NginxIngress200Rate-default-ingress
       annotations:
-        message: 'Percentage of 200 requests of nginx-modsec over the last 15 minutes is less than 40%.
+        message: 'Percentage of 200 requests of nginx-modsec over the last 15 minutes is less than 30%.
           NOTE: Ignoring 404s and 499s in this metric, since a  499 is a normal response when client closes the connection early eg. closed tab'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status="200", controller_class=~"k8s.io/ingress-default"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-default"}[5m]))-
-        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 < 40
+        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-default"}[5m]))) * 100 < 30
       for: 15m
       labels:
         severity: warning
