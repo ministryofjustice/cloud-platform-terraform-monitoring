@@ -138,7 +138,7 @@ spec:
 
     - alert: NginxIngressSuccessRate-default-ingress
       annotations:
-        message: 'Percentage of successful requests of nginx-default over the last 15 minutes is less than 70%.
+        message: 'Percentage of successful requests of nginx-default over the last 15 minutes is less than 60%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status=~"[1-3].*", controller_class=~"k8s.io/ingress-default"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-default"}[5m]))-
@@ -149,7 +149,7 @@ spec:
 
     - alert: NginxIngressSuccessRate-modsec-ingress
       annotations:
-        message: 'Percentage of successful requests of nginx-modsec  over the last 15 minutes is less than 70%.
+        message: 'Percentage of successful requests of nginx-modsec  over the last 15 minutes is less than 60%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-success-rate
       expr: sum(rate(nginx_ingress_controller_requests{status=~"[1-3].*", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
@@ -182,7 +182,7 @@ spec:
 
     - alert: NginxIngress5xxRate-modsec-ingress
       annotations:
-        message: 'Percentage of 5xx requests of nginx-modsec  over the last 15 minutes is more than 30%.
+        message: 'Percentage of 5xx requests of nginx-modsec  over the last 15 minutes is more than 40%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
       expr: sum(rate(nginx_ingress_controller_requests{status=~"5.*", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
@@ -193,7 +193,7 @@ spec:
 
     - alert: NginxIngress5xxRate-default-ingress
       annotations:
-        message: 'Percentage of 5xx requests of nginx-default over the last 15 minutes is more than 30%.
+        message: 'Percentage of 5xx requests of nginx-default over the last 15 minutes is more than 40%.
           NOTE: Ignoring 404s and 499s in this metric, since a  404 is a normal response for errant requests'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
       expr: sum(rate(nginx_ingress_controller_requests{status=~"5.*", controller_class=~"k8s.io/ingress-default"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-default"}[5m]))-
