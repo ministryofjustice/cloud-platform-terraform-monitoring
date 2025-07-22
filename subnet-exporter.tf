@@ -29,14 +29,6 @@ resource "helm_release" "subnet_exporter" {
       value = local.subnet_exporter_sa
     },
     {
-      name  = "serviceAccount.name"
-      value = local.subnet_exporter_sa
-    },
-    {
-      name  = "serviceAccount.name"
-      value = local.subnet_exporter_sa
-    },
-    {
       name = "serviceMonitor.enabled"
       value = true
     }
