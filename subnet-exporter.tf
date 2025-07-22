@@ -7,34 +7,40 @@ resource "helm_release" "subnet_exporter" {
   version    = "0.1.5"
   repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts/"
 
-  set {
-    name  = "image.tag"
-    value = var.aws_subnet_exporter_image_tag
-  }
-  set {
-    name  = "awsSubnetExporter.region"
-    value = "eu-west-2"
-  }
-
-  set {
-    name  = "awsSubnetExporter.filter"
-    value = "*"
-  }
-  
-  set {
-    name  = "serviceAccount.create"
-    value = false
-  }
-
-  set {
-    name  = "serviceAccount.name"
-    value = local.subnet_exporter_sa
-  }
-
-  set {
-    name = "serviceMonitor.enabled"
-    value = true
-  }
+  set = [
+    {
+      name  = "image.tag"
+      value = var.aws_subnet_exporter_image_tag
+    },
+    {
+      name  = "awsSubnetExporter.region"
+      value = "eu-west-2"
+    },
+    {
+      name  = "awsSubnetExporter.filter"
+      value = "*"
+    },
+    {
+      name  = "serviceAccount.create"
+      value = false
+    },
+    {
+      name  = "serviceAccount.name"
+      value = local.subnet_exporter_sa
+    },
+    {
+      name  = "serviceAccount.name"
+      value = local.subnet_exporter_sa
+    },
+    {
+      name  = "serviceAccount.name"
+      value = local.subnet_exporter_sa
+    },
+    {
+      name = "serviceMonitor.enabled"
+      value = true
+    }
+  ]
 
   depends_on = [
     local.prometheus_dependency,
