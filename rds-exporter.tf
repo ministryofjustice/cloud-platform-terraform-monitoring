@@ -7,55 +7,48 @@ resource "helm_release" "rds_exporter" {
   version    = "0.10.1"
   repository = "oci://public.ecr.aws/qonto"
 
-  set {
-    name  = "serviceAccount.create"
-    value = false
-  }
-
-  set {
-    name  = "serviceAccount.name"
-    value = local.rds_exporter_sa
-  }
-
-  set {
-    name  = "serviceMonitor.enabled"
-    value = true
-  }
-
-  set {
-    name = "serviceMonitor.interval"
-    value = "240s"
-  }
-
-  set {
-    name = "serviceMonitor.scrapeTimeout"
-    value = "240s"    
-  }
-
-  set {
-    name  = "aws.region"
-    value = "eu-west-2"
-  }
-
-  set {
-    name = "resources.requests.cpu"
-    value = "200m"
-  }
-
-  set { 
-    name = "resources.requests.memory"
-    value = "500Mi"
-  }
-
-  set {
-    name = "resources.limits.cpu"
-    value = "2000m"
-  }
-
-  set {
-    name = "resources.limits.memory"
-    value = "1Gi"
-  }
+  set = [
+    {
+      name  = "serviceAccount.create"
+      value = false
+    },
+    {
+      name  = "serviceAccount.name"
+      value = local.rds_exporter_sa
+    },
+    {
+      name  = "serviceMonitor.enabled"
+      value = true
+    },
+    {
+      name = "serviceMonitor.interval"
+      value = "240s"
+    },
+    {
+      name = "serviceMonitor.scrapeTimeout"
+      value = "240s"
+    },
+    {
+      name  = "aws.region"
+      value = "eu-west-2"
+    },
+    {
+      name = "resources.requests.cpu"
+      value = "200m"
+    },
+    {
+      name = "resources.requests.memory"
+      value = "500Mi"
+    },
+    {
+      name = "resources.limits.cpu"
+      value = "2000m"
+    },
+    {
+      name = "resources.limits.memory"
+      value = "1Gi"
+    }
+  ]
 
   depends_on = [
     local.prometheus_dependency,

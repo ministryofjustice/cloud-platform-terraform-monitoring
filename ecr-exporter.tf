@@ -11,20 +11,20 @@ resource "helm_release" "ecr_exporter" {
   version    = "0.4.0"
   repository = "https://ministryofjustice.github.io/cloud-platform-helm-charts"
 
-  set {
-    name  = "serviceAccount.name"
-    value = local.ecr_exporter_sa
-  }
-
-  set {
-    name  = "serviceMonitor.enabled"
-    value = true
-  }
-
-  set {
-    name  = "aws.region"
-    value = "eu-west-2"
-  }
+  set = [
+    {
+      name  = "serviceAccount.name"
+      value = local.ecr_exporter_sa
+    },
+    {
+      name  = "serviceMonitor.enabled"
+      value = true
+    },
+    {
+      name  = "aws.region"
+      value = "eu-west-2"
+    }
+  ]
 
   depends_on = [
     local.prometheus_dependency,

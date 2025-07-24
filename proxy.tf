@@ -23,21 +23,20 @@ resource "helm_release" "prometheus_proxy" {
     }),
   ]
 
-  set_sensitive {
-    name  = "config.clientID"
-    value = var.oidc_components_client_id
-  }
-
-  set_sensitive {
-    name  = "config.clientSecret"
-    value = var.oidc_components_client_secret
-  }
-
-  set_sensitive {
-    name  = "config.cookieSecret"
-    value = random_id.session_secret.b64_std
-  }
-
+  set_sensitive = [
+    {
+      name  = "config.clientID"
+      value = var.oidc_components_client_id
+    },
+    {
+      name  = "config.clientSecret"
+      value = var.oidc_components_client_secret
+    },
+    {
+      name  = "config.cookieSecret"
+      value = random_id.session_secret.b64_std
+    }
+  ]
 
   depends_on = [
     random_id.session_secret
@@ -74,20 +73,20 @@ resource "helm_release" "alertmanager_proxy" {
     }),
   ]
 
-  set_sensitive {
-    name  = "config.clientID"
-    value = var.oidc_components_client_id
-  }
-
-  set_sensitive {
-    name  = "config.clientSecret"
-    value = var.oidc_components_client_secret
-  }
-
-  set_sensitive {
-    name  = "config.cookieSecret"
-    value = random_id.session_secret.b64_std
-  }
+  set_sensitive = [
+    {
+      name  = "config.clientID"
+      value = var.oidc_components_client_id
+    },
+    {
+      name  = "config.clientSecret"
+      value = var.oidc_components_client_secret
+    },
+    {
+      name  = "config.cookieSecret"
+      value = random_id.session_secret.b64_std
+    }
+  ]
 
   depends_on = [
     random_id.session_secret
@@ -124,20 +123,20 @@ resource "helm_release" "thanos_proxy" {
     }),
   ]
 
-  set_sensitive {
-    name  = "config.clientID"
-    value = var.oidc_components_client_id
-  }
-
-  set_sensitive {
-    name  = "config.clientSecret"
-    value = var.oidc_components_client_secret
-  }
-
-  set_sensitive {
-    name  = "config.cookieSecret"
-    value = random_id.session_secret.b64_std
-  }
+  set_sensitive = [
+    {
+      name  = "config.clientID"
+      value = var.oidc_components_client_id
+    },
+    {
+      name  = "config.clientSecret"
+      value = var.oidc_components_client_secret
+    },
+    {
+      name  = "config.cookieSecret"
+      value = random_id.session_secret.b64_std
+    }
+  ]
 
   depends_on = [
     random_id.session_secret

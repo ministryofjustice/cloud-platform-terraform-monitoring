@@ -60,20 +60,20 @@ resource "helm_release" "prometheus_operator_eks" {
     storage_size                               = can(regex("live", terraform.workspace)) ? "750Gi" : "75Gi"
   })]
 
-  set_sensitive {
-    name  = "grafana.env.GF_SERVER_ROOT_URL"
-    value = local.grafana_root
-  }
-
-  set_sensitive {
-    name  = "grafana.adminUser"
-    value = random_id.username.hex
-  }
-
-  set_sensitive {
-    name  = "grafana.adminPassword"
-    value = random_id.password.hex
-  }
+  set_sensitive = [
+    {
+      name  = "grafana.env.GF_SERVER_ROOT_URL"
+      value = local.grafana_root
+    },
+    {
+      name  = "grafana.adminUser"
+      value = random_id.username.hex
+    },
+    {
+      name  = "grafana.adminPassword"
+      value = random_id.password.hex
+    }
+  ]
 
   # Depends on Helm being installed
   depends_on = [
