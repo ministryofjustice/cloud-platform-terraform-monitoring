@@ -128,7 +128,7 @@ resource "aws_iam_policy" "rds_exporter" {
 
 module "rds_exporter_irsa" {
   count            = var.enable_rds_exporter ? 1 : 0
-  source           = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=2.0.0"
+  source           = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=2.1.0"
   eks_cluster_name = terraform.workspace
   namespace        = kubernetes_namespace.monitoring.id
   role_policy_arns = {

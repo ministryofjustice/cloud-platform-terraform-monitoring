@@ -68,14 +68,13 @@ resource "aws_iam_policy" "subnet_exporter" {
 
 module "subnet_exporter_irsa" {
   count            = var.enable_subnet_exporter ? 1 : 0
-  source           = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=2.0.0"
+  source           = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=2.1.0"
   eks_cluster_name = terraform.workspace
   namespace        = kubernetes_namespace.monitoring.id
   role_policy_arns = {
     irsa = aws_iam_policy.subnet_exporter[0].arn
   }
   service_account_name = local.subnet_exporter_sa
-
   business_unit          = var.business_unit
   application            = var.application
   is_production          = var.is_production
