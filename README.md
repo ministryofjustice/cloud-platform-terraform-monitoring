@@ -53,9 +53,9 @@ module "monitoring" {
 |------|--------|---------|
 | <a name="module_iam_assumable_role_monitoring"></a> [iam\_assumable\_role\_monitoring](#module\_iam\_assumable\_role\_monitoring) | terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc | 5.52.1 |
 | <a name="module_iam_assumable_role_yace_cloudwatch_exporter"></a> [iam\_assumable\_role\_yace\_cloudwatch\_exporter](#module\_iam\_assumable\_role\_yace\_cloudwatch\_exporter) | terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc | 5.52.1 |
-| <a name="module_irsa"></a> [irsa](#module\_irsa) | github.com/ministryofjustice/cloud-platform-terraform-irsa | 2.0.0 |
-| <a name="module_rds_exporter_irsa"></a> [rds\_exporter\_irsa](#module\_rds\_exporter\_irsa) | github.com/ministryofjustice/cloud-platform-terraform-irsa | 2.0.0 |
-| <a name="module_subnet_exporter_irsa"></a> [subnet\_exporter\_irsa](#module\_subnet\_exporter\_irsa) | github.com/ministryofjustice/cloud-platform-terraform-irsa | 2.0.0 |
+| <a name="module_irsa"></a> [irsa](#module\_irsa) | github.com/ministryofjustice/cloud-platform-terraform-irsa | 2.1.0 |
+| <a name="module_rds_exporter_irsa"></a> [rds\_exporter\_irsa](#module\_rds\_exporter\_irsa) | github.com/ministryofjustice/cloud-platform-terraform-irsa | 2.1.0 |
+| <a name="module_subnet_exporter_irsa"></a> [subnet\_exporter\_irsa](#module\_subnet\_exporter\_irsa) | github.com/ministryofjustice/cloud-platform-terraform-irsa | 2.1.0 |
 
 ## Resources
 
