@@ -156,3 +156,10 @@ existingObjstoreSecret: thanos-objstore-config
 existingObjstoreSecretItems:
   - key: thanos.yaml
     path: objstore.yml
+
+image:
+  registry: docker.io
+  repository: bitnamilegacy/thanos
+  tag: 0.34.1-debian-12-r1
+  pullPolicy: IfNotPresent
+
