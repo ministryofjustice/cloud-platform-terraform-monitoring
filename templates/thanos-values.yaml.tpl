@@ -163,3 +163,35 @@ image:
   tag: 0.34.1-debian-12-r1
   pullPolicy: IfNotPresent
 
+
+########################################
+# bitnami legacy images issue:
+#
+# Bitnami's introduction of 'production-ready' secure images topic:
+# https://github.com/bitnami/charts/issues/35164
+# 
+# As a temp measure we are switching over to legacy registry. This means the chart complains about insecure images (this is by Bitnami design):
+#
+# ERROR: Original containers have been substituted for unrecognized ones. Deploying this chart with non-standard containers is likely to cause degraded security and performance, broken chart features, and missing environment variables.
+# 
+# Unrecognized images:
+#    - docker.io/bitnamilegacy/0.34.1-debian-12-r1
+#
+# If you are sure you want to proceed with non-standard containers, you can skip container image verification by setting the global parameter 'global.security.allowInsecureImages' to true.
+# Further information can be obtained at https://github.com/bitnami/charts/issues/30850
+#
+# Therefore we are setting: 
+# global.security.allowInsecureImages: true
+# 
+# This solution will only help us until we pass version 0.39 of thanos:
+# https://hub.docker.com/r/bitnamilegacy/thanos/tags
+#
+# After which we need to do something else:
+# 
+# - Investigate alternatives
+# - subscribe to bitnami?
+#
+########################################
+global:
+  security:
+    allowInsecureImages: true
