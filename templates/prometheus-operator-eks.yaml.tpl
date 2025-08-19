@@ -199,6 +199,9 @@ grafana:
   adminUser:
   adminPassword:
 
+  datasources:
+    timeout: 600
+
   ingress:
     enabled: true
     ingressClassName: default
