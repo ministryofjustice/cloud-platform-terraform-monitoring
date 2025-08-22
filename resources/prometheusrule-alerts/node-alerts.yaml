@@ -84,7 +84,7 @@ spec:
       expr: count(node_uname_info) > count(node_uname_info offset 135s)
       for: 15s
       labels:
-        severity: info-warning
+        severity: info-cloud-platform-notify
     - alert: DecreaseInNodeCount
       annotations:
         message: 'The Node count has decreased from {{ with query "count(node_uname_info offset 135s)" }}
@@ -94,7 +94,27 @@ spec:
       expr: count(node_uname_info) < count(node_uname_info offset 135s)
       for: 15s
       labels:
-        severity: info-warning
+        severity: info-cloud-platform-notify
+    - alert: IncreaseInNodeCountAlert
+      annotations:
+        message: 'The Node count has increased by 3 or more nodes within 30 minutes. From {{ with query "count(node_uname_info offset 1800s)" }}
+          {{ . | first | value | humanize }}
+        {{ end }} to {{ $value }}'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#ChangeInNodeCountAlert
+      expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+2)
+      for: 15s
+      labels:
+        severity: warning
+    - alert: DecreaseInNodeCountAlert
+      annotations:
+        message: 'The Node count has decreased by 3 or more nodes within 30 minutes. From {{ with query "count(node_uname_info offset 1800s)" }}
+          {{ . | first | value | humanize }}
+        {{ end }} to {{ $value }}'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#ChangeInNodeCountAlert
+      expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-2)
+      for: 15s
+      labels:
+        severity: warning
     - alert: LowIpPrefixesAvailable
       annotations:
         message: The remaining available IP prefixes for the cluster is below 10% of it total availablity, {{ $value }} remaining. This must be addressed before no IP prefixes run out otherwise .
