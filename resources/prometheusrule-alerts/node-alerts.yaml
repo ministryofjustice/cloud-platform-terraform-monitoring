@@ -104,7 +104,7 @@ spec:
       expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+2)
       for: 15s
       labels:
-        severity: warning
+        severity: info-warning
     - alert: DecreaseInNodeCountAlert
       annotations:
         message: 'The Node count has decreased by 3 or more nodes within 30 minutes. From {{ with query "count(node_uname_info offset 1800s)" }}
@@ -114,7 +114,7 @@ spec:
       expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-2)
       for: 15s
       labels:
-        severity: warning
+        severity: info-warning
     - alert: LowIpPrefixesAvailable
       annotations:
         message: The remaining available IP prefixes for the cluster is below 10% of it total availablity, {{ $value }} remaining. This must be addressed before no IP prefixes run out otherwise .
