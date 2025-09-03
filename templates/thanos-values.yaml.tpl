@@ -160,7 +160,7 @@ existingObjstoreSecretItems:
 image:
   registry: docker.io
   repository: bitnamilegacy/thanos
-  tag: 0.34.1-debian-12-r1
+  tag: 0.39.2-debian-12-r2
   pullPolicy: IfNotPresent
 
 
