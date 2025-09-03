@@ -104,7 +104,6 @@ compactor:
     - --compact.enable-vertical-compaction
     - --deduplication.replica-label=prometheus_replica
     - --deduplication.func=penalty
-    - --compact.concurrency=64
     - --downsample.concurrency=16
     - --compact.blocks-fetch-concurrency=16
     - --delete-delay=12h
@@ -112,6 +111,7 @@ compactor:
   retentionResolutionRaw: 30d
   retentionResolution5m: 180d
   retentionResolution1h: 365d
+  concurrency: 64
   persistence:
     size: 16000Gi
   serviceAccount:
