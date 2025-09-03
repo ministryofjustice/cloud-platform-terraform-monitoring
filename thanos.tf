@@ -5,7 +5,7 @@ resource "helm_release" "thanos" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "thanos"
-  version    = "15.0.0"
+  version    = "17.3.1"
   timeout    = 900
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
     prometheus_sa_name  = local.prometheus_sa_name
