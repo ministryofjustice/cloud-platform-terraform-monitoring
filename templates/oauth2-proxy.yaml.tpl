@@ -69,40 +69,6 @@ redis:
   # provision an instance of the redis sub-chart
   enabled: true
   architecture: standalone
-  image:
-    registry: docker.io
-    repository: bitnamilegacy/redis
-    tag: 7.2.4-debian-11-r5
-    pullPolicy: IfNotPresent
-
-########################################
-# bitnami legacy images issue:
-#
-# Bitnami's introduction of 'production-ready' secure images topic:
-# https://github.com/bitnami/charts/issues/35164
-# 
-# As a temp measure we are switching over to legacy registry. This means the chart complains about insecure images (this is by Bitnami design):
-#
-# ERROR: Original containers have been substituted for unrecognized ones. Deploying this chart with non-standard containers is likely to cause degraded security and performance, broken chart features, and missing environment variables.
-# 
-# Unrecognized images:
-#    - docker.io/bitnamilegacy/redis-7.2.4-debian-11-r5
-#
-# If you are sure you want to proceed with non-standard containers, you can skip container image verification by setting the global parameter 'global.security.allowInsecureImages' to true.
-# Further information can be obtained at https://github.com/bitnami/charts/issues/30850
-#
-# Therefore we are setting: 
-# global.security.allowInsecureImages: true
-# 
-# This solution will only help us until we pass version 8.0.3 of redis:
-# https://hub.docker.com/r/bitnamilegacy/redis/tags
-#
-# After which we need to do something else:
-# 
-# - Investigate alternatives
-# - subscribe to bitnami?
-#
-########################################
 
 priorityClassName: system-cluster-critical
 
