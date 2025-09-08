@@ -111,7 +111,7 @@ compactor:
   retentionResolutionRaw: 30d
   retentionResolution5m: 180d
   retentionResolution1h: 365d
-  concurrency: 64
+  concurrency: 8
   persistence:
     size: 16000Gi
   serviceAccount:
