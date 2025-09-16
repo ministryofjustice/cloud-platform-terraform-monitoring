@@ -701,17 +701,17 @@ Investigation in Kibana required
 IncreaseInNodeCountAlert/DecreaseInNodeCountAlert
 Severity: warning
 ```
-This alert is triggered when 3 or more nodes scale up/down within 30 minutes.  
+This alert is triggered when 5 or more nodes scale up/down within 30 minutes.
 
 Expression:<br>
 Increase:
 ```
-expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+2)
+expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+4)
 for: 15s
 ```
 Decrease:
 ```
-expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-2)
+expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-4)
 for: 15s
 ```
 ### Action
