@@ -31,7 +31,7 @@ Please read the documentation from [Kubernetes](https://github.com/kubernetes/ko
 Node-Scheduling-Disabled
 Severity: warning
 ```
-This alert is triggered when a node has had scheduling disabled for more than 3 hours. 
+This alert is triggered when a node has had scheduling disabled for more than 3 hours.
 
 Expression:
 ```
@@ -43,15 +43,15 @@ for: 3h
 Run the following command:
 `kubectl describe node <node name>`
 
-A node with a status of `Ready,SchedulingDisabled` is normally set when a node as been `Cordoned` by a user or a process such as the node recycle pipeline. 
-However, there may be other reasons why a node has been set to `Ready,SchedulingDisabled` by Kubernetes, and a describe of the node should give an indication to why. 
+A node with a status of `Ready,SchedulingDisabled` is normally set when a node as been `Cordoned` by a user or a process such as the node recycle pipeline.
+However, there may be other reasons why a node has been set to `Ready,SchedulingDisabled` by Kubernetes, and a describe of the node should give an indication to why.
 
 ## Node-Disk-Space-Low
 ```
 Node-Disk-Space-Low
 Severity: warning
 ```
-This alert is triggered when a node has less than 10% disk space (Ignoring /snap/* mountpoints) for 30 minutes. 
+This alert is triggered when a node has less than 10% disk space (Ignoring /snap/* mountpoints) for 30 minutes.
 
 Expression:
 ```
@@ -478,7 +478,7 @@ This alert is triggered when job completion is taking longer than 1 hour to comp
 
 Expression:
 ```
-kube_job_spec_completions - kube_job_status_succeeded {job_name=~"elasticsearch-curator-cronjob.+"} > 0      
+kube_job_spec_completions - kube_job_status_succeeded {job_name=~"elasticsearch-curator-cronjob.+"} > 0
 for: 1h
 ```
 
@@ -525,7 +525,7 @@ You can also run the following query on Kibana to check for the error:
 
 #### Nginx Error Log Severity Levels
 
-The are a number of severity levels that can be defined in the error_log. The following is a list of all severity levels: 
+The are a number of severity levels that can be defined in the error_log. The following is a list of all severity levels:
 
 + debug - Useful debugging information to help determine where the problem lies.
 + info - Informational messages that aren’t necessary to read but may be good to know.
@@ -556,7 +556,7 @@ sum(rate(nginx_ingress_controller_requests{status!~"[4-5].*", controller_class=~
 
 There has been previous situations when the response rate was improved when the number of replicas of ingress controller are incremented.
 
-Check in grafana dashboard if the number of requests are increased in past few months. 
+Check in grafana dashboard if the number of requests are increased in past few months.
 
 NOTE: Currently the ingress controller handles 23.0million requests with success rate at 98.9% over 3 hours period with 30 replicas. If the traffic has increased with the similar time period, the reduced success rate might be because of the number of ingress controller pods.
 
@@ -701,17 +701,17 @@ Investigation in Kibana required
 IncreaseInNodeCountAlert/DecreaseInNodeCountAlert
 Severity: warning
 ```
-This alert is triggered when 3 or more nodes scale up/down within 30 minutes.  
+This alert is triggered when 4 or more nodes scale up/down within 30 minutes.
 
 Expression:<br>
 Increase:
 ```
-expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+2)
+expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+3)
 for: 15s
 ```
 Decrease:
 ```
-expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-2)
+expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-3)
 for: 15s
 ```
 ### Action

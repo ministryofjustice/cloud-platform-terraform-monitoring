@@ -97,21 +97,21 @@ spec:
         severity: info-cloud-platform-notify
     - alert: IncreaseInNodeCountAlert
       annotations:
-        message: 'The Node count has increased by 3 or more nodes within 30 minutes. From {{ with query "count(node_uname_info offset 1800s)" }}
+        message: 'The Node count has increased by 4 or more nodes within 30 minutes. From {{ with query "count(node_uname_info offset 1800s)" }}
           {{ . | first | value | humanize }}
         {{ end }} to {{ $value }}'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#ChangeInNodeCountAlert
-      expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+2)
+      expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+3)
       for: 15s
       labels:
         severity: info-warning
     - alert: DecreaseInNodeCountAlert
       annotations:
-        message: 'The Node count has decreased by 3 or more nodes within 30 minutes. From {{ with query "count(node_uname_info offset 1800s)" }}
+        message: 'The Node count has decreased by 4 or more nodes within 30 minutes. From {{ with query "count(node_uname_info offset 1800s)" }}
           {{ . | first | value | humanize }}
         {{ end }} to {{ $value }}'
         runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#ChangeInNodeCountAlert
-      expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-2)
+      expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-3)
       for: 15s
       labels:
         severity: info-warning
