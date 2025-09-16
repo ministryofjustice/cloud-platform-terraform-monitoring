@@ -706,12 +706,12 @@ This alert is triggered when 4 or more nodes scale up/down within 30 minutes.
 Expression:<br>
 Increase:
 ```
-expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+2)
+expr: count(node_uname_info) > (count(node_uname_info offset 1800s)+3)
 for: 15s
 ```
 Decrease:
 ```
-expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-2)
+expr: count(node_uname_info) < (count(node_uname_info offset 1800s)-3)
 for: 15s
 ```
 ### Action
