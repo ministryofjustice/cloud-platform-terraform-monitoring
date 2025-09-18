@@ -109,3 +109,22 @@ priorityClassName: system-cluster-critical
 global:
   security:
     allowInsecureImages: true
+
+########################################
+# bitnami legacy image:
+# wait-for-redis initContainer 
+########################################
+
+initContainers:
+  # if the redis sub-chart is enabled, wait for it to be ready
+  # before starting the proxy
+  # creates a role binding to get, list, watch, the redis master pod
+  # if service account is enabled
+  waitForRedis:
+    enabled: true
+    image:
+      repository: "docker.io/bitnamilegacy/kubectl"
+      pullPolicy: "IfNotPresent"
+    # uses the kubernetes version of the cluster
+    # the chart is deployed on, if not set
+    kubectlVersion: ""
