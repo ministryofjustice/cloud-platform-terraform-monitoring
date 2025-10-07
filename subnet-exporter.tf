@@ -66,19 +66,42 @@ resource "aws_iam_policy" "subnet_exporter" {
   policy      = data.aws_iam_policy_document.subnet_exporter.json
 }
 
-module "subnet_exporter_irsa" {
-  count            = var.enable_subnet_exporter ? 1 : 0
-  source           = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=2.1.0"
-  eks_cluster_name = terraform.workspace
-  namespace        = kubernetes_namespace.monitoring.id
-  role_policy_arns = {
-    irsa = aws_iam_policy.subnet_exporter[0].arn
+# IRSA resources for subnet exporter
+resource "aws_iam_role" "subnet_exporter" {
+  count = var.enable_subnet_exporter ? 1 : 0
+  name = "subnet-exporter-irsa-${terraform.workspace}"
+  assume_role_policy = data.aws_iam_policy_document.subnet_exporter_assume_role[count.index].json
+  tags = {
+    business-unit          = var.business_unit
+    application            = var.application
+    is-production          = var.is_production
+    team-name              = var.team_name
+    environment-name       = var.environment
+    infrastructure-support = var.infrastructure_support
   }
-  service_account_name = local.subnet_exporter_sa
-  business_unit          = var.business_unit
-  application            = var.application
-  is_production          = var.is_production
-  team_name              = var.team_name
-  environment_name       = var.environment
-  infrastructure_support = var.infrastructure_support
 }
+
+data "aws_iam_policy_document" "subnet_exporter_assume_role" {
+  count = var.enable_subnet_exporter ? 1 : 0
+  statement {
+    effect = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    principals {
+      type        = "Federated"
+      identifiers = [replace(var.eks_cluster_oidc_issuer_url, "https://", "")]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(var.eks_cluster_oidc_issuer_url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:${kubernetes_namespace.monitoring.id}:${local.subnet_exporter_sa}"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "subnet_exporter" {
+  count      = var.enable_subnet_exporter ? 1 : 0
+  role       = aws_iam_role.subnet_exporter[count.index].name
+  policy_arn = aws_iam_policy.subnet_exporter[count.index].arn
+}
+
+
