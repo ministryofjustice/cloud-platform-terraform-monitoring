@@ -21,11 +21,11 @@ resource "helm_release" "rds_exporter" {
       value = true
     },
     {
-      name = "serviceMonitor.interval"
+      name  = "serviceMonitor.interval"
       value = "240s"
     },
     {
-      name = "serviceMonitor.scrapeTimeout"
+      name  = "serviceMonitor.scrapeTimeout"
       value = "240s"
     },
     {
@@ -33,19 +33,19 @@ resource "helm_release" "rds_exporter" {
       value = "eu-west-2"
     },
     {
-      name = "resources.requests.cpu"
+      name  = "resources.requests.cpu"
       value = "200m"
     },
     {
-      name = "resources.requests.memory"
+      name  = "resources.requests.memory"
       value = "500Mi"
     },
     {
-      name = "resources.limits.cpu"
+      name  = "resources.limits.cpu"
       value = "2000m"
     },
     {
-      name = "resources.limits.memory"
+      name  = "resources.limits.memory"
       value = "1Gi"
     }
   ]
@@ -60,7 +60,7 @@ resource "helm_release" "rds_exporter" {
 }
 
 data "aws_iam_policy_document" "rds_exporter" {
-statement {
+  statement {
     sid    = "AllowInstanceAndLogDescriptions"
     effect = "Allow"
     actions = [

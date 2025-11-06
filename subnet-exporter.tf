@@ -29,7 +29,7 @@ resource "helm_release" "subnet_exporter" {
       value = local.subnet_exporter_sa
     },
     {
-      name = "serviceMonitor.enabled"
+      name  = "serviceMonitor.enabled"
       value = true
     }
   ]
@@ -44,7 +44,7 @@ resource "helm_release" "subnet_exporter" {
 }
 
 data "aws_iam_policy_document" "subnet_exporter" {
-statement {
+  statement {
     sid    = "AllowDescribeSubnets"
     effect = "Allow"
     actions = [
@@ -74,7 +74,7 @@ module "subnet_exporter_irsa" {
   role_policy_arns = {
     irsa = aws_iam_policy.subnet_exporter[0].arn
   }
-  service_account_name = local.subnet_exporter_sa
+  service_account_name   = local.subnet_exporter_sa
   business_unit          = var.business_unit
   application            = var.application
   is_production          = var.is_production
