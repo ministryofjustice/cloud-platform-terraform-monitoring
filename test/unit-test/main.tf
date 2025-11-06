@@ -20,6 +20,8 @@ module "prometheus" {
   enable_prometheus_affinity_and_tolerations = false
   enable_large_nodesgroup                    = false
   enable_thanos_compact                      = false
+  operator_storage_class                     = "gp2-expand"
+  operator_storage_size                      = "75Gi"
 
   cluster_domain_name           = "prometheus.cloud-platform.service.justice.gov.uk"
   oidc_components_client_id     = "XXX"

@@ -146,3 +146,15 @@ variable "aws_subnet_exporter_image_tag" {
   default     = ""
   type        = string
 }
+
+variable "operator_storage_class" {
+  description = "Storage class to use for prometheus-operator persistent volume claims"
+  type        = string
+  default     = "gp2-expand"
+}
+
+variable "operator_storage_size" {
+  description = "Storage size to use for prometheus-operator persistent volume claims"
+  type        = string
+  default     = "75Gi"
+}
