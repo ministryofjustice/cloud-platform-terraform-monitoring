@@ -135,6 +135,8 @@ module "monitoring" {
 | <a name="input_oidc_components_client_id"></a> [oidc\_components\_client\_id](#input\_oidc\_components\_client\_id) | OIDC ClientID used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_components_client_secret"></a> [oidc\_components\_client\_secret](#input\_oidc\_components\_client\_secret) | OIDC ClientSecret used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
 | <a name="input_oidc_issuer_url"></a> [oidc\_issuer\_url](#input\_oidc\_issuer\_url) | Issuer URL used to authenticate to Grafana, AlertManager and Prometheus (oauth2-proxy) | `any` | n/a | yes |
+| <a name="input_operator_storage_class"></a> [operator\_storage\_class](#input\_operator\_storage\_class) | Storage class to use for prometheus-operator persistent volume claims | `string` | `"gp2-expand"` | no |
+| <a name="input_operator_storage_size"></a> [operator\_storage\_size](#input\_operator\_storage\_size) | Storage size to use for prometheus-operator persistent volume claims | `string` | `"75Gi"` | no |
 | <a name="input_pagerduty_config"></a> [pagerduty\_config](#input\_pagerduty\_config) | Add PagerDuty key to allow integration with a PD service. | `any` | n/a | yes |
 | <a name="input_team_name"></a> [team\_name](#input\_team\_name) | n/a | `string` | `"webops"` | no |
 | <a name="input_thanos_query_replica_count"></a> [thanos\_query\_replica\_count](#input\_thanos\_query\_replica\_count) | the number of thanos query replicas | `number` | `1` | no |
