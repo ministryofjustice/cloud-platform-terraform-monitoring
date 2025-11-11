@@ -181,8 +181,6 @@ alertmanager:
 ##
 grafana:
   enabled: true
-  image:
-    tag: "${ grafana_image_tag }"
 
   rbac:
     pspEnabled: false
@@ -191,6 +189,7 @@ grafana:
     pullSecrets:
     - "dockerhub-credentials"
     repository: grafana/grafana
+    tag: "${ grafana_image_tag }"
     pullPolicy: IfNotPresent
 
   serviceAccount:
