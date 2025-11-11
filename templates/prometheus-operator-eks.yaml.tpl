@@ -181,6 +181,8 @@ alertmanager:
 ##
 grafana:
   enabled: true
+  image:
+    tag: "${ grafana_image_tag }"
 
   rbac:
     pspEnabled: false
