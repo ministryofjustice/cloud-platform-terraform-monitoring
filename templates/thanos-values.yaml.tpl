@@ -41,13 +41,7 @@ query:
             operator: In
             values:
             - "true"
-        - matchExpressions:
-          - key: topology.kubernetes.io/zone
-            operator: In
-            values:
-            - "eu-west-2a"
-            - "eu-west-2b"
-            - "eu-west-2c"
+
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
@@ -56,11 +50,27 @@ query:
                 operator: In
                 values:
                 - prometheus-operator-kube-p-prometheus
+          topologyKey: kubernetes.io/hostname    
+        - labelSelector:
+            matchExpressions:        
               - key: app.kubernetes.io/component
                 operator: In
                 values:
                 - query
-          topologyKey: topology.kubernetes.io/zone
+          topologyKey: kubernetes.io/hostname                
+        - labelSelector:
+            matchExpressions:        
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - grafana
+          topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: "monitoring-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
 
   extraFlags:
     - --query.timeout=5m
