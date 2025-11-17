@@ -537,13 +537,6 @@ prometheus:
               operator: In
               values:
               - "true"
-          - matchExpressions:
-            - key: topology.kubernetes.io/zone
-              operator: In
-              values:
-              - "eu-west-2a"
-              - "eu-west-2b"
-              - "eu-west-2c"
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
@@ -552,11 +545,14 @@ prometheus:
                   operator: In
                   values:
                   - prometheus-operator-kube-p-prometheus
+            topologyKey: topology.kubernetes.io/zone
+          - labelSelector:     
+              matchExpressions:   
                 - key: app.kubernetes.io/component
                   operator: In
                   values:
                   - query
-            topologyKey: topology.kubernetes.io/zone
+            topologyKey: kubernetes.io/hostname
 
     %{ endif ~}
 
