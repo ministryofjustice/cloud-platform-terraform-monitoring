@@ -366,6 +366,17 @@ spec:
       for: 10m
       labels:
         severity: critical
+    - alert: coreDNSDeploymentReplicasMismatch
+      annotations:
+        message: CoreDNS deployment has {{ $value }} ready replicas but should have {{ $labels.spec_replicas }}. Cluster networking may be impacted. Check for any Pending pods or unhealthy cluster nodes. Consider rollout restart of CoreDNS deployment.
+        runbook_url: https://grafana.live.cloud-platform.service.justice.gov.uk/d/k8s_system_coredns/kubernetes-system-coredns?orgId=1&from=now-1h&to=now&timezone=browser&var-datasource=prometheus&var-instance=$__all&var-protocol=udp&var-resolution=30s&refresh=30s
+      expr: |-
+        kube_deployment_status_replicas_ready{deployment="coredns"} 
+        != 
+        kube_deployment_spec_replicas{deployment="coredns"}
+      for: 5m
+      labels:
+        severity: warning
     - alert: PrometheusServerMemHigh
       annotations:
         message: The Prometheus server uses a lot of memory and has ocassionally OOMKilled bringing down prometheus. Bump the node group monitoring instance size
