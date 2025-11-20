@@ -688,3 +688,35 @@ config: |-
             - Minimum
             - SampleCount
           nilToZero: true
+        - name: ReadIOPS
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: WriteIOPS
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: ReadThroughput
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
+        - name: WriteThroughput
+          statistics:
+            - Sum
+            - Average
+            - Maximum
+            - Minimum
+            - SampleCount
+          nilToZero: true
