@@ -25,6 +25,15 @@ storegateway:
 
 query:
   replicaCount: "${thanos_query_replica_count}"
+  %{ if enable_large_nodesgroup }  
+  resources:
+    limits:
+      cpu: 28000m
+      memory: 300Gi
+    requests:
+      cpu: "${large_nodesgroup_cpu_requests}"
+      memory: "${large_nodesgroup_memory_requests}"
+  %{ else }
   resources:
     limits:
       cpu: 3000m
@@ -32,6 +41,8 @@ query:
     requests:
       cpu: 10m
       memory: 100Mi
+  %{ endif }
+
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
