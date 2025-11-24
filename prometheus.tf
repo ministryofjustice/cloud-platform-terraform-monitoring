@@ -36,7 +36,7 @@ resource "helm_release" "prometheus_operator_eks" {
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.monitoring.id
-  version    = "69.8.2"
+  version    = "79.4.1"
   skip_crds  = true # Crds are managed separately using resource kubectl_manifest.prometheus_operator_crds in core
   timeout    = 600
 
@@ -60,7 +60,7 @@ resource "helm_release" "prometheus_operator_eks" {
     storage_size                               = var.operator_storage_size
     # NOTE: We are overriding the grafana image to use CVE-2025-6197 security patched release. This can be removed once Helm charts are also patched.
     # Ref: https://grafana.com/security/security-advisories/cve-2025-6197/
-    grafana_image_tag                          = "11.5.6-security-01"
+    grafana_image_tag = "11.5.6-security-01"
   })]
 
   set_sensitive = [
