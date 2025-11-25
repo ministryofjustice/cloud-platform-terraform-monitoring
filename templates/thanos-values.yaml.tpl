@@ -6,11 +6,44 @@ metrics:
 storegateway:
   resources:
     limits:
-      cpu: 2000m
-      memory: 32Gi
+      cpu: 6000m
+      memory: 64Gi
     requests:
       cpu: 10m
       memory: 100Mi
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: cloud-platform.justice.gov.uk/monitoring-ng
+            operator: In
+            values:
+            - "true"
+
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                - prometheus-operator-kube-p-prometheus
+          topologyKey: kubernetes.io/hostname    
+        - labelSelector:
+            matchExpressions:        
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - grafana
+          topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: "monitoring-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
 
   enabled: true
   serviceAccount:
@@ -28,8 +61,8 @@ query:
   %{ if enable_large_nodesgroup }  
   resources:
     limits:
-      cpu: 28000m
-      memory: 300Gi
+      cpu: 18000m
+      memory: 200Gi
     requests:
       cpu: "${large_nodesgroup_cpu_requests}"
       memory: "${large_nodesgroup_memory_requests}"
