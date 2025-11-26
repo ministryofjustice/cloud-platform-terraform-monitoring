@@ -117,7 +117,7 @@ query:
       effect: "NoSchedule"
 
   extraFlags:
-    - --query.timeout=5m
+    - --query.timeout=10m
 
   ## @param query.replicaLabel Replica indicator(s) along which data is de-duplicated
   replicaLabel:
