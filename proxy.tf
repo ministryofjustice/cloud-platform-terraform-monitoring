@@ -4,7 +4,7 @@ resource "helm_release" "prometheus_proxy" {
   namespace  = kubernetes_namespace.monitoring.id
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "7.1.0"
+  version    = "8.5.1"
   timeout    = 900
 
   values = [
@@ -20,6 +20,7 @@ resource "helm_release" "prometheus_proxy" {
       clusterName          = terraform.workspace
       ingress_redirect     = terraform.workspace == local.live_workspace ? true : false
       live_domain_hostname = "prometheus.${local.live_domain}"
+      release_name         = "prometheus-proxy"
     }),
   ]
 
@@ -35,6 +36,13 @@ resource "helm_release" "prometheus_proxy" {
     {
       name  = "config.cookieSecret"
       value = random_id.session_secret.b64_std
+    }
+  ]
+
+  set = [
+    {
+      name  = "redis.redis.config.min-replicas-to-write"
+      value = "0"
     }
   ]
 
@@ -54,7 +62,7 @@ resource "helm_release" "alertmanager_proxy" {
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "7.1.0"
+  version    = "8.5.1"
   timeout    = 900
 
   values = [
@@ -70,6 +78,7 @@ resource "helm_release" "alertmanager_proxy" {
       clusterName          = terraform.workspace
       ingress_redirect     = local.ingress_redirect
       live_domain_hostname = "alertmanager.${local.live_domain}"
+      release_name         = "alertmanager-proxy"
     }),
   ]
 
@@ -85,6 +94,13 @@ resource "helm_release" "alertmanager_proxy" {
     {
       name  = "config.cookieSecret"
       value = random_id.session_secret.b64_std
+    }
+  ]
+
+  set = [
+    {
+      name  = "redis.redis.config.min-replicas-to-write"
+      value = "0"
     }
   ]
 
@@ -104,7 +120,7 @@ resource "helm_release" "thanos_proxy" {
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "7.1.0"
+  version    = "8.5.1"
   timeout    = 900
 
   values = [
@@ -120,6 +136,7 @@ resource "helm_release" "thanos_proxy" {
       clusterName          = terraform.workspace
       ingress_redirect     = local.ingress_redirect
       live_domain_hostname = "thanos.${local.live_domain}"
+      release_name         = "thanos-proxy"
     }),
   ]
 
@@ -135,6 +152,13 @@ resource "helm_release" "thanos_proxy" {
     {
       name  = "config.cookieSecret"
       value = random_id.session_secret.b64_std
+    }
+  ]
+
+  set = [
+    {
+      name  = "redis.redis.config.min-replicas-to-write"
+      value = "0"
     }
   ]
 
