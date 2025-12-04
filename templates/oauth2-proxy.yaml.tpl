@@ -68,9 +68,12 @@ sessionStorage:
 redis:
   # provision an instance of the redis sub-chart
   enabled: true
-  architecture: standalone
   sentinel:
     enabled: false
+
+redis-ha:
+  haproxy:
+    enabled: true
 
 ########################################
 # bitnami legacy images issue:
