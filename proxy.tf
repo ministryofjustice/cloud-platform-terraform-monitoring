@@ -54,7 +54,7 @@ resource "helm_release" "alertmanager_proxy" {
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "7.1.0"
+  version    = "8.0.0"
   timeout    = 900
 
   values = [
@@ -104,7 +104,7 @@ resource "helm_release" "thanos_proxy" {
   namespace  = "monitoring"
   repository = "https://oauth2-proxy.github.io/manifests"
   chart      = "oauth2-proxy"
-  version    = "7.1.0"
+  version    = "8.0.0"
   timeout    = 900
 
   values = [
