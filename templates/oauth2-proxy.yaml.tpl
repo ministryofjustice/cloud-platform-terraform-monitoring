@@ -69,11 +69,8 @@ redis:
   # provision an instance of the redis sub-chart
   enabled: true
   architecture: standalone
-  image:
-    registry: docker.io
-    repository: bitnamilegacy/redis
-    tag: 7.2.4-debian-11-r5
-    pullPolicy: IfNotPresent
+  sentinel:
+    enabled: false
 
 ########################################
 # bitnami legacy images issue:
