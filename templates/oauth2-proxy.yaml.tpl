@@ -123,6 +123,8 @@ redis:
 initContainers:
   waitForRedis:
     enabled: true
+    image:
+      repository: "alpine"
 
 
 priorityClassName: system-cluster-critical
