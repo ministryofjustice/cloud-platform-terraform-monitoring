@@ -65,13 +65,18 @@ securityContext:
 sessionStorage:
   # Can be one of the supported session storage cookie/redis
   type: redis
+  redis:
+    enabled: true
+    clientType: standalone
+    sentinel:
+      enabled: false
+    standalone:
+      connectionUrl: "redis://${release_name}-redis-haproxy:6379"
 redis:
   # provision an instance of the redis sub-chart
   enabled: true
   sentinel:
     enabled: false
-
-redis-ha:
   haproxy:
     enabled: true
 

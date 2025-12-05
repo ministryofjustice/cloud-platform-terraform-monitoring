@@ -20,6 +20,7 @@ resource "helm_release" "prometheus_proxy" {
       clusterName          = terraform.workspace
       ingress_redirect     = terraform.workspace == local.live_workspace ? true : false
       live_domain_hostname = "prometheus.${local.live_domain}"
+      release_name         = "prometheus-proxy"
     }),
   ]
 
@@ -70,6 +71,7 @@ resource "helm_release" "alertmanager_proxy" {
       clusterName          = terraform.workspace
       ingress_redirect     = local.ingress_redirect
       live_domain_hostname = "alertmanager.${local.live_domain}"
+      release_name         = "alertmanager-proxy"
     }),
   ]
 
@@ -120,6 +122,7 @@ resource "helm_release" "thanos_proxy" {
       clusterName          = terraform.workspace
       ingress_redirect     = local.ingress_redirect
       live_domain_hostname = "thanos.${local.live_domain}"
+      release_name         = "thanos-proxy"
     }),
   ]
 
