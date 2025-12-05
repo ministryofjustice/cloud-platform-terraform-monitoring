@@ -65,69 +65,55 @@ securityContext:
 sessionStorage:
   # Can be one of the supported session storage cookie/redis
   type: redis
+  redis:
+    enabled: true
+    clientType: standalone
+    sentinel:
+      enabled: false
+    standalone:
+      connectionUrl: "redis://${release_name}-redis-announce-0:6379"
 redis:
   # provision an instance of the redis sub-chart
   enabled: true
-  clientType: standalone
-
   replicas: 1
-
-  # Remove sentinel overhead, speed up startup and redis itself
   sentinel:
-    livenessProbe:
-      enabled: false
-    readinessProbe:
-      enabled: false
-    startupProbe:
-      enabled: false
-    quorum: 1
-
-  hardAntiAffinity: false
-
-  redis:
-    config:
-      min-replicas-to-write: 0
-      save: ""
-      appendonly: "no"
-
-    terminationGracePeriodSeconds: 10
-    livenessProbe:
-      initialDelaySeconds: 5
-      periodSeconds: 5
-      timeoutSeconds: 3
-      failureThreshold: 2
-    readinessProbe:
-      initialDelaySeconds: 5
-      periodSeconds: 5
-      timeoutSeconds: 3
-      failureThreshold: 2
-    startupProbe:
-      initialDelaySeconds: 5
-      periodSeconds: 2
-      timeoutSeconds: 3
-      failureThreshold: 10
-  splitBrainDetection:
-    interval: 60
-  persistentVolume:
     enabled: false
-  emptyDir: {}
   haproxy:
     enabled: false
-  exporter:
-    enabled: false
-  sysctlImage:
-    enabled: false
-  hostPath:
-    chown: false
+
+########################################
+# bitnami legacy images issue:
+#
+# Bitnami's introduction of 'production-ready' secure images topic:
+# https://github.com/bitnami/charts/issues/35164
+# 
+# As a temp measure we are switching over to legacy registry. This means the chart complains about insecure images (this is by Bitnami design):
+#
+# ERROR: Original containers have been substituted for unrecognized ones. Deploying this chart with non-standard containers is likely to cause degraded security and performance, broken chart features, and missing environment variables.
+# 
+# Unrecognized images:
+#    - docker.io/bitnamilegacy/redis-7.2.4-debian-11-r5
+#
+# If you are sure you want to proceed with non-standard containers, you can skip container image verification by setting the global parameter 'global.security.allowInsecureImages' to true.
+# Further information can be obtained at https://github.com/bitnami/charts/issues/30850
+#
+# Therefore we are setting: 
+# global.security.allowInsecureImages: true
+# 
+# This solution will only help us until we pass version 8.0.3 of redis:
+# https://hub.docker.com/r/bitnamilegacy/redis/tags
+#
+# After which we need to do something else:
+# 
+# - Investigate alternatives
+# - subscribe to bitnami?
+#
+########################################
 
 initContainers:
+  # if the redis sub-chart is enabled, wait for it to be ready
+  # before starting the proxy
+  # creates a role binding to get, list, watch, the redis master pod
+  # if service account is enabled
   waitForRedis:
     enabled: true
-    image:
-      repository: "alpine"
-
-
-priorityClassName: system-cluster-critical
-
-
-
