@@ -65,18 +65,30 @@ securityContext:
 sessionStorage:
   # Can be one of the supported session storage cookie/redis
   type: redis
-  redis:
-    clientType: "standalone"
-    sentinel:
-      enabled: false
 redis:
-   redis:
+  # provision an instance of the redis sub-chart
+  enabled: true
+  clientType: standalone
+
+  replicas: 1
+
+  # Remove sentinel overhead, speed up startup and redis itself
+  sentinel:
+    livenessProbe:
+      enabled: false
+    readinessProbe:
+      enabled: false
+    startupProbe:
+      enabled: false
+    quorum: 1
+
+  hardAntiAffinity: false
+
+  redis:
     config:
       min-replicas-to-write: 0
       save: ""
       appendonly: "no"
-    sentinel:
-      enabled: false
 
     terminationGracePeriodSeconds: 10
     livenessProbe:
@@ -111,3 +123,9 @@ redis:
 initContainers:
   waitForRedis:
     enabled: true
+
+
+priorityClassName: system-cluster-critical
+
+
+
