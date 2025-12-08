@@ -66,6 +66,7 @@ sessionStorage:
   # Can be one of the supported session storage cookie/redis
   type: redis
   redis:
+    replicas: 1
     enabled: true
     clientType: standalone
     sentinel:
