@@ -158,3 +158,9 @@ variable "operator_storage_size" {
   type        = string
   default     = "75Gi"
 }
+
+variable "thanos_storage_class" {
+  description = "Storage class to use for Thanos storegateway volume claims"
+  type        = string
+  default     = ""
+}

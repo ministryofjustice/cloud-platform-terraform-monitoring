@@ -8,14 +8,15 @@ resource "helm_release" "thanos" {
   version    = "17.3.1"
   timeout    = 900
   values = [templatefile("${path.module}/templates/thanos-values.yaml.tpl", {
-    prometheus_sa_name         = local.prometheus_sa_name
-    enabled_compact            = var.enable_thanos_compact
-    monitoring_aws_role        = module.iam_assumable_role_monitoring.iam_role_name
-    clusterName                = terraform.workspace
-    thanos_query_replica_count = var.thanos_query_replica_count
-    enable_large_nodesgroup    = var.enable_large_nodesgroup
-    large_nodesgroup_cpu_requests = var.large_nodesgroup_cpu_requests
+    prometheus_sa_name               = local.prometheus_sa_name
+    enabled_compact                  = var.enable_thanos_compact
+    monitoring_aws_role              = module.iam_assumable_role_monitoring.iam_role_name
+    clusterName                      = terraform.workspace
+    thanos_query_replica_count       = var.thanos_query_replica_count
+    enable_large_nodesgroup          = var.enable_large_nodesgroup
+    large_nodesgroup_cpu_requests    = var.large_nodesgroup_cpu_requests
     large_nodesgroup_memory_requests = var.large_nodesgroup_memory_requests
+    thanos_storage_class             = var.thanos_storage_class
   })]
 
   depends_on = [
