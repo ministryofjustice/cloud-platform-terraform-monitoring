@@ -39,6 +39,13 @@ resource "helm_release" "prometheus_proxy" {
     }
   ]
 
+  set = [
+    {
+      name  = "redis.redis.config.min-replicas-to-write"
+      value = "0"
+    }
+  ]
+
   depends_on = [
     random_id.session_secret
   ]
@@ -90,6 +97,13 @@ resource "helm_release" "alertmanager_proxy" {
     }
   ]
 
+  set = [
+    {
+      name  = "redis.redis.config.min-replicas-to-write"
+      value = "0"
+    }
+  ]
+
   depends_on = [
     random_id.session_secret
   ]
@@ -138,6 +152,13 @@ resource "helm_release" "thanos_proxy" {
     {
       name  = "config.cookieSecret"
       value = random_id.session_secret.b64_std
+    }
+  ]
+
+  set = [
+    {
+      name  = "redis.redis.config.min-replicas-to-write"
+      value = "0"
     }
   ]
 
