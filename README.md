@@ -140,7 +140,7 @@ module "monitoring" {
 | <a name="input_pagerduty_config"></a> [pagerduty\_config](#input\_pagerduty\_config) | Add PagerDuty key to allow integration with a PD service. | `any` | n/a | yes |
 | <a name="input_team_name"></a> [team\_name](#input\_team\_name) | n/a | `string` | `"webops"` | no |
 | <a name="input_thanos_query_replica_count"></a> [thanos\_query\_replica\_count](#input\_thanos\_query\_replica\_count) | the number of thanos query replicas | `number` | `1` | no |
-| <a name="input_thanos_storage_class"></a> [thanos\_storage\_class](#input\_thanos\_storage\_class) | Storage class to use for thanos storagegateway persistent volume claims | `string` | `""` | no |
+| <a name="input_thanos_storage_class"></a> [thanos\_storage\_class](#input\_thanos\_storage\_class) | Storage class to use for Thanos storegateway volume claims | `string` | `""` | no |
 
 ## Outputs
 
