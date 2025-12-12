@@ -69,15 +69,11 @@ sessionStorage:
     replicas: 1
     enabled: true
     clientType: standalone
-    sentinel:
-      enabled: false
     standalone:
       connectionUrl: "redis://${release_name}-redis-announce-0:6379"
 redis:
   # provision an instance of the redis sub-chart
   enabled: true
   replicas: 1
-  sentinel:
-    enabled: false
   haproxy:
     enabled: false
