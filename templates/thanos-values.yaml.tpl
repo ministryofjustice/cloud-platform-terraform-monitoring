@@ -51,7 +51,7 @@ storegateway:
     name: "${prometheus_sa_name}"
   persistence:
     storageClass: ${thanos_storage_class}
-    size: 75Gi
+    size: 150Gi
   podAnnotations:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
   extraFlags:
