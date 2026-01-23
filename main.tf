@@ -88,7 +88,7 @@ resource "kubernetes_resource_quota" "monitoring" {
   }
   spec {
     hard = {
-      pods = 150
+      pods = 200
     }
   }
 }
