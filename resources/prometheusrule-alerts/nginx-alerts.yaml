@@ -36,7 +36,7 @@ spec:
     - alert: ModsecNginxConfigReloadFailure
       annotations:
         message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure:x
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure
       expr: nginx_ingress_controller_config_last_reload_successful{controller_class="k8s.io/ingress-modsec"} == 0
       for: 5m
       labels:
@@ -53,7 +53,7 @@ spec:
     - alert: DefaultNginxConfigReloadFailure
       annotations:
         message: The Nginx Config has failed to reload for pod {{ $labels.pod }}
-        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure:x
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md#nginx-config-reload-failure
       expr: nginx_ingress_controller_config_last_reload_successful{controller_class="k8s.io/ingress-default"} == 0
       for: 5m
       labels:
