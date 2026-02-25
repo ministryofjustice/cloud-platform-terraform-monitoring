@@ -121,6 +121,17 @@ resource "kubectl_manifest" "manager_only_alerts" {
   depends_on = [helm_release.prometheus_operator_eks]
 }
 
+# apply live only alerts for non-prod and internal ingress
+resource "kubectl_manifest" "live_only_alerts" {
+  count = terraform.workspace == "live" ? 1 : 0
+
+  yaml_body          = file("${path.module}/resources/live_only_alerts.yaml")
+  override_namespace = "monitoring"
+  wait               = true
+
+  depends_on = [helm_release.prometheus_operator_eks]
+}
+
 # Alertmanager and Prometheus proxy
 # Ref: https://github.com/evry/docker-oidc-proxy
 resource "random_id" "session_secret" {
