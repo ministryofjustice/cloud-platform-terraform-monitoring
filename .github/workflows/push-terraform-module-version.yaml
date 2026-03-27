@@ -16,7 +16,7 @@ jobs:
             "${{ github.api_url }}/repos/${{ github.repository }}/releases/latest" \
           | jq -r .tag_name)" >> $GITHUB_ENV
 
-      - uses: ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version@main
+      - uses: ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version@96d2805c4dda20128dd8b5f0069725b6df9a6949
         name: push version to go-get-module api
         if: ${{ github.ref_name == env.LATEST_TAG }}
         env:
