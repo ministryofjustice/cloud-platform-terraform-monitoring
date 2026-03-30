@@ -267,3 +267,25 @@ spec:
       for: 15m
       labels:
         severity: warning
+
+    - alert: NginxIngress403Rate-modsec-ingress
+      annotations:
+        message: 'Percentage of 403 requests of nginx-modsec over the last 15 minutes is more than 15%.
+          NOTE: Ignoring 404s and 499s in this metric. A sustained high 403 rate on the modsec ingress class may indicate ModSecurity rule false positives, an auth misconfiguration, or a version bump impact.'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
+      expr: sum(rate(nginx_ingress_controller_requests{status="403", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
+        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 > 15
+      for: 15m
+      labels:
+        severity: warning
+
+    - alert: NginxIngress406Rate-modsec-ingress
+      annotations:
+        message: 'Percentage of 406 requests of nginx-modsec over the last 15 minutes is more than 15%.
+          NOTE: 406 (Not Acceptable) responses are unique to HMPPS services.'
+        runbook_url: https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/README.md
+      expr: sum(rate(nginx_ingress_controller_requests{status="406", controller_class=~"k8s.io/ingress-modsec"}[5m]))/(sum(rate(nginx_ingress_controller_requests{controller_class=~"k8s.io/ingress-modsec"}[5m]))-
+        sum(rate(nginx_ingress_controller_requests{status=~"404|499", controller_class=~"k8s.io/ingress-modsec"}[5m]))) * 100 > 15
+      for: 15m
+      labels:
+        severity: warning
