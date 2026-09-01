@@ -338,6 +338,9 @@ kubeStateMetrics:
 ## Configuration for kube-state-metrics subchart
 ##
 kube-state-metrics:
+  image:
+    tag: "${ kube_state_metrics_image_tag }"
+
   metricAnnotationsAllowList:
     - namespaces=[*]
 
