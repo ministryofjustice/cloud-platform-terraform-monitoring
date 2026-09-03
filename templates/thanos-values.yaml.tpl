@@ -51,7 +51,7 @@ storegateway:
     name: "${prometheus_sa_name}"
   persistence:
     storageClass: ${thanos_storage_class}
-    size: 150Gi
+    size: 200Gi
   podAnnotations:
     iam.amazonaws.com/role: "${monitoring_aws_role}"
   extraFlags:
@@ -161,7 +161,7 @@ compactor:
     - --deduplication.func=penalty
     - --downsample.concurrency=16
     - --compact.blocks-fetch-concurrency=16
-    - --delete-delay=12h
+    - --delete-delay=2h
     - --no-debug.halt-on-error
   retentionResolutionRaw: 30d
   retentionResolution5m: 180d
