@@ -17,7 +17,7 @@ storegateway:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
-          - key: cloud-platform.justice.gov.uk/monitoring-ng
+          - key: cloud-platform.justice.gov.uk/thanos-ng
             operator: In
             values:
             - "true"
@@ -40,7 +40,7 @@ storegateway:
           topologyKey: kubernetes.io/hostname
 
   tolerations:
-    - key: "monitoring-node"
+    - key: "thanos-node"
       operator: "Equal"
       value: "true"
       effect: "NoSchedule"
