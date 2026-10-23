@@ -10,7 +10,7 @@ storegateway:
       memory: 64Gi
     requests:
       cpu: 10m
-      memory: 100Mi
+      memory: 32Gi
 
   affinity:
     nodeAffinity:
