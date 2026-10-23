@@ -10,14 +10,14 @@ storegateway:
       memory: 64Gi
     requests:
       cpu: 10m
-      memory: 100Mi
+      memory: 32Gi
 
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
-          - key: cloud-platform.justice.gov.uk/thanos-ng
+          - key: cloud-platform.justice.gov.uk/monitoring-ng
             operator: In
             values:
             - "true"
@@ -40,7 +40,7 @@ storegateway:
           topologyKey: kubernetes.io/hostname
 
   tolerations:
-    - key: "thanos-node"
+    - key: "monitoring-node"
       operator: "Equal"
       value: "true"
       effect: "NoSchedule"
