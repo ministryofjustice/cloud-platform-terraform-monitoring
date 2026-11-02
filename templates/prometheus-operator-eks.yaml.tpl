@@ -262,6 +262,9 @@ grafana:
     image:
       registry: quay.io
       repository: kiwigrid/k8s-sidecar
+      # Pin while on kube-prometheus-stack 77.x: its default 1.30.10 is marked bugged upstream
+      # ("Do not use 1.30.10 due to #431 ... Use 1.30.9"). Remove when moving to a chart that defaults to 2.x.
+      tag: "1.30.9"
     alerts:
       enabled: true
       label: grafana_alert
