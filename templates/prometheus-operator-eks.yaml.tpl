@@ -578,7 +578,7 @@ prometheus:
 
 %{ if enable_thanos_sidecar == true ~}
     thanos: 
-      baseImage: quay.io/thanos/thanos
+      image: quay.io/thanos/thanos:v0.42.5
       objectStorageConfig:
         existingSecret:
           key: thanos.yaml
