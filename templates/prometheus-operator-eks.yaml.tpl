@@ -262,9 +262,11 @@ grafana:
     image:
       registry: quay.io
       repository: kiwigrid/k8s-sidecar
-      # Pinned because chart 77.x defaults to 1.30.10, which upstream yanked (kiwigrid/k8s-sidecar#431); remove when the chart default is 2.x.
-      # Release note: "Do not use 1.30.10 due to #431" / "Use 1.30.9 as latest stable" (https://github.com/kiwigrid/k8s-sidecar/releases/tag/1.30.10)
-      tag: "1.30.9"
+      # Pinned to 1.30.3, the last release on urllib3 2.3.0. From 1.30.4, urllib3 2.4.0+ on Python 3.13 enables strict X.509 verification,
+      # which rejects the API server certificate on EKS clusters created on Kubernetes 1.16 or earlier, such as manager:
+      # "certificate verify failed: Missing Authority Key Identifier" (kiwigrid/k8s-sidecar#400). Keep this pin until manager is rebuilt.
+      # The chart 77.x default, 1.30.10, is also yanked upstream (kiwigrid/k8s-sidecar#431).
+      tag: "1.30.3"
     alerts:
       enabled: true
       label: grafana_alert
