@@ -262,17 +262,8 @@ grafana:
     image:
       registry: quay.io
       repository: kiwigrid/k8s-sidecar
-      # Pinned while on kube-prometheus-stack 77.x, whose Grafana subchart defaults to k8s-sidecar 1.30.10.
-      # Upstream yanked 1.30.10 and 1.30.11. The 1.30.10 release note says:
-      #   "⚠️ YANKED/UNSTABLE ⚠️: Do not use 1.30.10 due to #431
-      #   Use 1.30.9 as latest stable"
-      #   (https://github.com/kiwigrid/k8s-sidecar/releases/tag/1.30.10; the 1.30.11 release note says the same for 1.30.11)
-      # Issue #431, "1.30.10+ Breaks kubernetes api connection", maintainer's root cause:
-      #   "Since 1.30.10 processes relatet to configmaps and secrets are running separately and each of these
-      #   processes requires its own kube config. I did not sufficiently ensure that this was always available.
-      #   So, with no valid kubeconfig, connection fall back to defaults and try localhost:80."
-      #   (https://github.com/kiwigrid/k8s-sidecar/issues/431#issuecomment-3401152986)
-      # Remove this pin when moving to a chart whose default is 2.x (kube-prometheus-stack 92.14.0 defaults to 2.14.1).
+      # Pinned because chart 77.x defaults to 1.30.10, which upstream yanked (kiwigrid/k8s-sidecar#431); remove when the chart default is 2.x.
+      # Release note: "Do not use 1.30.10 due to #431" / "Use 1.30.9 as latest stable" (https://github.com/kiwigrid/k8s-sidecar/releases/tag/1.30.10)
       tag: "1.30.9"
     alerts:
       enabled: true
