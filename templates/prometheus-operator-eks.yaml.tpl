@@ -586,6 +586,9 @@ prometheus:
 
 %{ if enable_thanos_sidecar == true ~}
     thanos: 
+      # Diverges from the chart default (thanosImage v0.42.4), which does not have the eMudhra CA fix.
+      # v0.42.5 is "v0.42.4 but with eMudhra CA fix" (https://github.com/thanos-io/thanos/releases/tag/v0.42.5).
+      # Uses `image` because `baseImage` is deprecated in the v0.94.2 CRD ("use 'image' instead"). Remove when the chart default is v0.42.5 or later.
       image: quay.io/thanos/thanos:v0.42.5
       objectStorageConfig:
         existingSecret:
