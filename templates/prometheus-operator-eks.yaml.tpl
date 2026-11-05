@@ -258,29 +258,37 @@ grafana:
 
   envFromSecret: "grafana-env"
 
+  # The live and manager EKS CAs (created 2021) have no X.509 extensions, so k8s-sidecar 1.30.4 and later fail Python 3.13+ strict
+  # verification of the API server: "Missing Authority Key Identifier" (kiwigrid/k8s-sidecar#400).
+  # DISABLE_X509_STRICT_VERIFICATION (k8s-sidecar 2.5.0+) turns off only the strict checks; the chain, expiry and hostname are still verified.
+  # SSL_CERT_FILE keeps the Kubernetes client trusting only the cluster CA, instead of the image's public root CAs.
   sidecar:
     image:
       registry: quay.io
       repository: kiwigrid/k8s-sidecar
-      # Pinned to 1.30.3, the last release on urllib3 2.3.0. From 1.30.4, urllib3 2.4.0+ on Python 3.13 enables strict X.509 verification,
-      # which rejects the API server certificate on EKS clusters created on Kubernetes 1.16 or earlier, such as manager:
-      # "certificate verify failed: Missing Authority Key Identifier" (kiwigrid/k8s-sidecar#400). Keep this pin until manager is rebuilt.
-      # The chart 77.x default, 1.30.10, is also yanked upstream (kiwigrid/k8s-sidecar#431).
-      tag: "1.30.3"
     alerts:
       enabled: true
       label: grafana_alert
       labelValue: ""
       searchNamespace: ALL
+      env:
+        DISABLE_X509_STRICT_VERIFICATION: "true"
+        SSL_CERT_FILE: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     dashboards:
       enabled: true
       label: grafana_dashboard
       labelValue: ""
       searchNamespace: ALL
+      env:
+        DISABLE_X509_STRICT_VERIFICATION: "true"
+        SSL_CERT_FILE: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     datasources:
       enabled: true
       label: grafana_datasource
       labelValue: ""
+      env:
+        DISABLE_X509_STRICT_VERIFICATION: "true"
+        SSL_CERT_FILE: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 
   ## Configure additional grafana datasources
   ## ref: http://docs.grafana.org/administration/provisioning/#datasources
