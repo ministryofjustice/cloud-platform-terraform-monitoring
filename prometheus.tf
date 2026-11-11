@@ -61,7 +61,7 @@ resource "helm_release" "prometheus_operator_eks" {
     # NOTE: We are overriding the grafana image to use CVE-2025-6197 security patched release. This can be removed once Helm charts are also patched.
     # Ref: https://grafana.com/security/security-advisories/cve-2025-6197/
     grafana_image_tag            = "11.5.6-security-01"
-    kube_state_metrics_image_tag = "v2.18.0"
+    kube_state_metrics_image_tag = "v2.19.1"
   })]
 
   set_sensitive = [
